@@ -174,7 +174,7 @@ export function Hero3D() {
       )}
       <div className="w-full h-full">
         <Canvas
-          camera={{ position: [0, 0, 35], fov: 50 }}
+          camera={{ position: [0, 0, 38], fov: 50 }}
           gl={{ antialias: true }}
           style={{ opacity: ready ? 1 : 0 }}
           onCreated={() => setReady(true)}

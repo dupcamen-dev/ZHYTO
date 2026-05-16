@@ -798,7 +798,7 @@ export default function Home() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full glass-card rounded-lg px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer"
+                  className="w-full glass-card rounded-lg px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer bg-white/70"
                 >
                   <span className="font-serif text-[17px] text-foreground">{item.q}</span>
                   <ChevronDown className={`w-4 h-4 text-primary shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
@@ -812,7 +812,7 @@ export default function Home() {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 py-4 text-muted-foreground text-[15px] leading-relaxed">
+                      <div className="px-6 py-4 text-foreground/70 text-[15px] leading-relaxed bg-white/60 rounded-b-lg">
                         {item.a}
                       </div>
                     </motion.div>
