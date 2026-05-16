@@ -177,6 +177,7 @@ export default function Home() {
   const activeProducts = dbProducts || products
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
+  const hero3dScale = useTransform(heroScale, [1, 0.95], [1, 1 / 0.95])
   const [showScrollTop, setShowScrollTop] = useState(false)
 
   useEffect(() => {
@@ -346,6 +347,7 @@ export default function Home() {
 
             {/* 3D Model */}
             <motion.div
+              style={{ scale: hero3dScale }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}

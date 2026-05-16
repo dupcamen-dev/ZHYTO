@@ -23,8 +23,8 @@ function Model() {
       <Center>
         <primitive
           object={scene}
-          scale={1.4}
-          rotation={[Math.PI / 2, Math.PI / 2, 0]}
+          scale={3}
+          rotation={[0, Math.PI, 0]}
         />
       </Center>
     </group>
@@ -42,7 +42,7 @@ export function Hero3D() {
         </div>
       )}
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 35 }}
+        camera={{ position: [0, 0, 8], fov: 35 }}
         gl={{ antialias: true }}
         style={{ opacity: ready ? 1 : 0 }}
         onCreated={() => setReady(true)}
