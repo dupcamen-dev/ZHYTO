@@ -19,7 +19,8 @@ function Model() {
   const isSpinningRef = useRef(false)
   const spinVelocityRef = useRef(0)
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const lastXRef = useRef(0)
+  const prevAngleRef = useRef(0)
+  const angleSetRef = useRef(false)
   const lastTimeRef = useRef(0)
   const [hovered, setHovered] = useState(false)
 
@@ -83,33 +84,46 @@ function Model() {
     const handleMove = (e: PointerEvent) => {
       if (!draggingRef.current || !groupRef.current) return
 
-      const dx = e.clientX - lastXRef.current
-      const rotationDelta = dx * 0.01
+      const rect = gl.domElement.getBoundingClientRect()
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
 
-      groupRef.current.rotation.z -= rotationDelta
+      const angle = Math.atan2(e.clientY - cy, e.clientX - cx)
+
+      if (!angleSetRef.current) {
+        prevAngleRef.current = angle
+        angleSetRef.current = true
+        return
+      }
+
+      let delta = angle - prevAngleRef.current
+      if (delta > Math.PI) delta -= Math.PI * 2
+      if (delta < -Math.PI) delta += Math.PI * 2
+
+      groupRef.current.rotation.z -= delta
 
       const now = performance.now()
       const dt = (now - lastTimeRef.current) / 1000
       if (dt > 0 && dt < 0.1) {
-        spinVelocityRef.current = rotationDelta / dt
+        spinVelocityRef.current = -delta / dt
       }
       lastTimeRef.current = now
-      lastXRef.current = e.clientX
-    }
 
+      prevAngleRef.current = angle
+    }
     const handleUp = () => {
       draggingRef.current = false
+      angleSetRef.current = false
       gl.domElement.style.touchAction = ''
 
       const now = performance.now()
       const dt = (now - lastTimeRef.current) / 1000
-      if (dt > 0.001 && dt < 0.5 && Math.abs(spinVelocityRef.current) > 0.5) {
+      if (dt > 0.001 && dt < 0.5 && Math.abs(spinVelocityRef.current) > 0.01) {
         isSpinningRef.current = true
       } else {
         scheduleResume()
       }
     }
-
     window.addEventListener('pointermove', handleMove)
     window.addEventListener('pointerup', handleUp)
     return () => {
@@ -127,11 +141,12 @@ function Model() {
         autoPausedRef.current = true
         isSpinningRef.current = false
         spinVelocityRef.current = 0
-        lastXRef.current = e.clientX
+        angleSetRef.current = false
         lastTimeRef.current = performance.now()
         if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
         e.stopPropagation()
         gl.domElement.style.touchAction = 'none'
+        gl.domElement.setPointerCapture(e.pointerId)
       }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
