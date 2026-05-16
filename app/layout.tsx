@@ -1,0 +1,53 @@
+import type { Metadata, Viewport } from 'next'
+import { Cormorant_Garamond, Dancing_Script, Geist } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import { CartProvider } from '@/components/cart-context'
+import { Toaster } from '@/components/ui/sonner'
+import './globals.css'
+
+const cormorant = Cormorant_Garamond({ 
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-cormorant',
+})
+
+const dancing = Dancing_Script({ 
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-dancing',
+})
+
+const geist = Geist({ 
+  subsets: ['latin'],
+  variable: '--font-geist',
+})
+
+export const metadata: Metadata = {
+  title: 'zhyto.london | Authentic Ukrainian Varenyky & Syrnyky',
+  description: 'Handcrafted Ukrainian varenyky and syrnyky delivered to your door in London. Marketplace for authentic homemade cuisine.',
+  keywords: ['varenyky', 'syrnyky', 'ukrainian food', 'london', 'dumplings', 'marketplace'],
+}
+
+export const viewport: Viewport = {
+  themeColor: '#1a1612',
+  width: 'device-width',
+  initialScale: 1,
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en" className={`${cormorant.variable} ${dancing.variable} ${geist.variable} bg-background`}>
+      <body className="font-serif antialiased">
+        <CartProvider>
+          {children}
+          <Toaster />
+        </CartProvider>
+        {process.env.NODE_ENV === 'production' && <Analytics />}
+      </body>
+    </html>
+  )
+}
