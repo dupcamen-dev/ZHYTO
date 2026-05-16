@@ -310,14 +310,14 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-[1800px] mx-auto px-6 lg:px-12 pt-24 sm:pt-32 pb-20 sm:pb-28">
-          <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 lg:gap-12">
-            <div className="max-w-xl w-full lg:w-auto">
+          <div className="relative z-10 w-full max-w-[1800px] mx-auto px-6 lg:px-20 pt-24 sm:pt-28 pb-16 sm:pb-20">
+          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-8 lg:gap-8">
+            <div className="w-full lg:w-auto lg:max-w-md xl:max-w-lg">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-[12px] tracking-[0.35em] text-primary mb-6"
+                className="text-[12px] tracking-[0.35em] text-primary mb-5"
               >
                 AUTHENTIC. HANDMADE. TIMELESS.
               </motion.p>
@@ -326,7 +326,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-5xl md:text-6xl lg:text-7xl font-serif font-light leading-[1.05] mb-8"
+                className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-light leading-[1.05] mb-6"
               >
                 <span className="text-foreground block">Dumplings</span>
                 <span className="font-script text-primary text-[1.1em]">with soul</span>
@@ -336,14 +336,14 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="w-12 h-px bg-primary/60 mb-8"
+                className="w-12 h-px bg-primary/60 mb-6"
               />
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="text-[17px] text-foreground/80 leading-[1.8] mb-10 max-w-md"
+                className="text-base md:text-lg text-foreground/80 leading-[1.8] mb-8 max-w-md"
               >
                 We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
               </motion.p>
@@ -355,7 +355,7 @@ export default function Home() {
               >
                 <a 
                   href="#products" 
-                  className="group inline-flex items-center gap-4 text-primary text-[12px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
+                  className="group inline-flex items-center gap-4 text-primary text-[13px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
                 >
                   <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
                   <ArrowRight className="w-4 h-4 opacity-80" />
@@ -369,7 +369,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex items-center justify-center shrink-0 -ml-24"
+              className="hidden lg:flex items-center justify-center shrink-0"
             >
               <Hero3D />
             </motion.div>
@@ -380,7 +380,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-wrap items-center gap-8 md:gap-12 mt-24"
+            className="flex flex-wrap items-center gap-6 md:gap-10 mt-16"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center">
