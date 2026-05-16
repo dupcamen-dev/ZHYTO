@@ -30,7 +30,7 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDrawerProps) {
-  const { cart, addToCart, removeFromCart, updateQuantity, totalItems } = useCart()
+  const { cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems } = useCart()
   const { settings } = useDeliverySettings()
 
   const cartItems = Object.entries(cart)
@@ -153,6 +153,14 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                       ? `Add £${(settings.min_order - subtotal).toFixed(0)} more — min. order £${settings.min_order}`
                       : `Add £${(settings.free_threshold - subtotal).toFixed(0)} more for free delivery`}
                   </p>
+                  {items.length > 0 && (
+                    <button
+                      onClick={() => clearCart()}
+                      className="w-full text-[11px] tracking-[0.15em] text-foreground/40 hover:text-destructive transition-colors py-1"
+                    >
+                      CLEAR ALL
+                    </button>
+                  )}
                 </div>
               )}
 

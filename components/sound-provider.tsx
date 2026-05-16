@@ -1,15 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   useEffect(() => {
-    const audio = new Audio("/sounds/click.mp3");
-    audio.volume = 0.3;
+    audioRef.current = new Audio("/sounds/click.mp3");
+    audioRef.current.volume = 0.3;
+    audioRef.current.load();
 
     const handler = () => {
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      }
     };
 
     document.addEventListener("click", handler, true);
