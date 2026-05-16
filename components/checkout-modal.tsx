@@ -53,9 +53,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : 0
   const total = subtotal + delivery
 
-  // Advance to payment when user logs in
+  // Advance to payment when user logs in (only if items in cart)
   useEffect(() => {
-    if (user && !showPayment && !authLoading && open && !submitting) {
+    if (user && !showPayment && !authLoading && open && !submitting && cartItems.length > 0) {
       handleContinue()
     }
   }, [user, authLoading, open])
