@@ -154,7 +154,7 @@ function Model() {
       <group ref={innerRef}>
         <primitive
           object={scene}
-          scale={3}
+          scale={4.5}
           rotation={[0, 0, 0]}
         />
       </group>
@@ -166,25 +166,27 @@ export function Hero3D() {
   const [ready, setReady] = useState(false)
 
   return (
-    <div className="relative w-full max-w-[160px] aspect-square sm:w-[300px] sm:h-[300px] lg:w-[700px] lg:h-[700px]">
+    <div className="relative w-full max-w-[160px] aspect-square sm:w-[300px] sm:h-[300px] lg:w-[900px] lg:h-[900px] overflow-visible">
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Loader className="w-6 h-6 text-primary animate-spin" />
         </div>
       )}
-      <Canvas
-        camera={{ position: [0, 0, 12], fov: 35 }}
-        gl={{ antialias: true }}
-        style={{ opacity: ready ? 1 : 0 }}
-        onCreated={() => setReady(true)}
-      >
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 5, 5]} intensity={1.5} />
-        <directionalLight position={[-3, 2, -2]} intensity={0.4} />
-        <Suspense fallback={null}>
-          <Model />
-        </Suspense>
-      </Canvas>
+      <div className="w-full h-full">
+        <Canvas
+          camera={{ position: [0, 0, 20], fov: 40 }}
+          gl={{ antialias: true }}
+          style={{ opacity: ready ? 1 : 0 }}
+          onCreated={() => setReady(true)}
+        >
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[5, 5, 5]} intensity={1.5} />
+          <directionalLight position={[-3, 2, -2]} intensity={0.4} />
+          <Suspense fallback={null}>
+            <Model />
+          </Suspense>
+        </Canvas>
+      </div>
     </div>
   )
 }

@@ -231,16 +231,17 @@ export default function Home() {
                   <div className="flex items-center gap-3">
                       <Link
                         href="/account"
-                        className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50"
+                        className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-primary hover:text-primary transition-all"
+                        title="My Account"
                       >
                         <User className="w-3.5 h-3.5" />
-                        MY ACCOUNT
                       </Link>
                       <Link
                         href="/admin"
-                        className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50"
+                        className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-primary hover:text-primary transition-all text-[10px] tracking-[0.1em] font-medium"
+                        title="Admin"
                       >
-                        ADMIN
+                        A
                     </Link>
                     <button
                       onClick={signOut}
