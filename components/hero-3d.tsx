@@ -56,7 +56,7 @@ function Model() {
         <primitive
           object={scene}
           scale={3}
-          rotation={[0, 0, 0]}
+          rotation={[0.03, 0, 0]}
         />
       </Center>
     </group>
@@ -67,7 +67,7 @@ export function Hero3D() {
   const [ready, setReady] = useState(false)
 
   return (
-    <div className="relative w-[400px] h-[400px] lg:w-[500px] lg:h-[500px]">
+    <div className="relative w-[300px] h-[300px] lg:w-[600px] lg:h-[600px]">
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Loader className="w-6 h-6 text-primary animate-spin" />
