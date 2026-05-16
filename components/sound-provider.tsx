@@ -8,7 +8,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     audioRef.current = new Audio(`${BASE_PATH}/sounds/click.mp3`);
-    audioRef.current.volume = 0.3;
+    audioRef.current.volume = 0.15;
     audioRef.current.load();
 
     const handler = () => {
