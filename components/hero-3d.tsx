@@ -16,15 +16,28 @@ function Model() {
   const innerRef = useRef<THREE.Group>(null)
   const draggingRef = useRef(false)
   const autoPausedRef = useRef(false)
+  const isSpinningRef = useRef(false)
+  const spinVelocityRef = useRef(0)
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const prevAngleRef = useRef(0)
   const angleSetRef = useRef(false)
+  const lastTimeRef = useRef(0)
   const [hovered, setHovered] = useState(false)
 
   useCursor(hovered, 'grab')
 
   useFrame((_, delta) => {
-    if (groupRef.current && !autoPausedRef.current) {
+    if (!groupRef.current) return
+
+    if (isSpinningRef.current) {
+      groupRef.current.rotation.z += spinVelocityRef.current * delta
+      spinVelocityRef.current *= (1 - 3 * delta)
+      if (Math.abs(spinVelocityRef.current) < 0.001) {
+        isSpinningRef.current = false
+        spinVelocityRef.current = 0
+        scheduleResume()
+      }
+    } else if (!autoPausedRef.current) {
       groupRef.current.rotation.z += delta * 0.1
     }
   })
@@ -88,12 +101,27 @@ function Model() {
       if (delta < -Math.PI) delta += Math.PI * 2
 
       groupRef.current.rotation.z -= delta
+
+      const now = performance.now()
+      const dt = (now - lastTimeRef.current) / 1000
+      if (dt > 0 && dt < 0.1) {
+        spinVelocityRef.current = -delta / dt
+      }
+      lastTimeRef.current = now
+
       prevAngleRef.current = angle
     }
     const handleUp = () => {
       draggingRef.current = false
       angleSetRef.current = false
-      scheduleResume()
+
+      const now = performance.now()
+      const dt = (now - lastTimeRef.current) / 1000
+      if (dt > 0.001 && dt < 0.5 && Math.abs(spinVelocityRef.current) > 0.01) {
+        isSpinningRef.current = true
+      } else {
+        scheduleResume()
+      }
     }
     window.addEventListener('pointermove', handleMove)
     window.addEventListener('pointerup', handleUp)
@@ -110,7 +138,10 @@ function Model() {
       onPointerDown={(e) => {
         draggingRef.current = true
         autoPausedRef.current = true
+        isSpinningRef.current = false
+        spinVelocityRef.current = 0
         angleSetRef.current = false
+        lastTimeRef.current = performance.now()
         if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
         e.stopPropagation()
       }}
