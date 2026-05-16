@@ -761,9 +761,9 @@ export default function Home() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0" style={{ background: 'oklch(0.95 0.02 85 / 0.35)' }} />
+          <div className="absolute inset-0" style={{ background: 'oklch(0.95 0.02 85 / 0.55)' }} />
           <div className="absolute inset-0" style={{
-            background: 'radial-gradient(circle at 50% 50%, transparent 50%, oklch(0.95 0.02 85 / 0.5) 100%)'
+            background: 'radial-gradient(circle at 50% 50%, transparent 50%, oklch(0.95 0.02 85 / 0.65) 100%)'
           }} />
         </div>
         <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
@@ -786,7 +786,6 @@ export default function Home() {
               { q: "How to cook?", a: "Cook pelmeni and varenyky from frozen in boiling salted water for 5–7 minutes. For syrnyky, fry in butter over medium heat for 3–4 minutes per side until golden." },
               { q: "How to store?", a: "Keep frozen. Our products stay fresh for up to 3 months in the freezer. Once thawed, do not refreeze. Always cook directly from frozen." },
               { q: "Delivery zones?", a: "We deliver across all London zones. Same-day delivery available for Zones 1–3. Next-day delivery for all London and select surrounding areas." },
-              { q: "What is the minimum order?", a: "Minimum order is £25. Delivery is £5 for orders between £25–£49, and completely free for orders over £50." },
               { q: "How do I order?", a: "Browse our menu, add items to your cart, checkout with your delivery details, and we'll confirm your order via email or phone." },
             ].map((item, index) => (
               <motion.div
@@ -798,7 +797,7 @@ export default function Home() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full glass-card rounded-lg px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer bg-white/70"
+                  className="w-full glass-card rounded-none px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer bg-white/80 backdrop-blur-md"
                 >
                   <span className="font-serif text-[19px] text-black">{item.q}</span>
                   <ChevronDown className={`w-4 h-4 text-primary shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
@@ -812,7 +811,7 @@ export default function Home() {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 py-4 text-black text-[16px] leading-relaxed bg-white/60 rounded-b-lg">
+                      <div className="px-6 py-4 text-black text-[16px] leading-relaxed bg-white/80 backdrop-blur-md">
                         {item.a}
                       </div>
                     </motion.div>
