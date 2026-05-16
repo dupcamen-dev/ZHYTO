@@ -408,9 +408,9 @@ export default function Home() {
 
           {/* Product categories */}
           {[
-            { key: 'pelmeni', label: 'Pelmeni', desc: 'Traditional meat-filled dumplings' },
             { key: 'varenyky', label: 'Varenyky', desc: 'Classic Ukrainian dumplings' },
             { key: 'syrnyky', label: 'Syrnyky', desc: 'Golden cheese fritters' },
+            { key: 'pelmeni', label: 'Pelmeni', desc: 'Traditional meat-filled dumplings' },
           ].map((category, catIndex) => {
             const catProducts = products.filter(p => p.category === category.key)
             if (catProducts.length === 0) return null
