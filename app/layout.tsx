@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Dancing_Script, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
+import { CookieConsent } from '@/components/cookie-consent'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -51,6 +52,7 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             {children}
+            <CookieConsent />
             <Toaster />
           </CartProvider>
         </AuthProvider>
