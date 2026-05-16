@@ -167,7 +167,7 @@ const navLinks = [
 
 export default function Home() {
   const { cart, addToCart, removeFromCart, totalItems } = useCart()
-  const { user, loading, signOut, signInWithGoogle } = useAuth()
+  const { user, loading, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
@@ -226,7 +226,7 @@ export default function Home() {
                   </div>
                 ) : (
                   <span
-                    onClick={signInWithGoogle}
+                    onClick={() => setCheckoutOpen(true)}
                     className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50 cursor-pointer"
                   >
                     <User className="w-3.5 h-3.5" />
