@@ -12,6 +12,7 @@ import { useAuth } from '@/components/auth-context'
 import { supabase } from '@/lib/supabase'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
+import { Hero3D } from '@/components/hero-3d'
 import { toast } from 'sonner'
 
 // Wheat icon for badge
@@ -28,27 +29,6 @@ function WheatIcon({ className }: { className?: string }) {
       <path d="M30 36 Q20 44 10 36" stroke="currentColor" strokeWidth="1.5" fill="none" />
       <path d="M30 36 Q40 44 50 36" stroke="currentColor" strokeWidth="1.5" fill="none" />
     </svg>
-  )
-}
-
-// Circular quality badge
-function QualityBadge() {
-  return (
-    <div className="relative w-28 h-28 md:w-32 md:h-32">
-      <svg viewBox="0 0 100 100" className="w-full h-full animate-rotate-slow">
-        <defs>
-          <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
-        </defs>
-        <text className="text-[7px] fill-primary uppercase tracking-[0.25em]" style={{ fontFamily: 'system-ui' }}>
-          <textPath href="#circlePath">
-            • PREMIUM QUALITY • NATURAL INGREDIENTS
-          </textPath>
-        </text>
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <WheatIcon className="w-10 h-10 text-primary" />
-      </div>
-    </div>
   )
 }
 
@@ -362,14 +342,14 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Quality Badge */}
+            {/* 3D Model */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, rotate: -20 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 1, delay: 1 }}
-              className="hidden lg:block shrink-0 mt-16"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.8 }}
+              className="hidden lg:flex items-center justify-center shrink-0 -mt-8"
             >
-              <QualityBadge />
+              <Hero3D />
             </motion.div>
           </div>
 
