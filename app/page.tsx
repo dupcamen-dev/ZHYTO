@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
 import { Hero3D } from '@/components/hero-3d'
+import { useDeliverySettings } from '@/lib/use-delivery'
 import { toast } from 'sonner'
 
 // Wheat icon for badge
@@ -165,6 +166,7 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [dbProducts, setDbProducts] = useState<typeof products | null>(null)
   const { scrollYProgress } = useScroll()
+  const { settings: delivery } = useDeliverySettings()
 
   useEffect(() => {
     if (!supabase) return
@@ -717,11 +719,11 @@ export default function Home() {
                   </div>
                   <div className="flex justify-between border-b border-border/30 pb-5">
                     <span className="text-muted-foreground">Minimum Order</span>
-                    <span className="text-primary">£25</span>
+                    <span className="text-primary">£{delivery.min_order}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Free Delivery</span>
-                    <span className="text-primary">Orders over £50</span>
+                    <span className="text-primary">Orders over £{delivery.free_threshold}</span>
                   </div>
                 </div>
               </div>
