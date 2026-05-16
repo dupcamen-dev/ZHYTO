@@ -42,7 +42,8 @@ const products = [
     unit: "/ kg",
     image: img("/images/pelmeni.webp"),
     badge: "Bestseller",
-    category: "pelmeni"
+    category: "pelmeni",
+    stock: 10
   },
   {
     id: 2,
@@ -52,7 +53,8 @@ const products = [
     unit: "/ kg",
     image: img("/images/pelmeni.webp"),
     badge: null,
-    category: "pelmeni"
+    category: "pelmeni",
+    stock: 10
   },
   {
     id: 3,
@@ -62,7 +64,8 @@ const products = [
     unit: "/ kg",
     image: img("/images/hero-varenyky.jpg"),
     badge: "Traditional",
-    category: "varenyky"
+    category: "varenyky",
+    stock: 10
   },
   {
     id: 4,
@@ -72,7 +75,8 @@ const products = [
     unit: "/ kg",
     image: img("/images/hero-varenyky.jpg"),
     badge: null,
-    category: "varenyky"
+    category: "varenyky",
+    stock: 10
   },
   {
     id: 5,
@@ -82,7 +86,8 @@ const products = [
     unit: "/ kg",
     image: img("/images/hero-varenyky.jpg"),
     badge: null,
-    category: "varenyky"
+    category: "varenyky",
+    stock: 10
   },
   {
     id: 6,
@@ -92,7 +97,8 @@ const products = [
     unit: "/ kg",
     image: img("/images/hero-varenyky.jpg"),
     badge: "Seasonal",
-    category: "varenyky"
+    category: "varenyky",
+    stock: 10
   },
   {
     id: 7,
@@ -102,7 +108,8 @@ const products = [
     unit: "/ kg",
     image: img("/images/hero-varenyky.jpg"),
     badge: null,
-    category: "varenyky"
+    category: "varenyky",
+    stock: 10
   },
   {
     id: 8,
@@ -112,7 +119,8 @@ const products = [
     unit: "/ 600g",
     image: img("/images/syrnyky.webp"),
     badge: "Chef's Choice",
-    category: "syrnyky"
+    category: "syrnyky",
+    stock: 10
   },
   {
     id: 9,
@@ -122,7 +130,8 @@ const products = [
     unit: "/ 600g",
     image: img("/images/syrnyky.webp"),
     badge: null,
-    category: "syrnyky"
+    category: "syrnyky",
+    stock: 10
   },
   {
     id: 10,
@@ -132,7 +141,8 @@ const products = [
     unit: "/ 600g",
     image: img("/images/syrnyky.webp"),
     badge: null,
-    category: "syrnyky"
+    category: "syrnyky",
+    stock: 10
   },
 ]
 
@@ -169,6 +179,7 @@ export default function Home() {
           image: img(p.image),
           badge: p.badge,
           category: p.category,
+          stock: p.stock ?? 10,
         })))
       }
     })
@@ -445,7 +456,7 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       className="group flex"
                     >
-                      <div className="card-dark rounded-lg overflow-hidden flex flex-col w-full">
+                      <div className={`card-dark rounded-lg overflow-hidden flex flex-col w-full ${product.stock === 0 ? 'opacity-40' : ''}`}>
                         <div className="relative h-48 overflow-hidden">
                           <Image
                             src={product.image}
@@ -458,6 +469,13 @@ export default function Home() {
                             <span className="absolute top-4 left-4 px-3 py-1.5 bg-primary text-primary-foreground text-[10px] tracking-[0.2em] uppercase">
                               {product.badge}
                             </span>
+                          )}
+                          {product.stock === 0 && (
+                            <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+                              <span className="px-4 py-2 bg-background/80 text-foreground text-[11px] tracking-[0.2em] rounded-lg">
+                                COMING BACK SOON
+                              </span>
+                            </div>
                           )}
                         </div>
                         
@@ -492,7 +510,8 @@ export default function Home() {
                                 <button 
                                   onClick={() => { addToCart(product.id); toast.success(`${product.name} added to cart`, { duration: 2000 }) }}
                                   aria-label={`Increase quantity of ${product.name}`}
-                                  className="w-8 h-8 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all"
+                                  disabled={product.stock === 0}
+                                  className="w-8 h-8 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                   <Plus className="w-3 h-3" />
                                 </button>

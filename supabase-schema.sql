@@ -32,6 +32,7 @@ CREATE TABLE products (
   badge TEXT,
   category TEXT NOT NULL CHECK (category IN ('varenyky', 'syrnyky', 'pelmeni')),
   available BOOLEAN DEFAULT true,
+  stock INT DEFAULT 10,
   sort_order INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -55,18 +56,21 @@ CREATE POLICY "Admins can delete products"
   ON products FOR DELETE
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
+-- Add stock column to existing table:
+-- ALTER TABLE products ADD COLUMN stock INT DEFAULT 10;
+
 -- Seed products
-INSERT INTO products (name, description, price, unit, image, badge, category, sort_order) VALUES
-  ('Varenyky with potato', 'Classic Ukrainian varenyky with creamy mashed potato', 12, '/ kg', '/images/hero-varenyky.jpg', 'Traditional', 'varenyky', 1),
-  ('Varenyky with cabbage', 'Hearty varenyky with savoury braised cabbage', 12, '/ kg', '/images/hero-varenyky.jpg', null, 'varenyky', 2),
-  ('Varenyky with mushroom', 'Rich varenyky with wild forest mushroom filling', 12, '/ kg', '/images/hero-varenyky.jpg', null, 'varenyky', 3),
-  ('Varenyky with cheese & cherries', 'Sweet varenyky filled with cottage cheese and cherries', 13, '/ kg', '/images/hero-varenyky.jpg', 'Seasonal', 'varenyky', 4),
-  ('Varenyky with cheese & spinach', 'Savory varenyky with cottage cheese and fresh spinach', 13, '/ kg', '/images/hero-varenyky.jpg', null, 'varenyky', 5),
-  ('Syrnyky', 'Traditional Ukrainian cheese fritters, golden and fluffy', 10, '/ 600g', '/images/syrnyky.png', 'Chef''s Choice', 'syrnyky', 6),
-  ('Syrnyky with chocolate', 'Decadent syrnyky with rich chocolate chunks', 11, '/ 600g', '/images/syrnyky.png', null, 'syrnyky', 7),
-  ('Syrnyky with blueberries', 'Fluffy syrnyky bursting with wild blueberries', 11, '/ 600g', '/images/syrnyky.png', null, 'syrnyky', 8),
-  ('Pelmeni (beef & pork)', 'Hearty Ukrainian dumplings with seasoned beef and pork filling', 15, '/ kg', '/images/pelmeni.png', 'Bestseller', 'pelmeni', 9),
-  ('Pelmeni (chicken & turkey)', 'Light and tender pelmeni with poultry filling', 15, '/ kg', '/images/pelmeni.png', null, 'pelmeni', 10);
+INSERT INTO products (name, description, price, unit, image, badge, category, stock, sort_order) VALUES
+  ('Varenyky with potato', 'Classic Ukrainian varenyky with creamy mashed potato', 12, '/ kg', '/images/hero-varenyky.jpg', 'Traditional', 'varenyky', 10, 1),
+  ('Varenyky with cabbage', 'Hearty varenyky with savoury braised cabbage', 12, '/ kg', '/images/hero-varenyky.jpg', null, 'varenyky', 10, 2),
+  ('Varenyky with mushroom', 'Rich varenyky with wild forest mushroom filling', 12, '/ kg', '/images/hero-varenyky.jpg', null, 'varenyky', 10, 3),
+  ('Varenyky with cheese & cherries', 'Sweet varenyky filled with cottage cheese and cherries', 13, '/ kg', '/images/hero-varenyky.jpg', 'Seasonal', 'varenyky', 10, 4),
+  ('Varenyky with cheese & spinach', 'Savory varenyky with cottage cheese and fresh spinach', 13, '/ kg', '/images/hero-varenyky.jpg', null, 'varenyky', 10, 5),
+  ('Syrnyky', 'Traditional Ukrainian cheese fritters, golden and fluffy', 10, '/ 600g', '/images/syrnyky.png', 'Chef''s Choice', 'syrnyky', 10, 6),
+  ('Syrnyky with chocolate', 'Decadent syrnyky with rich chocolate chunks', 11, '/ 600g', '/images/syrnyky.png', null, 'syrnyky', 10, 7),
+  ('Syrnyky with blueberries', 'Fluffy syrnyky bursting with wild blueberries', 11, '/ 600g', '/images/syrnyky.png', null, 'syrnyky', 10, 8),
+  ('Pelmeni (beef & pork)', 'Hearty Ukrainian dumplings with seasoned beef and pork filling', 15, '/ kg', '/images/pelmeni.png', 'Bestseller', 'pelmeni', 10, 9),
+  ('Pelmeni (chicken & turkey)', 'Light and tender pelmeni with poultry filling', 15, '/ kg', '/images/pelmeni.png', null, 'pelmeni', 10, 10);
 
 -- ============================================================
 -- ORDERS (extended)

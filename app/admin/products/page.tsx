@@ -15,6 +15,7 @@ interface Product {
   badge: string | null
   category: string
   available: boolean
+  stock: number
   sort_order: number
 }
 
@@ -22,7 +23,7 @@ const categories = ['varenyky', 'syrnyky', 'pelmeni']
 const emptyProduct = {
   name: '', description: '', price: 0, unit: '/ kg',
   image: '/images/hero-varenyky.jpg', badge: null,
-  category: 'varenyky', available: true, sort_order: 0,
+  category: 'varenyky', available: true, stock: 10, sort_order: 0,
 }
 
 export default function AdminProducts() {
@@ -53,14 +54,14 @@ export default function AdminProducts() {
       await supabase.from('products').update({
         name: editing.name, description: editing.description, price: editing.price,
         unit: editing.unit, badge: editing.badge || null, category: editing.category,
-        available: editing.available,
+        available: editing.available, stock: editing.stock ?? 10,
       }).eq('id', editing.id)
     } else {
       await supabase.from('products').insert({
         name: editing.name, description: editing.description, price: editing.price,
         unit: editing.unit, image: editing.image || '/images/hero-varenyky.jpg',
         badge: editing.badge || null, category: editing.category,
-        available: true, sort_order: products.length,
+        available: true, stock: editing.stock ?? 10, sort_order: products.length,
       })
     }
 
@@ -123,6 +124,9 @@ export default function AdminProducts() {
               <div className="flex items-center gap-3 mt-1">
                 <span className="text-primary text-[14px] font-serif">£{product.price}{product.unit}</span>
                 <span className="text-[10px] tracking-[0.15em] text-muted-foreground uppercase">{product.category}</span>
+                <span className={`text-[10px] tracking-[0.1em] ${product.stock === 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                  {product.stock === 0 ? 'OUT OF STOCK' : `STOCK: ${product.stock}`}
+                </span>
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
@@ -229,6 +233,16 @@ export default function AdminProducts() {
                     placeholder="e.g. Bestseller"
                   />
                 </div>
+              </div>
+              <div>
+                <label className="text-[11px] tracking-[0.1em] text-muted-foreground block mb-1">Stock (0 = out of stock)</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={editing.stock ?? ''}
+                  onChange={e => setEditing(f => ({ ...f, stock: parseInt(e.target.value) || 0 }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-[14px] text-foreground focus:border-primary outline-none"
+                />
               </div>
             </div>
 
