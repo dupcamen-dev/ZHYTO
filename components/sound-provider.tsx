@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { BASE_PATH } from "@/lib/constants";
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    audioRef.current = new Audio("/sounds/click.mp3");
+    audioRef.current = new Audio(`${BASE_PATH}/sounds/click.mp3`);
     audioRef.current.volume = 0.3;
     audioRef.current.load();
 
@@ -17,8 +18,8 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    document.addEventListener("click", handler, true);
-    return () => document.removeEventListener("click", handler, true);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, []);
 
   return <>{children}</>;
