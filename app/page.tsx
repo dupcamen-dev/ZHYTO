@@ -774,10 +774,10 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <p className="text-[13px] tracking-[0.35em] text-primary mb-5">FAQ</p>
+            <p className="text-[14px] tracking-[0.35em] text-primary mb-5">FAQ</p>
             <h2 className="text-4xl md:text-5xl font-serif font-light">
               <span className="font-script text-primary text-[1.15em]">Got</span>{" "}
-              <span className="text-foreground">questions?</span>
+              <span className="text-black">questions?</span>
             </h2>
           </motion.div>
 
@@ -800,7 +800,7 @@ export default function Home() {
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
                   className="w-full glass-card rounded-lg px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer bg-white/70"
                 >
-                  <span className="font-serif text-[17px] text-foreground">{item.q}</span>
+                  <span className="font-serif text-[19px] text-black">{item.q}</span>
                   <ChevronDown className={`w-4 h-4 text-primary shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
@@ -812,7 +812,7 @@ export default function Home() {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 py-4 text-foreground/70 text-[15px] leading-relaxed bg-white/60 rounded-b-lg">
+                      <div className="px-6 py-4 text-black text-[16px] leading-relaxed bg-white/60 rounded-b-lg">
                         {item.a}
                       </div>
                     </motion.div>
