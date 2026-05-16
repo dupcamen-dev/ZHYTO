@@ -18,7 +18,15 @@ function Model() {
     }
   })
 
-  return <primitive ref={ref} object={scene} scale={1} position={[0, -0.5, 0]} />
+  return (
+    <primitive
+      ref={ref}
+      object={scene}
+      scale={1.7}
+      position={[0, -0.3, 0]}
+      rotation={[-0.12, 0, 0]}
+    />
+  )
 }
 
 export function Hero3D() {
@@ -44,10 +52,10 @@ export function Hero3D() {
           <Model />
           <Environment preset="studio" />
           <ContactShadows
-            position={[0, -1.2, 0]}
-            opacity={0.3}
-            scale={4}
-            blur={3}
+            position={[0, -1, 0]}
+            opacity={0.25}
+            scale={5}
+            blur={4}
           />
         </Suspense>
       </Canvas>
