@@ -830,9 +830,22 @@ export default function Home() {
               zhyto.london
             </div>
             
-            <p className="text-[12px] text-foreground/70 tracking-[0.15em]">
-              © 2026 zhyto.london. ALL RIGHTS RESERVED.
-            </p>
+            <div className="flex flex-col items-center md:items-center gap-1">
+              <p className="text-[12px] text-foreground/70 tracking-[0.15em]">
+                © 2026 zhyto.london. ALL RIGHTS RESERVED.
+              </p>
+              <p className="text-[11px] text-muted-foreground/50 tracking-[0.1em]">
+                Designed &amp; Built by{' '}
+                <a
+                  href="https://millionpixels.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground/50 hover:text-primary transition-colors"
+                >
+                  Million Pixels
+                </a>
+              </p>
+            </div>
             
             <div className="flex items-center gap-8">
               <Link href="/privacy" className="text-[11px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
