@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import {
   Dialog,
   DialogContent,
@@ -10,9 +9,6 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Elements } from '@stripe/react-stripe-js'
 import { useCart } from '@/components/cart-context'
@@ -45,14 +41,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    notes: '',
-  })
-  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const cartItems = Object.entries(cart)
     .map(([id, qty]) => {
@@ -65,16 +53,12 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : 0
   const total = subtotal + delivery
 
-  // Auto-fill from auth on mount & when user changes
+  // Advance to payment when user logs in
   useEffect(() => {
-    if (user) {
-      setForm(f => ({
-        ...f,
-        name: user.user_metadata?.full_name || f.name,
-        email: user.email || f.email,
-      }))
+    if (user && !showPayment && !authLoading && open && !submitting) {
+      handleContinue()
     }
-  }, [user])
+  }, [user, authLoading, open])
 
   useEffect(() => {
     if (!open) {
@@ -83,26 +67,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     }
   }, [open])
 
-  // Advance to payment once authenticated
-  useEffect(() => {
-    if (user && showPayment === false && !authLoading && open) {
-      // User just logged in — keep them on the order step so they can fill address
-    }
-  }, [user, authLoading, showPayment, open])
-
-  const validate = () => {
-    const errs: Record<string, string> = {}
-    if (!form.name.trim()) errs.name = 'Name is required'
-    if (!form.email.trim()) errs.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = 'Invalid email address'
-    if (!form.address.trim()) errs.address = 'Delivery address is required'
-    setErrors(errs)
-    return Object.keys(errs).length === 0
-  }
-
   const handleContinue = async () => {
-    if (!validate()) return
-
     if (hasStripe) {
       setSubmitting(true)
       try {
@@ -124,7 +89,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         setSubmitting(false)
       }
     } else {
-      // Mock mode — show payment step without Stripe
       setShowPayment(true)
     }
   }
@@ -137,11 +101,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       total,
       delivery_fee: delivery,
       status: 'pending',
-      customer_name: form.name,
-      customer_email: form.email,
-      customer_phone: form.phone,
-      delivery_address: form.address,
-      notes: form.notes,
+      customer_name: user.user_metadata?.full_name || '',
+      customer_email: user.email || '',
     })
   }
 
@@ -152,8 +113,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     toast.success('Order confirmed! Expect your delivery. Enjoy!')
     clearCart()
     onOpenChange(false)
-    setForm({ name: '', email: '', phone: '', address: '', notes: '' })
-    setErrors({})
     setShowPayment(false)
     setClientSecret(null)
     setSubmitting(false)
@@ -164,8 +123,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     toast.success('Order confirmed! Expect your delivery. Enjoy!')
     clearCart()
     onOpenChange(false)
-    setForm({ name: '', email: '', phone: '', address: '', notes: '' })
-    setErrors({})
     setShowPayment(false)
     setClientSecret(null)
   }
@@ -182,12 +139,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[90vh] flex flex-col p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
-            {showPayment ? 'Pay securely' : 'Checkout'}
+            {showPayment ? 'Pay securely' : user ? 'Checkout' : 'Sign in'}
           </DialogTitle>
           <DialogDescription className="text-[13px] tracking-[0.2em] text-foreground/60">
             {showPayment
               ? 'Complete your payment — your details are secure'
-              : `Review your order — ${cartItems.reduce((s, i) => s + i.qty, 0)} items`}
+              : user
+                ? `Review your order — ${cartItems.reduce((s, i) => s + i.qty, 0)} items`
+                : 'Sign in to place your order'}
           </DialogDescription>
         </DialogHeader>
 
@@ -215,14 +174,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 </div>
               </div>
 
-              {/* Auth step — show when not logged in */}
+              {/* Auth step — only when not logged in */}
               {!user && !authLoading && (
                 <div className="glass-card rounded-lg p-5 space-y-4">
                   <p className="text-[11px] tracking-[0.2em] text-foreground/60 text-center">
                     SIGN IN TO CHECKOUT
                   </p>
                   <p className="text-[13px] text-muted-foreground text-center leading-relaxed">
-                    No manual forms — just sign in with your Google or Apple account
+                    Sign in with your Google or Apple account — no forms needed
                   </p>
                   <button
                     onClick={signInWithGoogle}
@@ -243,89 +202,15 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 </div>
               )}
 
-              {/* Contact/delivery info — shown after auth */}
-              <div className="space-y-3">
-                <p className="text-[11px] tracking-[0.2em] text-foreground/60">
-                  {user ? 'DELIVERY DETAILS' : 'CONTACT DETAILS'}
-                </p>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="name" className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                    Name *
-                  </Label>
-                  <Input
-                    id="name"
-                    value={form.name}
-                    onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(e => ({ ...e, name: '' })) }}
-                    className={`bg-transparent text-foreground text-[14px] rounded-none focus:border-primary ${errors.name ? 'border-destructive' : 'border-border/50'}`}
-                    placeholder="Your name"
-                    aria-invalid={!!errors.name}
-                  />
-                  {errors.name && <p className="text-[12px] text-destructive mt-1">{errors.name}</p>}
+              {/* Loading indicator while advancing to payment */}
+              {user && !showPayment && (
+                <div className="flex items-center justify-center py-8">
+                  <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                 </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="email" className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                      Email *
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={form.email}
-                      onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setErrors(e => ({ ...e, email: '' })) }}
-                      className={`bg-transparent text-foreground text-[14px] rounded-none focus:border-primary ${errors.email ? 'border-destructive' : 'border-border/50'}`}
-                      placeholder="your@email.com"
-                      aria-invalid={!!errors.email}
-                    />
-                    {errors.email && <p className="text-[12px] text-destructive mt-1">{errors.email}</p>}
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="phone" className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                      Phone
-                    </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={form.phone}
-                      onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                      className="bg-transparent border-border/50 text-foreground text-[14px] rounded-none focus:border-primary"
-                      placeholder="+44..."
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="address" className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                    Delivery Address *
-                  </Label>
-                  <Textarea
-                    id="address"
-                    value={form.address}
-                    onChange={e => { setForm(f => ({ ...f, address: e.target.value })); setErrors(e => ({ ...e, address: '' })) }}
-                    className={`bg-transparent text-foreground text-[14px] rounded-none focus:border-primary min-h-[60px] ${errors.address ? 'border-destructive' : 'border-border/50'}`}
-                    placeholder="Street, postcode, city"
-                    aria-invalid={!!errors.address}
-                  />
-                  {errors.address && <p className="text-[12px] text-destructive mt-1">{errors.address}</p>}
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="notes" className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                    Order Notes
-                  </Label>
-                  <Textarea
-                    id="notes"
-                    value={form.notes}
-                    onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                    className="bg-transparent border-border/50 text-foreground text-[14px] rounded-none focus:border-primary min-h-[60px]"
-                    placeholder="Any special requests..."
-                  />
-                </div>
-              </div>
+              )}
 
               {/* Delivery threshold info */}
-              {delivery > 0 && (
+              {delivery > 0 && !user && (
                 <div className="flex items-center gap-3 text-[13px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
                   <Truck className="w-4 h-4 shrink-0 text-primary" />
                   <span>
@@ -361,26 +246,27 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           ) : (
             <div className="space-y-5">
               {/* Back button */}
-              <button
-                onClick={handleBackToForm}
-                className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                BACK TO DETAILS
-              </button>
+              {!hasStripe && (
+                <button
+                  onClick={handleBackToForm}
+                  className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  BACK
+                </button>
+              )}
 
-              {/* Delivery summary */}
-              <div className="glass-card rounded-lg p-4 space-y-2">
-                <div className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-foreground/60 mb-2">
-                  <Package className="w-3.5 h-3.5" />
-                  DELIVERY TO
+              {/* User summary */}
+              {user && (
+                <div className="glass-card rounded-lg p-4 space-y-2">
+                  <div className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-foreground/60 mb-2">
+                    <Package className="w-3.5 h-3.5" />
+                    ACCOUNT
+                  </div>
+                  <p className="text-[15px] text-foreground">{user.user_metadata?.full_name || 'Guest'}</p>
+                  <p className="text-[13px] text-foreground/60">{user.email}</p>
                 </div>
-                <p className="text-[15px] text-foreground">{form.name}</p>
-                <p className="text-[13px] text-foreground/60">{form.address}</p>
-                {(form.email || form.phone) && (
-                  <p className="text-[12px] text-foreground/50">{form.email}{form.phone ? ` — ${form.phone}` : ''}</p>
-                )}
-              </div>
+              )}
 
               {/* Compact order total */}
               <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
@@ -466,27 +352,15 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="lg"
-                      onClick={handleBackToForm}
-                      disabled={submitting}
-                      className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
-                    >
-                      BACK
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={handleMockPayment}
-                      disabled={submitting}
-                      size="lg"
-                      className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
-                    >
-                      {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
-                    </Button>
-                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleMockPayment}
+                    disabled={submitting}
+                    size="lg"
+                    className="w-full text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                  >
+                    {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
+                  </Button>
                 </div>
               )}
             </div>

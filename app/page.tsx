@@ -56,7 +56,7 @@ const products = [
   {
     id: 1,
     name: "Pelmeni (beef & pork)",
-    description: "Traditional Siberian dumplings with seasoned beef and pork filling",
+    description: "Hearty Ukrainian dumplings with seasoned beef and pork filling",
     price: 15,
     unit: "/ kg",
     image: img("/images/hero-varenyky.jpg"),
@@ -403,7 +403,7 @@ export default function Home() {
 
           {/* Product categories */}
           {[
-            { key: 'pelmeni', label: 'Pelmeni', desc: 'Traditional Siberian dumplings' },
+            { key: 'pelmeni', label: 'Pelmeni', desc: 'Traditional meat-filled dumplings' },
             { key: 'varenyky', label: 'Varenyky', desc: 'Classic Ukrainian dumplings' },
             { key: 'syrnyky', label: 'Syrnyky', desc: 'Golden cheese fritters' },
           ].map((category, catIndex) => {
