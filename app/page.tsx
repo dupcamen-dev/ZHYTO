@@ -310,9 +310,9 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-[1800px] mx-auto px-6 lg:px-20 pt-24 sm:pt-28 pb-16 sm:pb-20">
-          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-8 lg:gap-8">
-            <div className="w-full lg:w-auto lg:max-w-md xl:max-w-lg">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-20 sm:pt-24 pb-16">
+          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-8 lg:gap-0">
+            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -380,7 +380,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-wrap items-center gap-6 md:gap-10 mt-16"
+            className="flex flex-wrap items-center gap-6 md:gap-10 mt-12"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center">
