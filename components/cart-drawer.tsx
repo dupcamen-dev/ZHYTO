@@ -12,7 +12,6 @@ import {
   SheetClose,
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { useCart } from '@/components/cart-context'
 
 interface Product {
@@ -45,7 +44,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-md bg-background border-border/30 flex flex-col p-0 max-h-screen overflow-hidden">
+      <SheetContent className="w-full sm:max-w-md bg-background border-border/30 flex flex-col p-0 max-h-dvh">
         <SheetHeader className="p-4 sm:p-6 pb-0">
           <SheetTitle className="font-serif text-xl sm:text-2xl tracking-[0.1em] text-foreground">
             Your Cart
@@ -72,7 +71,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
           </div>
         ) : (
           <>
-            <ScrollArea className="flex-1 px-4 sm:px-6 py-4">
+            <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4">
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-4 glass-card rounded-lg p-4">
@@ -114,7 +113,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                   </div>
                 ))}
               </div>
-            </ScrollArea>
+            </div>
 
             <div className="border-t border-border/30 p-4 sm:p-6 space-y-3">
               <div className="flex justify-between text-[15px]">
