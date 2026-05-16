@@ -753,9 +753,9 @@ export default function Home() {
 
       {/* FAQ Section */}
       <section id="faq" className="py-28 lg:py-36 relative overflow-hidden">
-        {/* Background image with white vignette */}
+        {/* Background image with cream overlay */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 brightness-[1.8] contrast-[0.85] saturate-[0.7]">
+          <div className="absolute inset-0 brightness-[0.6] contrast-[1.1] saturate-[0.8]">
             <Image
               src={img("/images/fornofone.png")}
               fill
@@ -763,11 +763,10 @@ export default function Home() {
               priority
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/40 to-white/70" />
+          <div className="absolute inset-0" style={{ background: 'oklch(0.95 0.02 85 / 0.85)' }} />
           <div className="absolute inset-0" style={{
-            background: 'radial-gradient(circle at 50% 50%, transparent 30%, white 100%)'
+            background: 'radial-gradient(circle at 50% 50%, transparent 40%, oklch(0.95 0.02 85 / 0.9) 100%)'
           }} />
-          <div className="absolute inset-0 bg-white/20" />
         </div>
         <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
           <motion.div
