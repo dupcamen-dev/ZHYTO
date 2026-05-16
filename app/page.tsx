@@ -294,7 +294,7 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-28">
           <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 lg:gap-12">
-            <div className="max-w-xl w-full">
+            <div className="max-w-xl w-full lg:w-auto">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
