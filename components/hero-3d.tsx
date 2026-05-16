@@ -19,9 +19,9 @@ function Model() {
   })
 
   return (
-    <group ref={groupRef} position={[0, -0.3, 0]}>
+    <group ref={groupRef} position={[0, -0.4, 0]}>
       <Center>
-        <primitive object={scene} scale={1.7} rotation={[-0.12, 0, 0]} />
+        <primitive object={scene} scale={1.7} />
       </Center>
     </group>
   )
@@ -38,15 +38,15 @@ export function Hero3D() {
         </div>
       )}
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 40 }}
+        camera={{ position: [0, 0.6, 5.5], fov: 38 }}
         gl={{ antialias: true }}
         style={{ opacity: ready ? 1 : 0 }}
         onCreated={() => setReady(true)}
       >
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={1.5} />
+        <directionalLight position={[-3, 2, -2]} intensity={0.4} />
         <Suspense fallback={null}>
-          <ambientLight intensity={0.4} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <directionalLight position={[-3, 2, -2]} intensity={0.4} />
           <Model />
           <Environment preset="studio" />
           <ContactShadows
