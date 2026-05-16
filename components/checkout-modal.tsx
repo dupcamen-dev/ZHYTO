@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import {
   Dialog,
   DialogContent,
@@ -15,10 +16,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Elements } from '@stripe/react-stripe-js'
 import { useCart } from '@/components/cart-context'
+import { useAuth } from '@/components/auth-context'
+import { supabase } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
 import { toast } from 'sonner'
-import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Banknote } from 'lucide-react'
+import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Banknote, Chrome } from 'lucide-react'
 
 interface Product {
   id: number
@@ -38,6 +41,7 @@ const hasStripe = typeof process !== 'undefined' &&
 
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
   const { cart, clearCart } = useCart()
+  const { user, loading: authLoading, signInWithGoogle, signInWithApple } = useAuth()
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -61,12 +65,30 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : 0
   const total = subtotal + delivery
 
+  // Auto-fill from auth on mount & when user changes
+  useEffect(() => {
+    if (user) {
+      setForm(f => ({
+        ...f,
+        name: user.user_metadata?.full_name || f.name,
+        email: user.email || f.email,
+      }))
+    }
+  }, [user])
+
   useEffect(() => {
     if (!open) {
       setShowPayment(false)
       setClientSecret(null)
     }
   }, [open])
+
+  // Advance to payment once authenticated
+  useEffect(() => {
+    if (user && showPayment === false && !authLoading && open) {
+      // User just logged in — keep them on the order step so they can fill address
+    }
+  }, [user, authLoading, showPayment, open])
 
   const validate = () => {
     const errs: Record<string, string> = {}
@@ -107,9 +129,26 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     }
   }
 
+  const saveOrder = async () => {
+    if (!supabase || !user) return
+    await supabase.from('orders').insert({
+      user_id: user.id,
+      items: cartItems.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
+      total,
+      delivery_fee: delivery,
+      status: 'pending',
+      customer_name: form.name,
+      customer_email: form.email,
+      customer_phone: form.phone,
+      delivery_address: form.address,
+      notes: form.notes,
+    })
+  }
+
   const handleMockPayment = async () => {
     setSubmitting(true)
     await new Promise(resolve => setTimeout(resolve, 1500))
+    await saveOrder()
     toast.success('Order confirmed! Expect your delivery. Enjoy!')
     clearCart()
     onOpenChange(false)
@@ -121,6 +160,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   }
 
   const handlePaymentSuccess = () => {
+    saveOrder()
     toast.success('Order confirmed! Expect your delivery. Enjoy!')
     clearCart()
     onOpenChange(false)
@@ -175,9 +215,39 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 </div>
               </div>
 
-              {/* Contact info */}
+              {/* Auth step — show when not logged in */}
+              {!user && !authLoading && (
+                <div className="glass-card rounded-lg p-5 space-y-4">
+                  <p className="text-[11px] tracking-[0.2em] text-foreground/60 text-center">
+                    SIGN IN TO CHECKOUT
+                  </p>
+                  <p className="text-[13px] text-muted-foreground text-center leading-relaxed">
+                    No manual forms — just sign in with your Google or Apple account
+                  </p>
+                  <button
+                    onClick={signInWithGoogle}
+                    className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-[14px] text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                  >
+                    <Chrome className="w-5 h-5" />
+                    Continue with Google
+                  </button>
+                  <button
+                    onClick={signInWithApple}
+                    className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-[14px] text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    Continue with Apple
+                  </button>
+                </div>
+              )}
+
+              {/* Contact/delivery info — shown after auth */}
               <div className="space-y-3">
-                <p className="text-[11px] tracking-[0.2em] text-foreground/60">CONTACT DETAILS</p>
+                <p className="text-[11px] tracking-[0.2em] text-foreground/60">
+                  {user ? 'DELIVERY DETAILS' : 'CONTACT DETAILS'}
+                </p>
 
                 <div className="space-y-1.5">
                   <Label htmlFor="name" className="text-[12px] text-foreground/60 tracking-[0.1em]">
@@ -280,11 +350,11 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 <Button
                   type="button"
                   onClick={handleContinue}
-                  disabled={submitting || cartItems.length === 0}
+                  disabled={submitting || cartItems.length === 0 || !user}
                   size="lg"
-                    className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                  className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                 >
-                  {submitting ? 'PLEASE WAIT...' : 'CONTINUE TO PAY'}
+                  {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : 'CONTINUE TO PAY'}
                 </Button>
               </div>
             </div>
@@ -403,16 +473,16 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                       size="lg"
                       onClick={handleBackToForm}
                       disabled={submitting}
-                    className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
-                  >
-                    BACK
+                      className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+                    >
+                      BACK
                     </Button>
                     <Button
                       type="button"
                       onClick={handleMockPayment}
                       disabled={submitting}
                       size="lg"
-                  className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                      className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                     >
                       {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
                     </Button>

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Dancing_Script, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
+import { AuthProvider } from '@/components/auth-context'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -42,10 +43,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${dancing.variable} ${geist.variable} bg-background`}>
       <body className="font-serif antialiased">
-        <CartProvider>
-          {children}
-          <Toaster />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <Toaster />
+          </CartProvider>
+        </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

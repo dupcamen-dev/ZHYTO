@@ -5,9 +5,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, ChevronDown } from 'lucide-react'
+import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, ChevronDown, User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
+import { useAuth } from '@/components/auth-context'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
 import { toast } from 'sonner'
@@ -166,6 +167,7 @@ const navLinks = [
 
 export default function Home() {
   const { cart, addToCart, removeFromCart, totalItems } = useCart()
+  const { user, loading, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
@@ -201,8 +203,37 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Cart & Mobile Toggle */}
+            {/* Cart, Auth & Mobile Toggle */}
             <div className="flex items-center gap-4">
+              {/* User button */}
+              {!loading && (
+                user ? (
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href="/account"
+                      className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50"
+                    >
+                      <User className="w-3.5 h-3.5" />
+                      MY ACCOUNT
+                    </Link>
+                    <button
+                      onClick={signOut}
+                      className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-destructive hover:text-destructive transition-all"
+                      title="Sign out"
+                    >
+                      <LogOut className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <span
+                    onClick={() => setCheckoutOpen(true)}
+                    className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50 cursor-pointer"
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    SIGN IN
+                  </span>
+                )
+              )}
               <button
                 onClick={() => setCartOpen(true)}
                 className="relative w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300"
@@ -516,7 +547,7 @@ export default function Home() {
             >
               <div className="relative h-[520px] rounded-lg overflow-hidden">
                 <Image
-                  src={img("/images/hero-varenyky.jpg")}
+                  src={img("/images/about-us.png")}
                   alt="Handmade varenyky process"
                   fill
                   className="object-cover"
@@ -844,6 +875,44 @@ export default function Home() {
                   {link.name}
                 </motion.a>
               ))}
+              {!loading && (
+                user ? (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: navLinks.length * 0.1 }}
+                    >
+                      <Link
+                        href="/account"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-lg tracking-[0.25em] text-primary hover:text-primary/80 transition-colors"
+                      >
+                        MY ACCOUNT
+                      </Link>
+                    </motion.div>
+                    <motion.button
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: (navLinks.length + 1) * 0.1 }}
+                      onClick={() => { signOut(); setMobileMenuOpen(false) }}
+                      className="text-lg tracking-[0.25em] text-destructive/60 hover:text-destructive transition-colors"
+                    >
+                      SIGN OUT
+                    </motion.button>
+                  </>
+                ) : (
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: navLinks.length * 0.1 }}
+                    onClick={() => { setMobileMenuOpen(false); setCheckoutOpen(true) }}
+                    className="text-lg tracking-[0.25em] text-primary hover:text-primary/80 transition-colors"
+                  >
+                    SIGN IN
+                  </motion.button>
+                )
+              )}
             </motion.nav>
           </motion.div>
         )}
