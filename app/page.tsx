@@ -279,12 +279,14 @@ export default function Home() {
       >
         {/* Background Image */}
         <div className="absolute inset-0">
-          <Image
-            src={img("/images/hero-bg.jpg")}
-            fill
-            className="object-cover"
-            priority
-          />
+          <div className="absolute inset-0 grayscale brightness-[0.6] contrast-[1.1]">
+            <Image
+              src={img("/images/hero-bg.jpg")}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
         </div>
 
