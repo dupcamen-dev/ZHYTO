@@ -365,8 +365,8 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* 3D Model — desktop only */}
-            <div className="hidden lg:flex items-center justify-center shrink-0">
+            {/* 3D Model */}
+            <div className="flex items-center justify-center shrink-0">
               <Hero3D />
             </div>
           </div>

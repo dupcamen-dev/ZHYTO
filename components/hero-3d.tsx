@@ -163,13 +163,19 @@ function Model() {
 }
 
 export function Hero3D() {
+  const [error, setError] = useState(false)
   const [ready, setReady] = useState(false)
 
   return (
     <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[550px] lg:h-[700px] xl:w-[620px] xl:h-[780px]">
-      {!ready && (
+      {!ready && !error && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <Loader className="w-6 h-6 text-primary animate-spin" />
+        </div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center z-10 text-[11px] text-foreground/30 tracking-[0.2em]">
+          3D MODEL LOAD FAILED
         </div>
       )}
       <Canvas
@@ -181,6 +187,10 @@ export function Hero3D() {
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 5, 5]} intensity={1.5} />
           <directionalLight position={[-3, 2, -2]} intensity={0.4} />
+          <mesh>
+            <boxGeometry args={[2, 2, 2]} />
+            <meshStandardMaterial color="green" />
+          </mesh>
           <Suspense fallback={null}>
             <Model />
           </Suspense>
