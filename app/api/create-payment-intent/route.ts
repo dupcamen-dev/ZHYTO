@@ -12,15 +12,31 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { amount } = await req.json()
+    const { amount, paymentMethodType } = await req.json()
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100),
-      currency: 'gbp',
-      automatic_payment_methods: {
-        enabled: true,
-      },
-    })
+    let paymentIntent
+
+    if (paymentMethodType === 'bank') {
+      paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100),
+        currency: 'gbp',
+        payment_method_types: ['customer_balance'],
+        payment_method_options: {
+          customer_balance: {
+            funding_type: 'bank_transfer',
+            bank_transfer: {
+              type: 'gb_bank_transfer',
+            },
+          },
+        },
+      })
+    } else {
+      paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100),
+        currency: 'gbp',
+        payment_method_types: ['card'],
+      })
+    }
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret })
   } catch {

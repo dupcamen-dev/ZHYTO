@@ -20,7 +20,7 @@ import { supabase } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
 import { toast } from 'sonner'
-import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Banknote, Chrome } from 'lucide-react'
+import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Banknote, Chrome, Loader } from 'lucide-react'
 
 interface Product {
   id: number
@@ -38,12 +38,21 @@ const hasStripe = typeof process !== 'undefined' &&
   !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY &&
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.startsWith('pk_')
 
+type PaymentMethodType = 'card' | 'wallet' | 'bank'
+
+const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: string; desc: string }> = {
+  card:   { icon: CreditCard,  label: 'Pay by Card',              desc: 'Debit or credit card' },
+  wallet: { icon: Smartphone,  label: 'Apple Pay / Google Pay',   desc: 'Fast checkout with your device' },
+  bank:   { icon: Banknote,    label: 'Pay by Bank Transfer',     desc: 'Pay directly from your bank' },
+}
+
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
   const router = useRouter()
   const { cart, clearCart } = useCart()
   const { user, loading: authLoading, signInWithGoogle, signInWithApple } = useAuth()
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [deliveryAddress, setDeliveryAddress] = useState('')
 
@@ -60,42 +69,47 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   // Advance to payment when user logs in (only if items in cart)
   useEffect(() => {
-    if (user && !showPayment && !authLoading && open && !submitting && cartItems.length > 0) {
-      handleContinue()
+    if (user && !showPayment && !authLoading && open && cartItems.length > 0) {
+      setShowPayment(true)
     }
   }, [user, authLoading, open])
 
   useEffect(() => {
     if (!open) {
       setShowPayment(false)
+      setSelectedMethod(null)
       setClientSecret(null)
       setDeliveryAddress('')
     }
   }, [open])
 
-  const handleContinue = async () => {
+  const handleMethodSelect = async (method: PaymentMethodType) => {
+    setSelectedMethod(method)
+
     if (hasStripe) {
       setSubmitting(true)
       try {
         const res = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: total }),
+          body: JSON.stringify({
+            amount: total,
+            paymentMethodType: method === 'wallet' ? 'card' : method,
+          }),
         })
         const data = await res.json()
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
-          setShowPayment(true)
         } else {
           toast.error('Payment service unavailable. Please try again.')
+          setSelectedMethod(null)
         }
       } catch {
         toast.error('Payment service unavailable. Please try again.')
+        setSelectedMethod(null)
       } finally {
         setSubmitting(false)
       }
-    } else {
-      setShowPayment(true)
     }
   }
 
@@ -121,6 +135,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     clearCart()
     onOpenChange(false)
     setShowPayment(false)
+    setSelectedMethod(null)
     setClientSecret(null)
     setSubmitting(false)
     router.push('/account')
@@ -132,16 +147,186 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     clearCart()
     onOpenChange(false)
     setShowPayment(false)
+    setSelectedMethod(null)
     setClientSecret(null)
     router.push('/account')
   }
 
-  const handleBackToForm = () => {
-    setShowPayment(false)
+  const handleBackToMethods = () => {
+    setSelectedMethod(null)
     setClientSecret(null)
   }
 
   const stripePromise = hasStripe ? getStripe() : null
+
+  const renderMethodButtons = () => (
+    <div className="grid gap-3">
+      {(Object.entries(methodConfig) as [PaymentMethodType, typeof methodConfig['card']][]).map(([key, config]) => {
+        const Icon = config.icon
+        return (
+          <button
+            key={key}
+            onClick={() => handleMethodSelect(key)}
+            disabled={submitting}
+            className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/30 bg-card/50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left cursor-pointer disabled:opacity-50"
+          >
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <Icon className="w-5 h-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] text-foreground font-medium">{config.label}</p>
+              <p className="text-[11px] text-muted-foreground tracking-[0.1em]">{config.desc}</p>
+            </div>
+            {submitting && selectedMethod === key && (
+              <Loader className="w-4 h-4 text-primary animate-spin" />
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  const renderPaymentStep = () => (
+    <div className="space-y-5">
+      {/* Back button (only if method selected and has Stripe) */}
+      {selectedMethod && hasStripe && (
+        <button
+          onClick={handleBackToMethods}
+          className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors cursor-pointer"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          {clientSecret ? 'CHANGE METHOD' : 'BACK'}
+        </button>
+      )}
+
+      {/* User summary */}
+      {user && (
+        <div className="glass-card rounded-lg p-4 space-y-2">
+          <div className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-foreground/60 mb-2">
+            <Package className="w-3.5 h-3.5" />
+            ACCOUNT
+          </div>
+          <p className="text-[15px] text-foreground">{user.user_metadata?.full_name || 'Guest'}</p>
+          <p className="text-[13px] text-foreground/60">{user.email}</p>
+        </div>
+      )}
+
+      {/* Delivery address */}
+      <div className="space-y-1.5">
+        <Label htmlFor="delivery-address" className="text-[12px] text-foreground/60 tracking-[0.1em]">
+          Delivery Address *
+        </Label>
+        <Textarea
+          id="delivery-address"
+          value={deliveryAddress}
+          onChange={e => setDeliveryAddress(e.target.value)}
+          className="bg-transparent border-border/50 text-foreground text-[16px] rounded-none focus:border-primary min-h-[60px]"
+          placeholder="Street, postcode, city"
+        />
+      </div>
+
+      {/* Order total */}
+      <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
+        <span className="text-[13px] text-foreground/60">
+          {cartItems.reduce((s, i) => s + i.qty, 0)} items
+        </span>
+        <span className="font-serif text-lg text-primary">£{total}</span>
+      </div>
+
+      {/* Payment method selection or form */}
+      {!selectedMethod ? (
+        <>
+          {renderMethodButtons()}
+
+          {/* Delivery threshold info */}
+          {delivery !== null && delivery > 0 && (
+            <div className="flex items-center gap-3 text-[13px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
+              <Truck className="w-4 h-4 shrink-0 text-primary" />
+              <span>
+                {delivery === 5
+                  ? `£5 delivery — add £${(50 - subtotal).toFixed(0)} more for free`
+                  : `Minimum £25 — add £${(25 - subtotal).toFixed(0)} more`}
+              </span>
+            </div>
+          )}
+
+          {cartItems.length > 0 && (
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={() => onOpenChange(false)}
+                className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+              >
+                CANCEL
+              </Button>
+              <Button
+                type="button"
+                disabled={submitting || cartItems.length === 0 || !user || subtotal < 25}
+                size="lg"
+                className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+              >
+                {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 25 ? `MINIMUM £25 — ADD £${(25 - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
+              </Button>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Stripe form or mock payment */
+        hasStripe && clientSecret && stripePromise ? (
+          <Elements
+            stripe={stripePromise}
+            options={{ clientSecret }}
+          >
+            <PaymentForm
+              amount={total}
+              clientSecret={clientSecret}
+              paymentMethod={selectedMethod}
+              onSuccess={handlePaymentSuccess}
+              onBack={handleBackToMethods}
+              addressFilled={!!deliveryAddress.trim()}
+              userName={user?.user_metadata?.full_name || ''}
+              userEmail={user?.email || ''}
+            />
+          </Elements>
+        ) : (
+          /* Mock payment — when Stripe is not configured or still loading */
+          <div className="space-y-4">
+            <div className="glass-card rounded-lg p-5">
+              <p className="text-[11px] tracking-[0.2em] text-foreground/60 mb-4">PAYMENT METHOD</p>
+              <div className="flex items-center gap-3 mb-4">
+                {(() => {
+                  const config = methodConfig[selectedMethod]
+                  const Icon = config.icon
+                  return (
+                    <>
+                      <Icon className="w-5 h-5 text-primary" />
+                      <span className="text-[13px] text-foreground">{config.label}</span>
+                    </>
+                  )
+                })()}
+              </div>
+              <div className="bg-border/10 border border-border/20 rounded-lg p-4 text-center">
+                <p className="font-serif text-3xl text-primary mb-1">£{total}</p>
+                <p className="text-[12px] text-foreground/60 tracking-[0.1em]">Total to pay</p>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              onClick={handleMockPayment}
+              disabled={submitting || !deliveryAddress.trim()}
+              size="lg"
+              className="w-full text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+            >
+              {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
+            </Button>
+          </div>
+        )
+      )}
+    </div>
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -274,7 +459,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </Button>
                     <Button
                       type="button"
-                      onClick={handleContinue}
                       disabled={submitting || cartItems.length === 0 || !user || subtotal < 25}
                       size="lg"
                       className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
@@ -286,141 +470,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               )}
             </div>
           ) : (
-            <div className="space-y-5">
-              {/* Back button */}
-              {!hasStripe && (
-                <button
-                  onClick={handleBackToForm}
-                  className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  BACK
-                </button>
-              )}
-
-              {/* User summary */}
-              {user && (
-                <div className="glass-card rounded-lg p-4 space-y-2">
-                  <div className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-foreground/60 mb-2">
-                    <Package className="w-3.5 h-3.5" />
-                    ACCOUNT
-                  </div>
-                  <p className="text-[15px] text-foreground">{user.user_metadata?.full_name || 'Guest'}</p>
-                  <p className="text-[13px] text-foreground/60">{user.email}</p>
-                </div>
-              )}
-
-              {/* Delivery address */}
-              <div className="space-y-1.5">
-                <Label htmlFor="delivery-address" className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                  Delivery Address *
-                </Label>
-                <Textarea
-                  id="delivery-address"
-                  value={deliveryAddress}
-                  onChange={e => setDeliveryAddress(e.target.value)}
-                  className="bg-transparent border-border/50 text-foreground text-[16px] rounded-none focus:border-primary min-h-[60px]"
-                  placeholder="Street, postcode, city"
-                />
-              </div>
-
-              {/* Compact order total */}
-              <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
-                <span className="text-[13px] text-foreground/60">
-                  {cartItems.reduce((s, i) => s + i.qty, 0)} items
-                </span>
-                <span className="font-serif text-lg text-primary">£{total}</span>
-              </div>
-
-              {/* Stripe payment */}
-              {hasStripe && clientSecret && stripePromise ? (
-                <Elements
-                  stripe={stripePromise}
-                  options={{
-                    clientSecret,
-                    appearance: {
-                      theme: 'night',
-                      variables: {
-                        colorPrimary: '#c8a24e',
-                        colorBackground: 'oklch(0.12 0.01 50)',
-                        colorText: 'oklch(0.95 0.01 85)',
-                        colorDanger: '#ef4444',
-                        fontFamily: 'Georgia, serif',
-                        borderRadius: '8px',
-                      },
-                      rules: {
-                        '.Input': {
-                          border: '1px solid oklch(0.25 0.01 50)',
-                          backgroundColor: 'oklch(0.1 0.01 50)',
-                        },
-                        '.Input:focus': {
-                          borderColor: '#c8a24e',
-                        },
-                        '.Label': {
-                          fontSize: '11px',
-                          letterSpacing: '0.1em',
-                          color: 'oklch(0.6 0.02 85)',
-                        },
-                        '.Tab': {
-                          backgroundColor: 'oklch(0.14 0.01 50)',
-                          border: '1px solid oklch(0.25 0.01 50)',
-                        },
-                        '.Tab--selected': {
-                          backgroundColor: 'oklch(0.18 0.01 50)',
-                          borderColor: '#c8a24e',
-                        },
-                      },
-                    },
-                  }}
-                >
-                  <PaymentForm
-                    amount={total}
-                    onSuccess={handlePaymentSuccess}
-                    onBack={handleBackToForm}
-                    addressFilled={!!deliveryAddress.trim()}
-                  />
-                </Elements>
-              ) : (
-                /* Mock payment — when Stripe is not configured */
-                <div className="space-y-4">
-                  <div className="glass-card rounded-lg p-5">
-                    <p className="text-[11px] tracking-[0.2em] text-foreground/60 mb-4">PAYMENT METHOD</p>
-
-                    <div className="flex items-center gap-4 text-[12px] tracking-[0.15em] text-foreground/60 mb-5">
-                      <div className="flex items-center gap-2">
-                        <CreditCard className="w-3.5 h-3.5" />
-                        <span>Card</span>
-                      </div>
-                      <span className="text-border/30">|</span>
-                      <div className="flex items-center gap-2">
-                        <Smartphone className="w-3.5 h-3.5" />
-                        <span>Apple Pay / Google Pay</span>
-                      </div>
-                      <span className="text-border/30">|</span>
-                      <div className="flex items-center gap-2">
-                        <Banknote className="w-3.5 h-3.5" />
-                        <span>Pay by Bank</span>
-                      </div>
-                    </div>
-
-                    <div className="bg-border/10 border border-border/20 rounded-lg p-4 text-center">
-                      <p className="font-serif text-3xl text-primary mb-1">£{total}</p>
-                      <p className="text-[12px] text-foreground/60 tracking-[0.1em]">Total to pay</p>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="button"
-                    onClick={handleMockPayment}
-                    disabled={submitting || !deliveryAddress.trim()}
-                    size="lg"
-                    className="w-full text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
-                  >
-                    {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
-                  </Button>
-                </div>
-              )}
-            </div>
+            renderPaymentStep()
           )}
         </ScrollArea>
       </DialogContent>
