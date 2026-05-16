@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useRef, useState, useEffect } from 'react'
+import { Suspense, useRef, useState, useEffect, Component, ReactNode } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useCursor } from '@react-three/drei'
 import * as THREE from 'three'
@@ -162,38 +162,53 @@ function Model() {
   )
 }
 
+class ModelErrorBoundary extends Component<{children: ReactNode, onError: () => void}, {hasError: boolean}> {
+  constructor(props: {children: ReactNode, onError: () => void}) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError() { return { hasError: true } }
+  componentDidCatch() { this.props.onError() }
+  render() {
+    if (this.state.hasError) return null
+    return this.props.children
+  }
+}
+
 export function Hero3D() {
-  const [error, setError] = useState(false)
   const [ready, setReady] = useState(false)
+  const [modelFailed, setModelFailed] = useState(false)
+
+  useEffect(() => {
+    useGLTF.preload(modelPath)
+  }, [])
 
   return (
     <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[550px] lg:h-[700px] xl:w-[620px] xl:h-[780px]">
-      {!ready && !error && (
+      {!ready && !modelFailed && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <Loader className="w-6 h-6 text-primary animate-spin" />
         </div>
       )}
-      {error && (
-        <div className="absolute inset-0 flex items-center justify-center z-10 text-[11px] text-foreground/30 tracking-[0.2em]">
-          3D MODEL LOAD FAILED
+      {modelFailed && (
+        <div className="absolute inset-0 flex items-center justify-center z-10 text-[10px] text-foreground/30">
+          3D UNAVAILABLE
         </div>
       )}
       <Canvas
         camera={{ position: [0, 0, 38], fov: 50 }}
         gl={{ antialias: true }}
-        style={{ width: '100%', height: '100%', opacity: ready ? 1 : 0, transition: 'opacity 0.5s' }}
+        style={{ width: '100%', height: '100%' }}
         onCreated={() => setReady(true)}
       >
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 5, 5]} intensity={1.5} />
           <directionalLight position={[-3, 2, -2]} intensity={0.4} />
-          <mesh>
-            <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial color="green" />
-          </mesh>
-          <Suspense fallback={null}>
-            <Model />
-          </Suspense>
+          <ModelErrorBoundary onError={() => setModelFailed(true)}>
+            <Suspense fallback={null}>
+              <Model />
+            </Suspense>
+          </ModelErrorBoundary>
       </Canvas>
     </div>
   )
