@@ -4,7 +4,7 @@ export function NoiseOverlay() {
   return (
     <div
       className="fixed inset-0 z-[9999] pointer-events-none select-none"
-      style={{ mixBlendMode: 'overlay', opacity: 0.035 }}
+      style={{ mixBlendMode: 'overlay', opacity: 0.06 }}
       aria-hidden="true"
     >
       <svg
@@ -19,6 +19,11 @@ export function NoiseOverlay() {
             baseFrequency="0.75"
             numOctaves="4"
             stitchTiles="stitch"
+            result="noise"
+          />
+          <feColorMatrix
+            type="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.15 0"
           />
         </filter>
         <rect

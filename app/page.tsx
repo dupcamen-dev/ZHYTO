@@ -40,7 +40,7 @@ const products = [
     description: "Hearty Ukrainian dumplings with seasoned beef and pork filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni.png"),
+    image: img("/images/pelmeni.webp"),
     badge: "Bestseller",
     category: "pelmeni"
   },
@@ -50,7 +50,7 @@ const products = [
     description: "Light and tender pelmeni with poultry filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni.png"),
+    image: img("/images/pelmeni.webp"),
     badge: null,
     category: "pelmeni"
   },
@@ -110,7 +110,7 @@ const products = [
     description: "Traditional Ukrainian cheese fritters, golden and fluffy",
     price: 10,
     unit: "/ 600g",
-    image: img("/images/syrnyky.png"),
+    image: img("/images/syrnyky.webp"),
     badge: "Chef's Choice",
     category: "syrnyky"
   },
@@ -120,7 +120,7 @@ const products = [
     description: "Decadent syrnyky with rich chocolate chunks",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/syrnyky.png"),
+    image: img("/images/syrnyky.webp"),
     badge: null,
     category: "syrnyky"
   },
@@ -130,7 +130,7 @@ const products = [
     description: "Fluffy syrnyky bursting with wild blueberries",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/syrnyky.png"),
+    image: img("/images/syrnyky.webp"),
     badge: null,
     category: "syrnyky"
   },
@@ -293,8 +293,8 @@ export default function Home() {
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-28">
-          <div className="flex items-start justify-between gap-12">
-            <div className="max-w-xl">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 lg:gap-12">
+            <div className="max-w-xl w-full">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -351,7 +351,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex items-center justify-center shrink-0 -mt-8"
+              className="flex items-center justify-center shrink-0 -mt-8 sm:mt-0"
             >
               <Hero3D />
             </motion.div>
@@ -451,6 +451,7 @@ export default function Home() {
                             src={product.image}
                             alt={product.name}
                             fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                           />
                           {product.badge && (
@@ -562,9 +563,11 @@ export default function Home() {
             >
               <div className="relative h-[520px] rounded-lg overflow-hidden">
                 <Image
-                  src={img("/images/about-us.png")}
+                  src={img("/images/about-us.webp")}
                   alt="Handmade varenyky process"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  loading="lazy"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
