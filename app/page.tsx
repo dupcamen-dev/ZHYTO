@@ -178,13 +178,13 @@ export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 300)
+    const handleScroll = () => setShowScrollTop(window.scrollY > 150)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
-    <main className="min-h-screen bg-background overflow-x-hidden">
+    <main className="min-h-screen bg-background">
       {/* Navigation */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 glass-nav"

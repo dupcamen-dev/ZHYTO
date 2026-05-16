@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Dialog,
   DialogContent,
@@ -36,6 +37,7 @@ const hasStripe = typeof process !== 'undefined' &&
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.startsWith('pk_')
 
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
+  const router = useRouter()
   const { cart, clearCart } = useCart()
   const { user, loading: authLoading, signInWithGoogle, signInWithApple } = useAuth()
   const [submitting, setSubmitting] = useState(false)
@@ -116,6 +118,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     setShowPayment(false)
     setClientSecret(null)
     setSubmitting(false)
+    router.push('/account')
   }
 
   const handlePaymentSuccess = () => {
@@ -125,6 +128,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     onOpenChange(false)
     setShowPayment(false)
     setClientSecret(null)
+    router.push('/account')
   }
 
   const handleBackToForm = () => {
