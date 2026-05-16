@@ -10,6 +10,8 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Elements } from '@stripe/react-stripe-js'
 import { useCart } from '@/components/cart-context'
@@ -43,6 +45,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
+  const [deliveryAddress, setDeliveryAddress] = useState('')
 
   const cartItems = Object.entries(cart)
     .map(([id, qty]) => {
@@ -66,6 +69,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     if (!open) {
       setShowPayment(false)
       setClientSecret(null)
+      setDeliveryAddress('')
     }
   }, [open])
 
@@ -105,6 +109,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       status: 'pending',
       customer_name: user.user_metadata?.full_name || '',
       customer_email: user.email || '',
+      delivery_address: deliveryAddress,
     })
   }
 
@@ -304,6 +309,20 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   <p className="text-[13px] text-foreground/60">{user.email}</p>
                 </div>
               )}
+
+              {/* Delivery address */}
+              <div className="space-y-1.5">
+                <Label htmlFor="delivery-address" className="text-[12px] text-foreground/60 tracking-[0.1em]">
+                  Delivery Address *
+                </Label>
+                <Textarea
+                  id="delivery-address"
+                  value={deliveryAddress}
+                  onChange={e => setDeliveryAddress(e.target.value)}
+                  className="bg-transparent border-border/50 text-foreground text-[14px] rounded-none focus:border-primary min-h-[60px]"
+                  placeholder="Street, postcode, city"
+                />
+              </div>
 
               {/* Compact order total */}
               <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
