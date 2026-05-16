@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense, useRef, useState, useEffect } from 'react'
-import { Canvas, useThree } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useCursor } from '@react-three/drei'
 import * as THREE from 'three'
 import { BASE_PATH } from '@/lib/constants'
@@ -15,11 +15,19 @@ function Model() {
   const groupRef = useRef<THREE.Group>(null)
   const innerRef = useRef<THREE.Group>(null)
   const draggingRef = useRef(false)
+  const autoPausedRef = useRef(false)
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const prevAngleRef = useRef(0)
   const angleSetRef = useRef(false)
   const [hovered, setHovered] = useState(false)
 
   useCursor(hovered, 'grab')
+
+  useFrame((_, delta) => {
+    if (groupRef.current && !autoPausedRef.current) {
+      groupRef.current.rotation.z += delta * 0.1
+    }
+  })
 
   useEffect(() => {
     if (!innerRef.current) return
@@ -52,6 +60,13 @@ function Model() {
     }
   }, [scene])
 
+  const scheduleResume = () => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
+    resumeTimerRef.current = setTimeout(() => {
+      autoPausedRef.current = false
+    }, 2000)
+  }
+
   useEffect(() => {
     const handleMove = (e: PointerEvent) => {
       if (!draggingRef.current || !groupRef.current) return
@@ -78,12 +93,14 @@ function Model() {
     const handleUp = () => {
       draggingRef.current = false
       angleSetRef.current = false
+      scheduleResume()
     }
     window.addEventListener('pointermove', handleMove)
     window.addEventListener('pointerup', handleUp)
     return () => {
       window.removeEventListener('pointermove', handleMove)
       window.removeEventListener('pointerup', handleUp)
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
     }
   }, [gl])
 
@@ -92,7 +109,9 @@ function Model() {
       ref={groupRef}
       onPointerDown={(e) => {
         draggingRef.current = true
+        autoPausedRef.current = true
         angleSetRef.current = false
+        if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
         e.stopPropagation()
       }}
       onPointerOver={() => setHovered(true)}
