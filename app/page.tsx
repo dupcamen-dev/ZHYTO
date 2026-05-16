@@ -317,7 +317,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-[12px] tracking-[0.35em] text-primary mb-5"
+                className="text-[14px] tracking-[0.35em] text-primary mb-5"
               >
                 AUTHENTIC. HANDMADE. TIMELESS.
               </motion.p>
@@ -326,7 +326,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-light leading-[1.05] mb-6"
+                className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-light leading-[1.05] mb-6"
               >
                 <span className="text-foreground block">Dumplings</span>
                 <span className="font-script text-primary text-[1.1em]">with soul</span>
@@ -336,14 +336,14 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="w-12 h-px bg-primary/60 mb-6"
+                className="w-14 h-px bg-primary/60 mb-6"
               />
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="text-base md:text-lg text-foreground/80 leading-[1.8] mb-8 max-w-md"
+                className="text-lg md:text-xl text-foreground/80 leading-[1.8] mb-8 max-w-md"
               >
                 We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
               </motion.p>
@@ -425,8 +425,8 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <p className="text-[13px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-light">
+            <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
+            <h2 className="text-5xl md:text-6xl font-serif font-light">
               <span className="font-script text-primary text-[1.15em]">Crafted</span>{" "}
               <span className="text-foreground">with tradition</span>
             </h2>
@@ -449,7 +449,7 @@ export default function Home() {
                   transition={{ duration: 0.6 }}
                   className="mb-8"
                 >
-                  <h3 className="font-serif text-2xl text-foreground mb-1">{category.label}</h3>
+                  <h3 className="font-serif text-3xl text-foreground mb-1">{category.label}</h3>
                   <p className="text-[13px] text-muted-foreground">{category.desc}</p>
                 </motion.div>
                 
@@ -775,7 +775,7 @@ export default function Home() {
             className="text-center mb-16"
           >
             <p className="text-[14px] tracking-[0.35em] text-primary mb-5">FAQ</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-light">
+            <h2 className="text-5xl md:text-6xl font-serif font-light">
               <span className="font-script text-primary text-[1.15em]">Got</span>{" "}
               <span className="text-black">questions?</span>
             </h2>
@@ -838,8 +838,8 @@ export default function Home() {
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
             >
-              <p className="text-[13px] tracking-[0.35em] text-primary mb-5">GET IN TOUCH</p>
-              <h2 className="text-4xl md:text-5xl font-serif font-light mb-8">
+              <p className="text-[14px] tracking-[0.35em] text-primary mb-5">GET IN TOUCH</p>
+              <h2 className="text-5xl md:text-6xl font-serif font-light mb-8">
                 <span className="text-foreground">Ready to</span>{" "}
                 <span className="font-script text-primary text-[1.15em]">order?</span>
               </h2>
