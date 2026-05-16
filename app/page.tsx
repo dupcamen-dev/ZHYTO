@@ -9,6 +9,7 @@ import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X,
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
+import { supabase } from '@/lib/supabase'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
 import { toast } from 'sonner'
@@ -172,7 +173,28 @@ export default function Home() {
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [dbProducts, setDbProducts] = useState<typeof products | null>(null)
   const { scrollYProgress } = useScroll()
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase.from('products').select('*').order('sort_order').then(({ data, error }) => {
+      if (!error && data && data.length > 0) {
+        setDbProducts(data.map(p => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          price: Number(p.price),
+          unit: p.unit,
+          image: img(p.image),
+          badge: p.badge,
+          category: p.category,
+        })))
+      }
+    })
+  }, [])
+
+  const activeProducts = dbProducts || products
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
   const [showScrollTop, setShowScrollTop] = useState(false)
@@ -414,7 +436,7 @@ export default function Home() {
             { key: 'syrnyky', label: 'Syrnyky', desc: 'Golden cheese fritters' },
             { key: 'pelmeni', label: 'Pelmeni', desc: 'Traditional meat-filled dumplings' },
           ].map((category, catIndex) => {
-            const catProducts = products.filter(p => p.category === category.key)
+            const catProducts = activeProducts.filter(p => p.category === category.key)
             if (catProducts.length === 0) return null
             return (
               <div key={category.key} className={catIndex > 0 ? 'mt-16' : ''}>
@@ -944,7 +966,7 @@ export default function Home() {
       <CartDrawer
         open={cartOpen}
         onOpenChange={setCartOpen}
-        products={products}
+        products={activeProducts}
         onCheckout={() => setCheckoutOpen(true)}
       />
 
@@ -952,7 +974,7 @@ export default function Home() {
       <CheckoutModal
         open={checkoutOpen}
         onOpenChange={setCheckoutOpen}
-        products={products}
+        products={activeProducts}
       />
       {/* Scroll to Top */}
       <AnimatePresence>
