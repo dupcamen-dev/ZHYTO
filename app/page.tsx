@@ -229,12 +229,18 @@ export default function Home() {
               {!loading && (
                 user ? (
                   <div className="flex items-center gap-3">
-                    <Link
-                      href="/account"
-                      className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50"
-                    >
-                      <User className="w-3.5 h-3.5" />
-                      MY ACCOUNT
+                      <Link
+                        href="/account"
+                        className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50"
+                      >
+                        <User className="w-3.5 h-3.5" />
+                        MY ACCOUNT
+                      </Link>
+                      <Link
+                        href="/admin"
+                        className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50"
+                      >
+                        ADMIN
                     </Link>
                     <button
                       onClick={signOut}
@@ -941,10 +947,23 @@ export default function Home() {
                         MY ACCOUNT
                       </Link>
                     </motion.div>
-                    <motion.button
+                    <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: (navLinks.length + 1) * 0.1 }}
+                    >
+                      <Link
+                        href="/admin"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-lg tracking-[0.25em] text-primary hover:text-primary/80 transition-colors"
+                      >
+                        ADMIN
+                      </Link>
+                    </motion.div>
+                    <motion.button
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: (navLinks.length + 2) * 0.1 }}
                       onClick={() => { signOut(); setMobileMenuOpen(false) }}
                       className="text-lg tracking-[0.25em] text-destructive/60 hover:text-destructive transition-colors"
                     >

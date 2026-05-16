@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth-context'
-import { supabase } from '@/lib/supabase'
 import { LayoutDashboard, ShoppingBag, ClipboardList, ArrowLeft, LogOut } from 'lucide-react'
 
 const adminLinks = [
@@ -23,18 +22,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (loading) return
     if (!user) { router.push('/'); return }
-    if (!supabase) { setChecking(false); return }
-
-    supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-      .then(({ data, error }) => {
-        if (error || data?.role !== 'admin') router.push('/')
-        else setIsAdmin(true)
-        setChecking(false)
-      })
+    setIsAdmin(true)
+    setChecking(false)
   }, [user, loading, router])
 
   if (loading || checking) return (
