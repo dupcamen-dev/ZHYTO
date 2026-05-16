@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -804,12 +805,12 @@ export default function Home() {
             </p>
             
             <div className="flex items-center gap-8">
-              <a href="/privacy" className="text-[11px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
+              <Link href="/privacy" className="text-[11px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
                 PRIVACY
-              </a>
-              <a href="/terms" className="text-[11px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
+              </Link>
+              <Link href="/terms" className="text-[11px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
                 TERMS
-              </a>
+              </Link>
             </div>
           </div>
         </div>

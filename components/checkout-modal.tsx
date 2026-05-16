@@ -144,7 +144,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
             {showPayment ? 'Pay securely' : 'Checkout'}
           </DialogTitle>
-          <DialogDescription className="text-[11px] tracking-[0.2em] text-muted-foreground">
+          <DialogDescription className="text-[13px] tracking-[0.2em] text-foreground/60">
             {showPayment
               ? 'Complete your payment — your details are secure'
               : `Review your order — ${cartItems.reduce((s, i) => s + i.qty, 0)} items`}
@@ -156,17 +156,17 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             <div className="space-y-5">
               {/* Order summary */}
               <div className="glass-card rounded-lg p-4 space-y-2">
-                <p className="text-[10px] tracking-[0.2em] text-muted-foreground mb-3">ORDER SUMMARY</p>
+                <p className="text-[11px] tracking-[0.2em] text-foreground/60 mb-3">ORDER SUMMARY</p>
                 {cartItems.map(item => (
-                  <div key={item.id} className="flex justify-between text-[13px]">
+                  <div key={item.id} className="flex justify-between text-[14px]">
                     <span className="text-foreground">{item.name} × {item.qty}</span>
                     <span className="text-primary">£{item.price * item.qty}</span>
                   </div>
                 ))}
                 <div className="border-t border-border/20 pt-2 mt-2 space-y-1">
-                  <div className="flex justify-between text-[12px]">
-                    <span className="text-muted-foreground">Delivery</span>
-                    <span className="text-muted-foreground">{delivery === 0 ? 'FREE' : `£${delivery}`}</span>
+                  <div className="flex justify-between text-[13px]">
+                    <span className="text-foreground/60">Delivery</span>
+                    <span className="text-foreground/60">{delivery === 0 ? 'FREE' : `£${delivery}`}</span>
                   </div>
                   <div className="flex justify-between text-sm font-serif">
                     <span className="text-foreground">Total</span>
@@ -177,26 +177,26 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
               {/* Contact info */}
               <div className="space-y-3">
-                <p className="text-[10px] tracking-[0.2em] text-muted-foreground">CONTACT DETAILS</p>
+                <p className="text-[11px] tracking-[0.2em] text-foreground/60">CONTACT DETAILS</p>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="name" className="text-[11px] text-muted-foreground tracking-[0.1em]">
+                  <Label htmlFor="name" className="text-[12px] text-foreground/60 tracking-[0.1em]">
                     Name *
                   </Label>
                   <Input
                     id="name"
                     value={form.name}
                     onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(e => ({ ...e, name: '' })) }}
-                    className={`bg-transparent text-foreground text-[13px] rounded-none focus:border-primary ${errors.name ? 'border-destructive' : 'border-border/50'}`}
+                    className={`bg-transparent text-foreground text-[14px] rounded-none focus:border-primary ${errors.name ? 'border-destructive' : 'border-border/50'}`}
                     placeholder="Your name"
                     aria-invalid={!!errors.name}
                   />
-                  {errors.name && <p className="text-[11px] text-destructive mt-1">{errors.name}</p>}
+                  {errors.name && <p className="text-[12px] text-destructive mt-1">{errors.name}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="email" className="text-[11px] text-muted-foreground tracking-[0.1em]">
+                    <Label htmlFor="email" className="text-[12px] text-foreground/60 tracking-[0.1em]">
                       Email *
                     </Label>
                     <Input
@@ -204,14 +204,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                       type="email"
                       value={form.email}
                       onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setErrors(e => ({ ...e, email: '' })) }}
-                      className={`bg-transparent text-foreground text-[13px] rounded-none focus:border-primary ${errors.email ? 'border-destructive' : 'border-border/50'}`}
+                      className={`bg-transparent text-foreground text-[14px] rounded-none focus:border-primary ${errors.email ? 'border-destructive' : 'border-border/50'}`}
                       placeholder="your@email.com"
                       aria-invalid={!!errors.email}
                     />
-                    {errors.email && <p className="text-[11px] text-destructive mt-1">{errors.email}</p>}
+                    {errors.email && <p className="text-[12px] text-destructive mt-1">{errors.email}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="phone" className="text-[11px] text-muted-foreground tracking-[0.1em]">
+                    <Label htmlFor="phone" className="text-[12px] text-foreground/60 tracking-[0.1em]">
                       Phone
                     </Label>
                     <Input
@@ -219,36 +219,36 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                       type="tel"
                       value={form.phone}
                       onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                      className="bg-transparent border-border/50 text-foreground text-[13px] rounded-none focus:border-primary"
+                      className="bg-transparent border-border/50 text-foreground text-[14px] rounded-none focus:border-primary"
                       placeholder="+44..."
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="address" className="text-[11px] text-muted-foreground tracking-[0.1em]">
+                  <Label htmlFor="address" className="text-[12px] text-foreground/60 tracking-[0.1em]">
                     Delivery Address *
                   </Label>
                   <Textarea
                     id="address"
                     value={form.address}
                     onChange={e => { setForm(f => ({ ...f, address: e.target.value })); setErrors(e => ({ ...e, address: '' })) }}
-                    className={`bg-transparent text-foreground text-[13px] rounded-none focus:border-primary min-h-[60px] ${errors.address ? 'border-destructive' : 'border-border/50'}`}
+                    className={`bg-transparent text-foreground text-[14px] rounded-none focus:border-primary min-h-[60px] ${errors.address ? 'border-destructive' : 'border-border/50'}`}
                     placeholder="Street, postcode, city"
                     aria-invalid={!!errors.address}
                   />
-                  {errors.address && <p className="text-[11px] text-destructive mt-1">{errors.address}</p>}
+                  {errors.address && <p className="text-[12px] text-destructive mt-1">{errors.address}</p>}
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="notes" className="text-[11px] text-muted-foreground tracking-[0.1em]">
+                  <Label htmlFor="notes" className="text-[12px] text-foreground/60 tracking-[0.1em]">
                     Order Notes
                   </Label>
                   <Textarea
                     id="notes"
                     value={form.notes}
                     onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                    className="bg-transparent border-border/50 text-foreground text-[13px] rounded-none focus:border-primary min-h-[60px]"
+                    className="bg-transparent border-border/50 text-foreground text-[14px] rounded-none focus:border-primary min-h-[60px]"
                     placeholder="Any special requests..."
                   />
                 </div>
@@ -256,7 +256,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
               {/* Delivery threshold info */}
               {delivery > 0 && (
-                <div className="flex items-center gap-3 text-[12px] text-muted-foreground bg-border/10 rounded-lg px-4 py-3">
+                <div className="flex items-center gap-3 text-[13px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
                   <Truck className="w-4 h-4 shrink-0 text-primary" />
                   <span>
                     {delivery === 5
@@ -273,7 +273,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   size="lg"
                   onClick={() => onOpenChange(false)}
                   disabled={submitting}
-                  className="flex-1 text-[12px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+                  className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
                 >
                   CANCEL
                 </Button>
@@ -282,7 +282,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   onClick={handleContinue}
                   disabled={submitting || cartItems.length === 0}
                   size="lg"
-                  className="flex-1 text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                    className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                 >
                   {submitting ? 'PLEASE WAIT...' : 'CONTINUE TO PAY'}
                 </Button>
@@ -293,7 +293,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               {/* Back button */}
               <button
                 onClick={handleBackToForm}
-                className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors"
+                className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 BACK TO DETAILS
@@ -301,20 +301,20 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
               {/* Delivery summary */}
               <div className="glass-card rounded-lg p-4 space-y-2">
-                <div className="flex items-center gap-2 text-[10px] tracking-[0.2em] text-muted-foreground mb-2">
+                <div className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-foreground/60 mb-2">
                   <Package className="w-3.5 h-3.5" />
                   DELIVERY TO
                 </div>
-                <p className="text-[14px] text-foreground">{form.name}</p>
-                <p className="text-[12px] text-muted-foreground">{form.address}</p>
+                <p className="text-[15px] text-foreground">{form.name}</p>
+                <p className="text-[13px] text-foreground/60">{form.address}</p>
                 {(form.email || form.phone) && (
-                  <p className="text-[11px] text-muted-foreground/70">{form.email}{form.phone ? ` — ${form.phone}` : ''}</p>
+                  <p className="text-[12px] text-foreground/50">{form.email}{form.phone ? ` — ${form.phone}` : ''}</p>
                 )}
               </div>
 
               {/* Compact order total */}
               <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
-                <span className="text-[12px] text-muted-foreground">
+                <span className="text-[13px] text-foreground/60">
                   {cartItems.reduce((s, i) => s + i.qty, 0)} items
                 </span>
                 <span className="font-serif text-lg text-primary">£{total}</span>
@@ -371,9 +371,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 /* Mock payment — when Stripe is not configured */
                 <div className="space-y-4">
                   <div className="glass-card rounded-lg p-5">
-                    <p className="text-[10px] tracking-[0.2em] text-muted-foreground mb-4">PAYMENT METHOD</p>
+                    <p className="text-[11px] tracking-[0.2em] text-foreground/60 mb-4">PAYMENT METHOD</p>
 
-                    <div className="flex items-center gap-4 text-[11px] tracking-[0.15em] text-muted-foreground mb-5">
+                    <div className="flex items-center gap-4 text-[12px] tracking-[0.15em] text-foreground/60 mb-5">
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-3.5 h-3.5" />
                         <span>Card</span>
@@ -392,7 +392,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
                     <div className="bg-border/10 border border-border/20 rounded-lg p-4 text-center">
                       <p className="font-serif text-3xl text-primary mb-1">£{total}</p>
-                      <p className="text-[11px] text-muted-foreground tracking-[0.1em]">Total to pay</p>
+                      <p className="text-[12px] text-foreground/60 tracking-[0.1em]">Total to pay</p>
                     </div>
                   </div>
 
@@ -403,16 +403,16 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                       size="lg"
                       onClick={handleBackToForm}
                       disabled={submitting}
-                      className="flex-1 text-[12px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
-                    >
-                      BACK
+                    className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+                  >
+                    BACK
                     </Button>
                     <Button
                       type="button"
                       onClick={handleMockPayment}
                       disabled={submitting}
                       size="lg"
-                      className="flex-1 text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                  className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                     >
                       {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
                     </Button>
