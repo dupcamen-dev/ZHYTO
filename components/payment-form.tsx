@@ -208,7 +208,7 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
 
       <div className="flex gap-3 pt-2">
         <Button type="button" variant="outline" size="lg" onClick={onBack} disabled={loading} className="flex-1 text-[12px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent">
-          BACK
+          CHANGE METHOD
         </Button>
         <Button type="submit" disabled={!stripe || !clientSecret || loading || !addressFilled} size="lg" className="flex-1 text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50">
           {loading ? 'PROCESSING...' : `PAY £${amount.toFixed(2)}`}
@@ -226,20 +226,25 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
         </div>
 
         {canMakePayment && paymentRequest ? (
-          <div className="flex justify-center">
-            <PaymentRequestButtonElement
-              options={{
-                paymentRequest,
-                style: {
-                  paymentRequestButton: {
-                    type: 'buy',
-                    theme: 'dark',
-                    height: '48px',
+          <>
+            <div className="flex justify-center">
+              <PaymentRequestButtonElement
+                options={{
+                  paymentRequest,
+                  style: {
+                    paymentRequestButton: {
+                      type: 'buy',
+                      theme: 'dark',
+                      height: '48px',
+                    },
                   },
-                },
-              }}
-            />
-          </div>
+                }}
+              />
+            </div>
+            <button onClick={onBack} className="text-[11px] tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+              CHANGE METHOD
+            </button>
+          </>
         ) : (
           <div className="text-[13px] text-muted-foreground py-4">
             <p>Apple Pay / Google Pay is not available on this device.</p>
@@ -319,7 +324,7 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
 
         <div className="flex gap-3 pt-2">
           <Button type="button" variant="outline" size="lg" onClick={onBack} disabled={loading} className="flex-1 text-[12px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent">
-            BACK
+            CHANGE METHOD
           </Button>
           <Button type="button" onClick={handleBankSubmit} disabled={!stripe || !clientSecret || loading || !addressFilled} size="lg" className="flex-1 text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50">
             {loading ? 'PROCESSING...' : 'CONFIRM BANK TRANSFER'}

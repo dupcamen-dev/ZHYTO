@@ -40,12 +40,12 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
     .filter(Boolean) as (Product & { qty: number })[]
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : null
+  const delivery = subtotal >= 50 ? 0 : subtotal >= 10 ? 5 : null
   const total = subtotal + (delivery ?? 0)
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-md bg-background border-border/30 flex flex-col p-0">
+      <SheetContent className="w-full sm:max-w-md bg-background border-border/30 flex flex-col p-0 max-h-screen overflow-hidden">
         <SheetHeader className="p-4 sm:p-6 pb-0">
           <SheetTitle className="font-serif text-xl sm:text-2xl tracking-[0.1em] text-foreground">
             Your Cart
@@ -144,12 +144,12 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                   </div>
                   <div className="flex justify-between text-[11px] tracking-[0.1em] text-foreground/60">
                     <span>£0</span>
-                    <span>£25</span>
+                    <span>£10</span>
                     <span>£50</span>
                   </div>
                   <p className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                    {subtotal < 25
-                      ? `Add £${(25 - subtotal).toFixed(0)} more — min. order £25`
+                    {subtotal < 10
+                      ? `Add £${(10 - subtotal).toFixed(0)} more — min. order £10`
                       : `Add £${(50 - subtotal).toFixed(0)} more for free delivery`}
                   </p>
                 </div>
@@ -167,7 +167,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                     onCheckout()
                   }}
                   size="lg"
-                  disabled={subtotal < 25}
+                  disabled={subtotal < 10}
                   className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   CHECKOUT

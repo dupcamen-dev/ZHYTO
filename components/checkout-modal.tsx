@@ -64,7 +64,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     .filter(Boolean) as (Product & { qty: number })[]
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : null
+  const delivery = subtotal >= 50 ? 0 : subtotal >= 10 ? 5 : null
   const total = subtotal + (delivery ?? 0)
 
   // Advance to payment when user logs in (only if items in cart)
@@ -245,7 +245,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               <span>
                 {delivery === 5
                   ? `£5 delivery — add £${(50 - subtotal).toFixed(0)} more for free`
-                  : `Minimum £25 — add £${(25 - subtotal).toFixed(0)} more`}
+                  : `Minimum £10 — add £${(10 - subtotal).toFixed(0)} more`}
               </span>
             </div>
           )}
@@ -263,11 +263,11 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               </Button>
               <Button
                 type="button"
-                disabled={submitting || cartItems.length === 0 || !user || subtotal < 25}
+                disabled={submitting || cartItems.length === 0 || !user || subtotal < 10}
                 size="lg"
                 className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
               >
-                {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 25 ? `MINIMUM £25 — ADD £${(25 - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
+                {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 10 ? `MINIMUM £10 — ADD £${(10 - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
               </Button>
             </div>
           )}
@@ -441,7 +441,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                       <span>
                         {delivery === 5
                           ? `£5 delivery — add £${(50 - subtotal).toFixed(0)} more for free`
-                          : `Minimum £25 — add £${(25 - subtotal).toFixed(0)} more`}
+                          : `Minimum £10 — add £${(10 - subtotal).toFixed(0)} more`}
                       </span>
                     </div>
                   )}
@@ -459,11 +459,11 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </Button>
                     <Button
                       type="button"
-                      disabled={submitting || cartItems.length === 0 || !user || subtotal < 25}
+                      disabled={submitting || cartItems.length === 0 || !user || subtotal < 10}
                       size="lg"
                       className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                     >
-                      {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 25 ? `MINIMUM £25 — ADD £${(25 - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
+                      {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 10 ? `MINIMUM £10 — ADD £${(10 - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
                     </Button>
                   </div>
                 </>
