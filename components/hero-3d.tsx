@@ -77,7 +77,7 @@ function Model() {
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
     resumeTimerRef.current = setTimeout(() => {
       autoPausedRef.current = false
-    }, 2000)
+    }, 300)
   }
 
   useEffect(() => {
