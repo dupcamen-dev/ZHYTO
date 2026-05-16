@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense, useRef, useState, useEffect } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas } from '@react-three/fiber'
 import { useGLTF, Center, useCursor } from '@react-three/drei'
 import { BASE_PATH } from '@/lib/constants'
 import { Loader } from 'lucide-react'
@@ -16,12 +16,6 @@ function Model() {
   const [hovered, setHovered] = useState(false)
 
   useCursor(hovered, 'grab')
-
-  useFrame((_, delta) => {
-    if (groupRef.current && !draggingRef.current) {
-      groupRef.current.rotation.z += delta * 0.08
-    }
-  })
 
   useEffect(() => {
     const handleMove = (e: PointerEvent) => {
@@ -52,7 +46,7 @@ function Model() {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <Center>
+      <Center position={[0, 0.35, 0]}>
         <primitive
           object={scene}
           scale={3}
