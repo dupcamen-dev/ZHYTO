@@ -25,9 +25,9 @@ export function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="fixed bottom-0 left-0 right-0 z-[100] p-4 sm:p-6"
+          className="fixed bottom-0 left-0 right-0 z-[100] p-4 sm:p-6 pointer-events-none"
         >
-          <div className="max-w-7xl mx-auto glass-strong rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-2xl">
+          <div className="max-w-7xl mx-auto glass-strong rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-2xl pointer-events-auto">
             <div className="flex-1 text-[14px] text-foreground/80 leading-relaxed">
               We use cookies to improve your experience. By continuing, you agree to our{' '}
               <a href="/privacy" className="text-primary hover:text-primary/80 underline underline-offset-2">Privacy Policy</a>.
