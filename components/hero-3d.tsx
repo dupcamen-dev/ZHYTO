@@ -168,25 +168,23 @@ export function Hero3D() {
   return (
     <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[550px] lg:h-[700px] xl:w-[620px] xl:h-[780px]">
       {!ready && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
           <Loader className="w-6 h-6 text-primary animate-spin" />
         </div>
       )}
-      <div className="w-full h-full">
-        <Canvas
-          camera={{ position: [0, 0, 38], fov: 50 }}
-          gl={{ antialias: true }}
-          style={{ opacity: ready ? 1 : 0 }}
-          onCreated={() => setReady(true)}
-        >
+      <Canvas
+        camera={{ position: [0, 0, 38], fov: 50 }}
+        gl={{ antialias: true }}
+        style={{ width: '100%', height: '100%', opacity: ready ? 1 : 0, transition: 'opacity 0.5s' }}
+        onCreated={() => setReady(true)}
+      >
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 5, 5]} intensity={1.5} />
           <directionalLight position={[-3, 2, -2]} intensity={0.4} />
           <Suspense fallback={null}>
             <Model />
           </Suspense>
-        </Canvas>
-      </div>
+      </Canvas>
     </div>
   )
 }
