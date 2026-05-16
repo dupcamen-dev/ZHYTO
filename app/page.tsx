@@ -752,20 +752,18 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-28 lg:py-36 relative overflow-hidden">
-        {/* Background image with cream overlay */}
+      <section id="faq" className="py-28 lg:py-36 relative overflow-hidden section-light">
+        {/* Background image with subtle cream tint */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 brightness-[0.6] contrast-[1.1] saturate-[0.8]">
-            <Image
-              src={img("/images/fornofone.png")}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-          <div className="absolute inset-0" style={{ background: 'oklch(0.95 0.02 85 / 0.85)' }} />
+          <Image
+            src={img("/images/fornofone.png")}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0" style={{ background: 'oklch(0.95 0.02 85 / 0.35)' }} />
           <div className="absolute inset-0" style={{
-            background: 'radial-gradient(circle at 50% 50%, transparent 40%, oklch(0.95 0.02 85 / 0.9) 100%)'
+            background: 'radial-gradient(circle at 50% 50%, transparent 50%, oklch(0.95 0.02 85 / 0.5) 100%)'
           }} />
         </div>
         <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
