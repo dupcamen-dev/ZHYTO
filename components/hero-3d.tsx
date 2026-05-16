@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, Environment, ContactShadows, Center } from '@react-three/drei'
+import { useGLTF, Center } from '@react-three/drei'
 import { BASE_PATH } from '@/lib/constants'
 import { Loader } from 'lucide-react'
 
@@ -14,14 +14,18 @@ function Model() {
 
   useFrame((_, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.25
+      groupRef.current.rotation.z -= delta * 0.3
     }
   })
 
   return (
-    <group ref={groupRef} position={[0, -0.4, 0]}>
+    <group ref={groupRef}>
       <Center>
-        <primitive object={scene} scale={1.7} />
+        <primitive
+          object={scene}
+          scale={1.4}
+          rotation={[Math.PI / 2, 0, 0]}
+        />
       </Center>
     </group>
   )
@@ -38,7 +42,7 @@ export function Hero3D() {
         </div>
       )}
       <Canvas
-        camera={{ position: [0, 0.6, 5.5], fov: 38 }}
+        camera={{ position: [0, 0, 5.5], fov: 35 }}
         gl={{ antialias: true }}
         style={{ opacity: ready ? 1 : 0 }}
         onCreated={() => setReady(true)}
@@ -48,13 +52,6 @@ export function Hero3D() {
         <directionalLight position={[-3, 2, -2]} intensity={0.4} />
         <Suspense fallback={null}>
           <Model />
-          <Environment preset="studio" />
-          <ContactShadows
-            position={[0, -1, 0]}
-            opacity={0.25}
-            scale={5}
-            blur={4}
-          />
         </Suspense>
       </Canvas>
     </div>
