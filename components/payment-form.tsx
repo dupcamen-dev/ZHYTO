@@ -14,9 +14,10 @@ interface PaymentFormProps {
   amount: number
   onSuccess: () => void
   onBack: () => void
+  addressFilled: boolean
 }
 
-export function PaymentForm({ amount, onSuccess, onBack }: PaymentFormProps) {
+export function PaymentForm({ amount, onSuccess, onBack, addressFilled }: PaymentFormProps) {
   const stripe = useStripe()
   const elements = useElements()
   const [loading, setLoading] = useState(false)
@@ -90,7 +91,7 @@ export function PaymentForm({ amount, onSuccess, onBack }: PaymentFormProps) {
         </Button>
         <Button
           type="submit"
-          disabled={!stripe || !elements || !ready || loading}
+          disabled={!stripe || !elements || !ready || loading || !addressFilled}
           size="lg"
           className="flex-1 text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
         >

@@ -377,6 +377,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     amount={total}
                     onSuccess={handlePaymentSuccess}
                     onBack={handleBackToForm}
+                    addressFilled={!!deliveryAddress.trim()}
                   />
                 </Elements>
               ) : (
@@ -411,7 +412,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   <Button
                     type="button"
                     onClick={handleMockPayment}
-                    disabled={submitting}
+                    disabled={submitting || !deliveryAddress.trim()}
                     size="lg"
                     className="w-full text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                   >
