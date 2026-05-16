@@ -166,7 +166,7 @@ export function Hero3D() {
   const [ready, setReady] = useState(false)
 
   return (
-    <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[750px] lg:h-[580px] xl:w-[900px] xl:h-[700px] 2xl:w-[1000px] 2xl:h-[780px]">
+    <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[1000px] lg:h-[1200px] xl:w-[1000px] xl:h-[1200px] 2xl:w-[1000px] 2xl:h-[1200px]">
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Loader className="w-6 h-6 text-primary animate-spin" />
@@ -174,7 +174,7 @@ export function Hero3D() {
       )}
       <div className="w-full h-full">
         <Canvas
-          camera={{ position: [0, 0, 30], fov: 50 }}
+          camera={{ position: [0, 0, 32], fov: 50 }}
           gl={{ antialias: true }}
           style={{ opacity: ready ? 1 : 0 }}
           onCreated={() => setReady(true)}
