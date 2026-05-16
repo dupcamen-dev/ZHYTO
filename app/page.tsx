@@ -311,7 +311,7 @@ export default function Home() {
 
         {/* Content */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-20 sm:pt-24 pb-16">
-          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-8 lg:gap-0">
+          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
