@@ -310,9 +310,9 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 lg:px-12 pt-24 sm:pt-32 pb-20 sm:pb-28">
+          <div className="relative z-10 w-full max-w-[1800px] mx-auto px-6 lg:px-12 pt-24 sm:pt-32 pb-20 sm:pb-28">
           <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 lg:gap-12">
-            <div className="w-full lg:w-auto">
+            <div className="max-w-xl w-full lg:w-auto">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -369,7 +369,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex items-center justify-center shrink-0"
+              className="hidden lg:flex items-center justify-center shrink-0 -ml-24"
             >
               <Hero3D />
             </motion.div>
