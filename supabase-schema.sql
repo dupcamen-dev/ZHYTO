@@ -109,3 +109,30 @@ CREATE INDEX idx_orders_user_id ON orders(user_id);
 CREATE INDEX idx_orders_created_at ON orders(created_at DESC);
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_products_category ON products(category);
+
+-- ============================================================
+-- SETTINGS (key-value store for config)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read settings"
+  ON settings FOR SELECT
+  USING (true);
+
+CREATE POLICY "Admins can upsert settings"
+  ON settings FOR INSERT
+  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+CREATE POLICY "Admins can update settings"
+  ON settings FOR UPDATE
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- Default delivery settings
+INSERT INTO settings (key, value) VALUES ('delivery', '{"min_order": 10, "free_threshold": 50, "fee": 5}')
+ON CONFLICT (key) DO NOTHING;

@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth-context'
-import { LayoutDashboard, ShoppingBag, ClipboardList, ArrowLeft, LogOut } from 'lucide-react'
+import { LayoutDashboard, ShoppingBag, ClipboardList, Settings, ArrowLeft, LogOut } from 'lucide-react'
 
 const adminLinks = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/orders', label: 'Orders', icon: ClipboardList },
   { href: '/admin/products', label: 'Menu', icon: ShoppingBag },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -37,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-border/30 flex flex-col bg-card/50">
+      <aside className="w-72 border-r border-border/30 flex flex-col bg-card/50">
         <div className="p-6 border-b border-border/30">
           <Link href="/admin" className="font-serif text-xl tracking-[0.1em] text-foreground">zhyto.admin</Link>
         </div>
@@ -49,13 +50,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-[13px] tracking-[0.15em] transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base tracking-[0.15em] transition-colors ${
                   active
                     ? 'bg-primary/10 text-primary'
                     : 'text-muted-foreground hover:text-foreground hover:bg-border/20'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-5 h-5" />
                 {link.label}
               </Link>
             )
@@ -64,14 +65,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="p-4 border-t border-border/30 space-y-2">
           <Link
             href="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[12px] tracking-[0.15em] text-muted-foreground hover:text-foreground hover:bg-border/20 transition-colors"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm tracking-[0.15em] text-muted-foreground hover:text-foreground hover:bg-border/20 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             BACK TO SITE
           </Link>
           <button
             onClick={signOut}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[12px] tracking-[0.15em] text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-full cursor-pointer"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm tracking-[0.15em] text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-full cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             SIGN OUT

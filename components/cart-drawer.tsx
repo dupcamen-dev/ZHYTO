@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
+import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
 
 interface Product {
   id: number
@@ -30,6 +31,7 @@ interface CartDrawerProps {
 
 export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDrawerProps) {
   const { cart, addToCart, removeFromCart, updateQuantity, totalItems } = useCart()
+  const { settings } = useDeliverySettings()
 
   const cartItems = Object.entries(cart)
     .map(([id, qty]) => {
@@ -39,7 +41,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
     .filter(Boolean) as (Product & { qty: number })[]
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const delivery = subtotal >= 50 ? 0 : subtotal >= 10 ? 5 : null
+  const delivery = calcDelivery(subtotal, settings)
   const total = subtotal + (delivery ?? 0)
 
   return (
@@ -130,12 +132,12 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
               </div>
 
               {/* Delivery progress bar */}
-              {subtotal < 50 && (
+              {subtotal < settings.free_threshold && (
                 <div className="space-y-2">
                   <div className="relative h-1.5 bg-border/30 rounded-full overflow-hidden">
                     <div 
                       className="absolute inset-y-0 left-0 bg-primary/60 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.min((subtotal / 50) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((subtotal / settings.free_threshold) * 100, 100)}%` }}
                     />
                     <div className="absolute top-1/2 -translate-y-1/2" style={{ left: '50%' }}>
                       <div className="w-2 h-2 rounded-full bg-border/50" />
@@ -143,13 +145,13 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                   </div>
                   <div className="flex justify-between text-[11px] tracking-[0.1em] text-foreground/60">
                     <span>£0</span>
-                    <span>£10</span>
-                    <span>£50</span>
+                    <span>£{settings.min_order}</span>
+                    <span>£{settings.free_threshold}</span>
                   </div>
                   <p className="text-[12px] text-foreground/60 tracking-[0.1em]">
-                    {subtotal < 10
-                      ? `Add £${(10 - subtotal).toFixed(0)} more — min. order £10`
-                      : `Add £${(50 - subtotal).toFixed(0)} more for free delivery`}
+                    {subtotal < settings.min_order
+                      ? `Add £${(settings.min_order - subtotal).toFixed(0)} more — min. order £${settings.min_order}`
+                      : `Add £${(settings.free_threshold - subtotal).toFixed(0)} more for free delivery`}
                   </p>
                 </div>
               )}
@@ -166,7 +168,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                     onCheckout()
                   }}
                   size="lg"
-                  disabled={subtotal < 10}
+                  disabled={subtotal < settings.min_order}
                   className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   CHECKOUT

@@ -17,33 +17,41 @@ interface ProductStat {
   count: number
 }
 
+type Period = 'week' | 'month' | 'all'
+
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [period, setPeriod] = useState<Period>('all')
   const [stats, setStats] = useState({ total: 0, revenue: 0, pending: 0, confirmed: 0, completed: 0 })
 
   useEffect(() => {
     if (!supabase) { setLoading(false); return }
 
-    supabase
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .then(({ data, error }) => {
-        if (!error && data) {
-          const orders = data as Order[]
-          setOrders(orders)
-          setStats({
-            total: orders.length,
-            revenue: orders.reduce((s, o) => s + o.total, 0),
-            pending: orders.filter(o => o.status === 'pending').length,
-            confirmed: orders.filter(o => o.status === 'confirmed').length,
-            completed: orders.filter(o => o.status === 'completed').length,
-          })
-        }
-        setLoading(false)
-      })
-  }, [])
+    const fromDate = period === 'week'
+      ? new Date(Date.now() - 7 * 86400000).toISOString()
+      : period === 'month'
+        ? new Date(Date.now() - 30 * 86400000).toISOString()
+        : null
+
+    let query = supabase.from('orders').select('*').order('created_at', { ascending: false })
+    if (fromDate) query = query.gte('created_at', fromDate)
+
+    query.then(({ data, error }) => {
+      if (!error && data) {
+        const orders = data as Order[]
+        setOrders(orders)
+        setStats({
+          total: orders.length,
+          revenue: orders.reduce((s, o) => s + o.total, 0),
+          pending: orders.filter(o => o.status === 'pending').length,
+          confirmed: orders.filter(o => o.status === 'confirmed').length,
+          completed: orders.filter(o => o.status === 'completed').length,
+        })
+      }
+      setLoading(false)
+    })
+  }, [period])
 
   // Top products
   const productCounts: ProductStat[] = orders
@@ -81,49 +89,67 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-serif text-3xl text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground text-[14px] mt-1">Overview of your shop</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-serif text-3xl text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground text-base mt-1">Overview of your shop</p>
+        </div>
+        {/* Period filter */}
+        <div className="flex gap-2">
+          {(['week', 'month', 'all'] as Period[]).map(p => (
+            <button
+              key={p}
+              onClick={() => setPeriod(p)}
+              className={`px-4 py-2 rounded-lg text-sm tracking-[0.15em] transition-colors cursor-pointer ${
+                period === p
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:text-foreground border border-border/30'
+              }`}
+            >
+              {p === 'week' ? 'WEEK' : p === 'month' ? 'MONTH' : 'ALL TIME'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Stats cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card rounded-xl p-5">
-          <TrendingUp className="w-5 h-5 text-primary mb-3" />
-          <p className="text-2xl font-serif text-foreground">£{stats.revenue.toFixed(0)}</p>
-          <p className="text-[11px] tracking-[0.15em] text-muted-foreground mt-1">TOTAL REVENUE</p>
+          <TrendingUp className="w-6 h-6 text-primary mb-3" />
+          <p className="text-3xl font-serif text-foreground">£{stats.revenue.toFixed(0)}</p>
+          <p className="text-sm tracking-[0.15em] text-muted-foreground mt-1">TOTAL REVENUE</p>
         </div>
         <div className="glass-card rounded-xl p-5">
-          <Package className="w-5 h-5 text-primary mb-3" />
-          <p className="text-2xl font-serif text-foreground">{stats.total}</p>
-          <p className="text-[11px] tracking-[0.15em] text-muted-foreground mt-1">TOTAL ORDERS</p>
+          <Package className="w-6 h-6 text-primary mb-3" />
+          <p className="text-3xl font-serif text-foreground">{stats.total}</p>
+          <p className="text-sm tracking-[0.15em] text-muted-foreground mt-1">TOTAL ORDERS</p>
         </div>
         <div className="glass-card rounded-xl p-5">
-          <Clock className="w-5 h-5 text-amber-400 mb-3" />
-          <p className="text-2xl font-serif text-foreground">{stats.pending}</p>
-          <p className="text-[11px] tracking-[0.15em] text-muted-foreground mt-1">PENDING</p>
+          <Clock className="w-6 h-6 text-amber-400 mb-3" />
+          <p className="text-3xl font-serif text-foreground">{stats.pending}</p>
+          <p className="text-sm tracking-[0.15em] text-muted-foreground mt-1">PENDING</p>
         </div>
         <div className="glass-card rounded-xl p-5">
-          <CheckCircle className="w-5 h-5 text-emerald-400 mb-3" />
-          <p className="text-2xl font-serif text-foreground">{stats.completed}</p>
-          <p className="text-[11px] tracking-[0.15em] text-muted-foreground mt-1">COMPLETED</p>
+          <CheckCircle className="w-6 h-6 text-emerald-400 mb-3" />
+          <p className="text-3xl font-serif text-foreground">{stats.completed}</p>
+          <p className="text-sm tracking-[0.15em] text-muted-foreground mt-1">COMPLETED</p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Recent orders */}
         <div className="glass-card rounded-xl p-6">
-          <h2 className="font-serif text-lg text-foreground mb-4">Recent Orders</h2>
+          <h2 className="font-serif text-xl text-foreground mb-4">Recent Orders</h2>
           {recentOrders.length === 0 ? (
-            <p className="text-[13px] text-muted-foreground">No orders yet</p>
+            <p className="text-base text-muted-foreground">No orders yet</p>
           ) : (
             <div className="space-y-3">
               {recentOrders.map(order => {
                 const Icon = statusIcon[order.status] || Package
                 return (
-                  <div key={order.id} className="flex items-center justify-between text-[13px]">
+                  <div key={order.id} className="flex items-center justify-between text-base">
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-3.5 h-3.5 ${statusColor[order.status] || 'text-muted-foreground'}`} />
+                      <Icon className={`w-4 h-4 ${statusColor[order.status] || 'text-muted-foreground'}`} />
                       <span className="text-foreground">#{order.id.slice(0, 6)}</span>
                     </div>
                     <span className="text-primary">£{order.total}</span>
@@ -136,13 +162,13 @@ export default function AdminDashboard() {
 
         {/* Popular items */}
         <div className="glass-card rounded-xl p-6">
-          <h2 className="font-serif text-lg text-foreground mb-4">Popular Items</h2>
+          <h2 className="font-serif text-xl text-foreground mb-4">Popular Items</h2>
           {productCounts.length === 0 ? (
-            <p className="text-[13px] text-muted-foreground">No data yet</p>
+            <p className="text-base text-muted-foreground">No data yet</p>
           ) : (
             <div className="space-y-3">
               {productCounts.map((item, i) => (
-                <div key={item.name} className="flex items-center justify-between text-[13px]">
+                <div key={item.name} className="flex items-center justify-between text-base">
                   <span className="text-foreground">{i + 1}. {item.name}</span>
                   <span className="text-muted-foreground">{item.count} sold</span>
                 </div>

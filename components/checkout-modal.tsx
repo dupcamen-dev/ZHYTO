@@ -21,6 +21,7 @@ import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
 import { toast } from 'sonner'
 import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Banknote, Chrome, Loader } from 'lucide-react'
+import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
 
 interface Product {
   id: number
@@ -50,6 +51,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const router = useRouter()
   const { cart, clearCart } = useCart()
   const { user, loading: authLoading, signInWithGoogle, signInWithApple } = useAuth()
+  const { settings } = useDeliverySettings()
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
@@ -64,7 +66,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     .filter(Boolean) as (Product & { qty: number })[]
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const delivery = subtotal >= 50 ? 0 : subtotal >= 10 ? 5 : null
+  const delivery = calcDelivery(subtotal, settings)
   const total = subtotal + (delivery ?? 0)
 
   // Advance to payment when user logs in (only if items in cart)
@@ -243,9 +245,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             <div className="flex items-center gap-3 text-[13px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
               <Truck className="w-4 h-4 shrink-0 text-primary" />
               <span>
-                {delivery === 5
-                  ? `£5 delivery — add £${(50 - subtotal).toFixed(0)} more for free`
-                  : `Minimum £10 — add £${(10 - subtotal).toFixed(0)} more`}
+                {delivery === settings.fee
+                  ? `£${settings.fee} delivery — add £${(settings.free_threshold - subtotal).toFixed(0)} more for free`
+                  : `Minimum £${settings.min_order} — add £${(settings.min_order - subtotal).toFixed(0)} more`}
               </span>
             </div>
           )}
@@ -263,11 +265,10 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               </Button>
               <Button
                 type="button"
-                disabled={submitting || cartItems.length === 0 || !user || subtotal < 10}
-                size="lg"
+                disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
                 className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
               >
-                {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 10 ? `MINIMUM £10 — ADD £${(10 - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
+                {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
               </Button>
             </div>
           )}
@@ -459,11 +460,10 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </Button>
                     <Button
                       type="button"
-                      disabled={submitting || cartItems.length === 0 || !user || subtotal < 10}
-                      size="lg"
+                      disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
                       className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                     >
-                      {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 10 ? `MINIMUM £10 — ADD £${(10 - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
+                      {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
                     </Button>
                   </div>
                 </>
