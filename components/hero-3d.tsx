@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense, useRef, useState, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { useGLTF, useCursor } from '@react-three/drei'
 import * as THREE from 'three'
 import { BASE_PATH } from '@/lib/constants'
@@ -11,10 +11,12 @@ const modelPath = `${BASE_PATH}/models/3dvaren.glb`
 
 function Model() {
   const { scene } = useGLTF(modelPath)
+  const { gl } = useThree()
   const groupRef = useRef<THREE.Group>(null)
   const innerRef = useRef<THREE.Group>(null)
   const draggingRef = useRef(false)
-  const prevXRef = useRef(0)
+  const prevAngleRef = useRef(0)
+  const angleSetRef = useRef(false)
   const [hovered, setHovered] = useState(false)
 
   useCursor(hovered, 'grab')
@@ -53,12 +55,29 @@ function Model() {
   useEffect(() => {
     const handleMove = (e: PointerEvent) => {
       if (!draggingRef.current || !groupRef.current) return
-      const dx = e.clientX - prevXRef.current
-      groupRef.current.rotation.z += dx * 0.005
-      prevXRef.current = e.clientX
+
+      const rect = gl.domElement.getBoundingClientRect()
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+
+      const angle = Math.atan2(e.clientY - cy, e.clientX - cx)
+
+      if (!angleSetRef.current) {
+        prevAngleRef.current = angle
+        angleSetRef.current = true
+        return
+      }
+
+      let delta = angle - prevAngleRef.current
+      if (delta > Math.PI) delta -= Math.PI * 2
+      if (delta < -Math.PI) delta += Math.PI * 2
+
+      groupRef.current.rotation.z += delta
+      prevAngleRef.current = angle
     }
     const handleUp = () => {
       draggingRef.current = false
+      angleSetRef.current = false
     }
     window.addEventListener('pointermove', handleMove)
     window.addEventListener('pointerup', handleUp)
@@ -66,14 +85,14 @@ function Model() {
       window.removeEventListener('pointermove', handleMove)
       window.removeEventListener('pointerup', handleUp)
     }
-  }, [])
+  }, [gl])
 
   return (
     <group
       ref={groupRef}
       onPointerDown={(e) => {
         draggingRef.current = true
-        prevXRef.current = e.clientX
+        angleSetRef.current = false
         e.stopPropagation()
       }}
       onPointerOver={() => setHovered(true)}
@@ -83,7 +102,7 @@ function Model() {
         <primitive
           object={scene}
           scale={3}
-          rotation={[0.03, 0, 0]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </group>
