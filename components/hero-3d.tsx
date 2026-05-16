@@ -72,7 +72,7 @@ function Model() {
       if (delta > Math.PI) delta -= Math.PI * 2
       if (delta < -Math.PI) delta += Math.PI * 2
 
-      groupRef.current.rotation.z += delta
+      groupRef.current.rotation.z -= delta
       prevAngleRef.current = angle
     }
     const handleUp = () => {
