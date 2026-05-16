@@ -31,20 +31,25 @@ export function PaymentForm({ amount, onSuccess, onBack, addressFilled }: Paymen
     setLoading(true)
     setError(null)
 
-    const { error: submitError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/`,
-      },
-      redirect: 'if_required',
-    })
+    try {
+      const { error: submitError } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/`,
+        },
+        redirect: 'if_required',
+      })
 
-    if (submitError) {
-      setError(submitError.message ?? 'Payment failed')
+      if (submitError) {
+        setError(submitError.message ?? 'Payment failed')
+      } else {
+        toast.success('Payment successful! We will prepare your order.')
+        onSuccess()
+      }
+    } catch {
+      setError('Network error. Please check your connection and try again.')
+    } finally {
       setLoading(false)
-    } else {
-      toast.success('Payment successful! We will prepare your order.')
-      onSuccess()
     }
   }
 

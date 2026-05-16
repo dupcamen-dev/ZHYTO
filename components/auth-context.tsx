@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import { toast } from 'sonner'
 
 interface AuthContextType {
   user: User | null
@@ -55,7 +56,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(mockUser)
       return
     }
-    await supabase.auth.signInWithOAuth({ provider: 'google' })
+    try {
+      await supabase.auth.signInWithOAuth({ provider: 'google' })
+    } catch {
+      toast.error('Google sign-in failed. Please try again.')
+    }
   }
 
   const signInWithApple = async () => {
@@ -64,7 +69,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(mockUser)
       return
     }
-    await supabase.auth.signInWithOAuth({ provider: 'apple' })
+    try {
+      await supabase.auth.signInWithOAuth({ provider: 'apple' })
+    } catch {
+      toast.error('Apple sign-in failed. Please try again.')
+    }
   }
 
   const signOut = async () => {

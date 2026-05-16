@@ -231,17 +231,18 @@ export default function Home() {
                     </button>
                   </div>
                 ) : (
-                  <span
+                  <button
                     onClick={() => setCheckoutOpen(true)}
                     className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50 cursor-pointer"
                   >
                     <User className="w-3.5 h-3.5" />
                     SIGN IN
-                  </span>
+                  </button>
                 )
               )}
               <button
                 onClick={() => setCartOpen(true)}
+                aria-label="Open cart"
                 className="relative w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300"
               >
                 <ShoppingCart className="w-4 h-4" />
@@ -259,6 +260,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 className="lg:hidden w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300"
               >
                 {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -467,6 +469,7 @@ export default function Home() {
                                 {cart[product.id] ? (
                                   <button 
                                     onClick={() => removeFromCart(product.id)}
+                                    aria-label={`Decrease quantity of ${product.name}`}
                                     className="w-8 h-8 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all"
                                   >
                                     <Minus className="w-3 h-3" />
@@ -481,6 +484,7 @@ export default function Home() {
                                 </span>
                                 <button 
                                   onClick={() => { addToCart(product.id); toast.success(`${product.name} added to cart`, { duration: 2000 }) }}
+                                  aria-label={`Increase quantity of ${product.name}`}
                                   className="w-8 h-8 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all"
                                 >
                                   <Plus className="w-3 h-3" />
@@ -958,6 +962,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            aria-label="Scroll to top"
             className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors gold-glow"
           >
             <ArrowUp className="w-5 h-5" />

@@ -29,7 +29,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (hydrated) {
-      localStorage.setItem('zhyto-cart', JSON.stringify(cart))
+      try { localStorage.setItem('zhyto-cart', JSON.stringify(cart)) } catch {}
     }
   }, [cart, hydrated])
 

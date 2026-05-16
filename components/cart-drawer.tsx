@@ -40,8 +40,8 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
     .filter(Boolean) as (Product & { qty: number })[]
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : 0
-  const total = subtotal + delivery
+  const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : null
+  const total = subtotal + (delivery ?? 0)
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -123,7 +123,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
               </div>
               <div className="flex justify-between text-[15px]">
                 <span className="text-muted-foreground">Delivery</span>
-                <span className="text-foreground">{delivery === 0 ? 'FREE' : `£${delivery}`}</span>
+                <span className="text-foreground">{delivery === null ? 'N/A' : delivery === 0 ? 'FREE' : `£${delivery}`}</span>
               </div>
               <div className="flex justify-between text-[17px] font-serif pt-2 border-t border-border/20">
                 <span className="text-foreground">Total</span>
@@ -167,6 +167,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                     onCheckout()
                   }}
                   size="lg"
+                  disabled={subtotal < 25}
                   className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   CHECKOUT

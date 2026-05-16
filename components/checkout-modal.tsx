@@ -55,8 +55,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     .filter(Boolean) as (Product & { qty: number })[]
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
-  const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : 0
-  const total = subtotal + delivery
+  const delivery = subtotal >= 50 ? 0 : subtotal >= 25 ? 5 : null
+  const total = subtotal + (delivery ?? 0)
 
   // Advance to payment when user logs in (only if items in cart)
   useEffect(() => {
@@ -205,7 +205,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     <div className="border-t border-border/20 pt-2 mt-2 space-y-1">
                       <div className="flex justify-between text-[13px]">
                         <span className="text-foreground/60">Delivery</span>
-                        <span className="text-foreground/60">{delivery === 0 ? 'FREE' : `£${delivery}`}</span>
+                        <span className="text-foreground/60">{delivery === null ? 'N/A' : delivery === 0 ? 'FREE' : `£${delivery}`}</span>
                       </div>
                       <div className="flex justify-between text-sm font-serif">
                         <span className="text-foreground">Total</span>
@@ -250,7 +250,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   )}
 
                   {/* Delivery threshold info */}
-                  {delivery > 0 && !user && (
+                  {delivery !== null && delivery > 0 && (
                     <div className="flex items-center gap-3 text-[13px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
                       <Truck className="w-4 h-4 shrink-0 text-primary" />
                       <span>
@@ -275,11 +275,11 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     <Button
                       type="button"
                       onClick={handleContinue}
-                      disabled={submitting || cartItems.length === 0 || !user}
+                      disabled={submitting || cartItems.length === 0 || !user || subtotal < 25}
                       size="lg"
                       className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                     >
-                      {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : 'CONTINUE TO PAY'}
+                      {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < 25 ? `MINIMUM £25 — ADD £${(25 - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
                     </Button>
                   </div>
                 </>
