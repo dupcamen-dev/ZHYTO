@@ -144,6 +144,7 @@ function Model() {
         lastTimeRef.current = performance.now()
         if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
         e.stopPropagation()
+        gl.domElement.setPointerCapture(e.pointerId)
       }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
@@ -163,7 +164,7 @@ export function Hero3D() {
   const [ready, setReady] = useState(false)
 
   return (
-    <div className="relative w-full max-w-[300px] aspect-square sm:w-[300px] sm:h-[300px] lg:w-[600px] lg:h-[600px]">
+    <div className="relative w-full max-w-[300px] aspect-square sm:w-[300px] sm:h-[300px] lg:w-[600px] lg:h-[600px]" style={{ touchAction: 'none' }}>
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Loader className="w-6 h-6 text-primary animate-spin" />
