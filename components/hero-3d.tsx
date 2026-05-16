@@ -24,7 +24,7 @@ function Model() {
         <primitive
           object={scene}
           scale={1.4}
-          rotation={[Math.PI / 2, 0, 0]}
+          rotation={[Math.PI / 2, Math.PI / 2, 0]}
         />
       </Center>
     </group>
