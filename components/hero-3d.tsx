@@ -2,7 +2,8 @@
 
 import { Suspense, useRef, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { useGLTF, Center, useCursor } from '@react-three/drei'
+import { useGLTF, useCursor } from '@react-three/drei'
+import * as THREE from 'three'
 import { BASE_PATH } from '@/lib/constants'
 import { Loader } from 'lucide-react'
 
@@ -11,11 +12,43 @@ const modelPath = `${BASE_PATH}/models/3dvaren.glb`
 function Model() {
   const { scene } = useGLTF(modelPath)
   const groupRef = useRef<THREE.Group>(null)
+  const innerRef = useRef<THREE.Group>(null)
   const draggingRef = useRef(false)
   const prevXRef = useRef(0)
   const [hovered, setHovered] = useState(false)
 
   useCursor(hovered, 'grab')
+
+  useEffect(() => {
+    if (!innerRef.current) return
+
+    scene.updateMatrixWorld(true)
+
+    const centroid = new THREE.Vector3()
+    let count = 0
+    const vec = new THREE.Vector3()
+
+    scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        const geom = child.geometry
+        if (!geom) return
+        const pos = geom.getAttribute('position')
+        if (!pos) return
+
+        for (let i = 0; i < pos.count; i++) {
+          vec.fromBufferAttribute(pos, i)
+          vec.applyMatrix4(child.matrixWorld)
+          centroid.add(vec)
+          count++
+        }
+      }
+    })
+
+    if (count > 0) {
+      centroid.divideScalar(count)
+      innerRef.current.position.set(-centroid.x, -centroid.y, -centroid.z)
+    }
+  }, [scene])
 
   useEffect(() => {
     const handleMove = (e: PointerEvent) => {
@@ -46,13 +79,13 @@ function Model() {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <Center position={[0, 0.35, 0]}>
+      <group ref={innerRef}>
         <primitive
           object={scene}
           scale={3}
           rotation={[0.03, 0, 0]}
         />
-      </Center>
+      </group>
     </group>
   )
 }
