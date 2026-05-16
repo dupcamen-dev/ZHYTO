@@ -24,10 +24,7 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm ci
-      - run: EXPORT=true npm run build
-      - name: Fix image paths for basePath
-        run: |
-          find out/ -name '*.html' -exec sed -i 's|src="/images/|src="/ZHYTO/images/|g' {} +
+      - run: EXPORT=true NEXT_PUBLIC_BASE_PATH=/ZHYTO npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./out

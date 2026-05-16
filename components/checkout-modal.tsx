@@ -139,7 +139,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[90vh] flex flex-col">
+      <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[90vh] flex flex-col p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
             {showPayment ? 'Pay securely' : 'Checkout'}

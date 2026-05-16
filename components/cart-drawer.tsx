@@ -46,8 +46,8 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md bg-background border-border/30 flex flex-col p-0">
-        <SheetHeader className="p-6 pb-0">
-          <SheetTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
+        <SheetHeader className="p-4 sm:p-6 pb-0">
+          <SheetTitle className="font-serif text-xl sm:text-2xl tracking-[0.1em] text-foreground">
             Your Cart
           </SheetTitle>
           <SheetDescription className="text-[14px] tracking-[0.2em] text-foreground/60">
@@ -72,7 +72,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
           </div>
         ) : (
           <>
-            <ScrollArea className="flex-1 px-6 py-4">
+            <ScrollArea className="flex-1 px-4 sm:px-6 py-4">
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-4 glass-card rounded-lg p-4">
@@ -116,7 +116,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
               </div>
             </ScrollArea>
 
-            <div className="border-t border-border/30 p-6 space-y-3">
+            <div className="border-t border-border/30 p-4 sm:p-6 space-y-3">
               <div className="flex justify-between text-[15px]">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="text-foreground">£{subtotal}</span>

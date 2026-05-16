@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -57,7 +58,7 @@ const products = [
     description: "Traditional Siberian dumplings with seasoned beef and pork filling",
     price: 15,
     unit: "/ kg",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: "Bestseller",
     category: "pelmeni"
   },
@@ -67,7 +68,7 @@ const products = [
     description: "Light and tender pelmeni with poultry filling",
     price: 15,
     unit: "/ kg",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: null,
     category: "pelmeni"
   },
@@ -77,7 +78,7 @@ const products = [
     description: "Classic Ukrainian varenyky with creamy mashed potato",
     price: 12,
     unit: "/ kg",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: "Traditional",
     category: "varenyky"
   },
@@ -87,7 +88,7 @@ const products = [
     description: "Hearty varenyky with savoury braised cabbage",
     price: 12,
     unit: "/ kg",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: null,
     category: "varenyky"
   },
@@ -97,7 +98,7 @@ const products = [
     description: "Rich varenyky with wild forest mushroom filling",
     price: 12,
     unit: "/ kg",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: null,
     category: "varenyky"
   },
@@ -107,7 +108,7 @@ const products = [
     description: "Sweet varenyky filled with cottage cheese and cherries",
     price: 13,
     unit: "/ kg",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: "Seasonal",
     category: "varenyky"
   },
@@ -117,7 +118,7 @@ const products = [
     description: "Savory varenyky with cottage cheese and fresh spinach",
     price: 13,
     unit: "/ kg",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: null,
     category: "varenyky"
   },
@@ -127,7 +128,7 @@ const products = [
     description: "Traditional Ukrainian cheese fritters, golden and fluffy",
     price: 10,
     unit: "/ 600g",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: "Chef's Choice",
     category: "syrnyky"
   },
@@ -137,7 +138,7 @@ const products = [
     description: "Decadent syrnyky with rich chocolate chunks",
     price: 11,
     unit: "/ 600g",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: null,
     category: "syrnyky"
   },
@@ -147,7 +148,7 @@ const products = [
     description: "Fluffy syrnyky bursting with wild blueberries",
     price: 11,
     unit: "/ 600g",
-    image: "/images/hero-varenyky.jpg",
+    image: img("/images/hero-varenyky.jpg"),
     badge: null,
     category: "syrnyky"
   },
@@ -176,11 +177,9 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
       {/* Navigation */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      <nav
         className="fixed top-0 left-0 right-0 z-50 glass-nav"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between h-20">
@@ -230,17 +229,17 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </motion.nav>
+        </nav>
 
       {/* Hero Section */}
       <motion.section 
         style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative min-h-screen flex items-center"
+        className="relative min-h-[100dvh] flex items-center"
       >
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-varenyky.jpg"
+            src={img("/images/hero-varenyky.jpg")}
             alt="Artisan varenyky"
             fill
             className="object-cover"
@@ -517,7 +516,7 @@ export default function Home() {
             >
               <div className="relative h-[520px] rounded-lg overflow-hidden">
                 <Image
-                  src="/images/hero-varenyky.jpg"
+                  src={img("/images/hero-varenyky.jpg")}
                   alt="Handmade varenyky process"
                   fill
                   className="object-cover"
@@ -566,7 +565,7 @@ export default function Home() {
                   <div className="w-full h-full flex items-center justify-center p-6">
                     <div className="w-full h-full relative -rotate-90">
                       <Image
-                        src="/images/ingredients.jpg"
+                        src={img("/images/ingredients.jpg")}
                         alt="Natural ingredients"
                         fill
                         className="object-contain"
