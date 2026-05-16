@@ -154,7 +154,7 @@ function Model() {
       <group ref={innerRef}>
         <primitive
           object={scene}
-          scale={5.5}
+          scale={8}
           rotation={[0, 0, 0]}
         />
       </group>
@@ -166,7 +166,7 @@ export function Hero3D() {
   const [ready, setReady] = useState(false)
 
   return (
-    <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[600px] lg:h-[480px] xl:w-[700px] xl:h-[560px] 2xl:w-[780px] 2xl:h-[620px]">
+    <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[750px] lg:h-[580px] xl:w-[900px] xl:h-[700px] 2xl:w-[1000px] 2xl:h-[780px]">
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Loader className="w-6 h-6 text-primary animate-spin" />
@@ -174,7 +174,7 @@ export function Hero3D() {
       )}
       <div className="w-full h-full">
         <Canvas
-          camera={{ position: [0, 0, 28], fov: 45 }}
+          camera={{ position: [0, 0, 30], fov: 50 }}
           gl={{ antialias: true }}
           style={{ opacity: ready ? 1 : 0 }}
           onCreated={() => setReady(true)}
