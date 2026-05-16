@@ -24,9 +24,14 @@ const geist = Geist({
 })
 
 export const metadata: Metadata = {
-  title: 'zhyto.london | Authentic Ukrainian Varenyky & Syrnyky',
+  title: '🌾 zhyto.london | Authentic Ukrainian Varenyky & Syrnyky',
   description: 'Handcrafted Ukrainian varenyky and syrnyky delivered to your door in London. Marketplace for authentic homemade cuisine.',
   keywords: ['varenyky', 'syrnyky', 'ukrainian food', 'london', 'dumplings', 'marketplace'],
+  icons: {
+    icon: [
+      { url: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌾</text></svg>', type: 'image/svg+xml' },
+    ],
+  },
 }
 
 export const viewport: Viewport = {
