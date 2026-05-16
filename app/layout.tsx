@@ -5,6 +5,7 @@ import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
 import { CookieConsent } from '@/components/cookie-consent'
 import { Toaster } from '@/components/ui/sonner'
+import { NoiseOverlay } from '@/components/noise-overlay'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({ 
@@ -52,6 +53,7 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             {children}
+            <NoiseOverlay />
             <CookieConsent />
             <Toaster />
           </CartProvider>
