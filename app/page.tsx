@@ -270,8 +270,7 @@ export default function Home() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src={img("/images/hero-varenyky.jpg")}
-            alt="Artisan varenyky"
+            src={img("/images/hero-bg.jpg")}
             fill
             className="object-cover"
             priority
