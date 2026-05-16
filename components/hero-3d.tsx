@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useGLTF, useCursor } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { BASE_PATH } from '@/lib/constants'
 import { Loader } from 'lucide-react'
@@ -11,179 +11,97 @@ const modelPath = `${BASE_PATH}/models/3dvaren.glb`
 
 function Model() {
   const { scene } = useGLTF(modelPath)
-  const { gl } = useThree()
-  const groupRef = useRef<THREE.Group>(null)
-  const innerRef = useRef<THREE.Group>(null)
-  const draggingRef = useRef(false)
-  const autoPausedRef = useRef(false)
-  const isSpinningRef = useRef(false)
-  const spinVelocityRef = useRef(0)
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const prevAngleRef = useRef(0)
-  const angleSetRef = useRef(false)
-  const lastTimeRef = useRef(0)
-  const [hovered, setHovered] = useState(false)
-
-  useCursor(hovered, 'grab')
-
-  useFrame((_, delta) => {
-    if (!groupRef.current) return
-
-    if (isSpinningRef.current) {
-      groupRef.current.rotation.z += spinVelocityRef.current * delta
-      spinVelocityRef.current *= (1 - 3 * delta)
-      if (Math.abs(spinVelocityRef.current) < 0.001) {
-        isSpinningRef.current = false
-        spinVelocityRef.current = 0
-        scheduleResume()
-      }
-    } else if (!autoPausedRef.current) {
-      groupRef.current.rotation.z += delta * 0.3
-    }
-  }, 2)
+  const meshRef = useRef<THREE.Group>(null)
+  const isDragging = useRef(false)
+  const lastX = useRef(0)
+  const velocity = useRef(0)
+  const autoRotate = useRef(true)
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    if (!innerRef.current) return
-
-    scene.updateMatrixWorld(true)
-
-    const centroid = new THREE.Vector3()
-    let count = 0
-    const vec = new THREE.Vector3()
-
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        const geom = child.geometry
-        if (!geom) return
-        const pos = geom.getAttribute('position')
-        if (!pos) return
-
-        for (let i = 0; i < pos.count; i++) {
-          vec.fromBufferAttribute(pos, i)
-          vec.applyMatrix4(child.matrixWorld)
-          centroid.add(vec)
-          count++
-        }
+        child.castShadow = true
+        child.receiveShadow = true
       }
     })
-
-    if (count > 0) {
-      centroid.divideScalar(count)
-      innerRef.current.position.set(-centroid.x, -centroid.y, -centroid.z)
-    }
   }, [scene])
 
-  const scheduleResume = () => {
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
-    resumeTimerRef.current = setTimeout(() => {
-      autoPausedRef.current = false
-    }, 300)
-  }
+  useFrame((_, delta) => {
+    if (!meshRef.current) return
 
-  useEffect(() => {
-    const handleMove = (e: PointerEvent) => {
-      if (!draggingRef.current || !groupRef.current) return
+    if (!autoRotate.current) {
+      velocity.current *= Math.pow(0.95, delta * 60)
+      meshRef.current.rotation.y += velocity.current * delta
 
-      const rect = gl.domElement.getBoundingClientRect()
-      const cx = rect.left + rect.width / 2
-      const cy = rect.top + rect.height / 2
-
-      const angle = Math.atan2(e.clientY - cy, e.clientX - cx)
-
-      if (!angleSetRef.current) {
-        prevAngleRef.current = angle
-        angleSetRef.current = true
-        return
+      if (Math.abs(velocity.current) < 0.01) {
+        autoRotate.current = true
       }
-
-      let delta = angle - prevAngleRef.current
-      if (delta > Math.PI) delta -= Math.PI * 2
-      if (delta < -Math.PI) delta += Math.PI * 2
-
-      groupRef.current.rotation.z -= delta
-
-      const now = performance.now()
-      const dt = (now - lastTimeRef.current) / 1000
-      if (dt > 0 && dt < 0.1) {
-        spinVelocityRef.current = -delta / dt
-      }
-      lastTimeRef.current = now
-
-      prevAngleRef.current = angle
+    } else {
+      meshRef.current.rotation.y += delta * 0.3
     }
-    const handleUp = () => {
-      draggingRef.current = false
-      angleSetRef.current = false
-      gl.domElement.style.touchAction = ''
-
-      const now = performance.now()
-      const dt = (now - lastTimeRef.current) / 1000
-      if (dt > 0.001 && dt < 0.5 && Math.abs(spinVelocityRef.current) > 0.01) {
-        isSpinningRef.current = true
-      } else {
-        scheduleResume()
-      }
-    }
-    window.addEventListener('pointermove', handleMove)
-    window.addEventListener('pointerup', handleUp)
-    return () => {
-      window.removeEventListener('pointermove', handleMove)
-      window.removeEventListener('pointerup', handleUp)
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
-    }
-  }, [gl])
+  })
 
   return (
     <group
-      ref={groupRef}
+      ref={meshRef}
       onPointerDown={(e) => {
-        draggingRef.current = true
-        autoPausedRef.current = true
-        isSpinningRef.current = false
-        spinVelocityRef.current = 0
-        angleSetRef.current = false
-        lastTimeRef.current = performance.now()
-        if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
+        isDragging.current = true
+        lastX.current = e.clientX
+        autoRotate.current = false
+        if (resumeTimer.current) clearTimeout(resumeTimer.current)
+        velocity.current = 0
         e.stopPropagation()
-        gl.domElement.style.touchAction = 'none'
-        gl.domElement.setPointerCapture(e.pointerId)
+        e.target.setPointerCapture(e.pointerId)
       }}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
+      onPointerUp={() => {
+        isDragging.current = false
+        velocity.current *= 0.5
+        if (Math.abs(velocity.current) < 0.1) autoRotate.current = true
+      }}
+      onPointerMove={(e) => {
+        if (!isDragging.current) return
+        const dx = (e.clientX - lastX.current) * 0.005
+        if (meshRef.current) {
+          meshRef.current.rotation.y -= dx
+          velocity.current = -dx / 0.016
+        }
+        lastX.current = e.clientX
+      }}
     >
-      <group ref={innerRef}>
-        <primitive
-          object={scene}
-          scale={8}
-          rotation={[0, 0, 0]}
-        />
-      </group>
+      <primitive object={scene} scale={8} />
     </group>
   )
 }
 
 export function Hero3D() {
-  const [ready, setReady] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState(false)
 
   return (
     <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[550px] lg:h-[700px] xl:w-[620px] xl:h-[780px]">
-      {!ready && (
+      {!loaded && !error && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <Loader className="w-6 h-6 text-primary animate-spin" />
         </div>
       )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center z-10 text-[10px] text-foreground/30">
+          3D unavailable
+        </div>
+      )}
       <Canvas
         camera={{ position: [0, 0, 38], fov: 50 }}
-        gl={{ antialias: true }}
-        style={{ width: '100%', height: '100%', opacity: ready ? 1 : 0, transition: 'opacity 0.5s' }}
-        onCreated={() => setReady(true)}
+        onCreated={() => setLoaded(true)}
+        style={{ width: '100%', height: '100%' }}
+        onError={() => setError(true)}
       >
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <directionalLight position={[-3, 2, -2]} intensity={0.4} />
-          <Suspense fallback={null}>
-            <Model />
-          </Suspense>
+        <ambientLight intensity={0.4} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
+        <pointLight position={[-10, -10, -10]} intensity={0.3} color="#ffd89b" />
+        <Suspense fallback={null}>
+          <Model />
+        </Suspense>
       </Canvas>
     </div>
   )

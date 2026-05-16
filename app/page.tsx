@@ -366,15 +366,9 @@ export default function Home() {
             </div>
 
             {/* 3D Model — desktop only */}
-            <motion.div
-              style={{ scale: hero3dScale }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex items-center justify-center shrink-0"
-            >
+            <div className="hidden lg:flex items-center justify-center shrink-0">
               <Hero3D />
-            </motion.div>
+            </div>
           </div>
 
           {/* Feature badges */}
