@@ -752,8 +752,24 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-28 lg:py-36 relative section-light overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <section id="faq" className="py-28 lg:py-36 relative overflow-hidden">
+        {/* Background image with white vignette */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 brightness-[1.8] contrast-[0.85] saturate-[0.7]">
+            <Image
+              src={img("/images/fornofone.png")}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/40 to-white/70" />
+          <div className="absolute inset-0" style={{
+            background: 'radial-gradient(circle at 50% 50%, transparent 30%, white 100%)'
+          }} />
+          <div className="absolute inset-0 bg-white/20" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
