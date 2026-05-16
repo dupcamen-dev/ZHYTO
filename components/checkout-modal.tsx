@@ -319,7 +319,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   id="delivery-address"
                   value={deliveryAddress}
                   onChange={e => setDeliveryAddress(e.target.value)}
-                  className="bg-transparent border-border/50 text-foreground text-[14px] rounded-none focus:border-primary min-h-[60px]"
+                  className="bg-transparent border-border/50 text-foreground text-[16px] rounded-none focus:border-primary min-h-[60px]"
                   placeholder="Street, postcode, city"
                 />
               </div>
