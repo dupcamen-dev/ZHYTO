@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, Environment, ContactShadows } from '@react-three/drei'
+import { useGLTF, Environment, ContactShadows, Center } from '@react-three/drei'
 import { BASE_PATH } from '@/lib/constants'
 import { Loader } from 'lucide-react'
 
@@ -10,22 +10,20 @@ const modelPath = `${BASE_PATH}/models/3dvaren.glb`
 
 function Model() {
   const { scene } = useGLTF(modelPath)
-  const ref = useRef<THREE.Group>(null)
+  const groupRef = useRef<THREE.Group>(null)
 
   useFrame((_, delta) => {
-    if (ref.current) {
-      ref.current.rotation.y += delta * 0.25
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.25
     }
   })
 
   return (
-    <primitive
-      ref={ref}
-      object={scene}
-      scale={1.7}
-      position={[0, -0.3, 0]}
-      rotation={[-0.12, 0, 0]}
-    />
+    <group ref={groupRef} position={[0, -0.3, 0]}>
+      <Center>
+        <primitive object={scene} scale={1.7} rotation={[-0.12, 0, 0]} />
+      </Center>
+    </group>
   )
 }
 
