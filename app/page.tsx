@@ -188,9 +188,8 @@ export default function Home() {
       {/* Navigation */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 glass-nav"
-        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <a href="#" className="text-2xl font-serif tracking-[0.15em] text-foreground">

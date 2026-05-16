@@ -24,7 +24,7 @@ const geist = Geist({
 })
 
 export const metadata: Metadata = {
-  title: '🌾 zhyto.london | Authentic Ukrainian Varenyky & Syrnyky',
+  title: 'zhyto.london | Authentic Ukrainian Varenyky & Syrnyky',
   description: 'Handcrafted Ukrainian varenyky and syrnyky delivered to your door in London. Marketplace for authentic homemade cuisine.',
   keywords: ['varenyky', 'syrnyky', 'ukrainian food', 'london', 'dumplings', 'marketplace'],
   icons: {
