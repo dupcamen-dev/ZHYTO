@@ -38,9 +38,9 @@ function Model() {
         scheduleResume()
       }
     } else if (!autoPausedRef.current) {
-      groupRef.current.rotation.z += delta * 0.1
+      groupRef.current.rotation.z += delta * 0.3
     }
-  })
+  }, 2)
 
   useEffect(() => {
     if (!innerRef.current) return
