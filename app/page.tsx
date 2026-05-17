@@ -246,7 +246,7 @@ export default function Home() {
         animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <div className="max-w-7xl mx-auto px-4 lg:px-8" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <motion.div
             className="flex items-center justify-between"
             animate={{ height: headerMode === 'tall' ? '14rem' : '7rem' }}
@@ -255,7 +255,7 @@ export default function Home() {
             {/* Logo */}
             <motion.a
               href="#"
-              className="flex items-center -ml-10 sm:-ml-12"
+              className="flex items-center -ml-6 sm:-ml-8"
               whileHover={{ scale: 1.06, rotate: -0.5 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 200, damping: 12 }}
@@ -389,7 +389,7 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-20 sm:pt-24 pb-16">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 lg:px-8 pt-20 sm:pt-24 pb-16">
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
               <motion.p
@@ -498,7 +498,7 @@ export default function Home() {
 
       {/* Products Section */}
       <section id="products" className="py-28 lg:py-36 relative section-orange">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -624,7 +624,7 @@ export default function Home() {
 
       {/* About Section */}
       <section id="about" className="py-28 lg:py-36 relative bg-background">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -689,7 +689,7 @@ export default function Home() {
 
       {/* Ingredients Section */}
       <section id="ingredients" className="py-28 lg:py-36 relative section-orange overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Heading */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -775,7 +775,7 @@ export default function Home() {
 
       {/* Delivery Section */}
       <section id="delivery" className="py-28 lg:py-36 bg-background">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -846,7 +846,7 @@ export default function Home() {
             background: 'radial-gradient(circle at 50% 50%, transparent 50%, oklch(0.95 0.02 85 / 0.65) 100%)'
           }} />
         </div>
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -910,7 +910,7 @@ export default function Home() {
         <div className="absolute bottom-10 right-10 w-48 h-48 rounded-full border border-primary/10 -z-10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="max-w-2xl mx-auto glass-card rounded-2xl p-12 md:p-16 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -960,7 +960,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-border/30 py-14 bg-background">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-2xl font-serif tracking-[0.15em]">
               zhyto.london
