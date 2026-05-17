@@ -389,7 +389,7 @@ export default function Home() {
         className="relative min-h-[120dvh] flex items-center overflow-hidden"
       >
         {/* Background photo */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute left-0 right-0 bottom-0 z-0" style={{ top: '14rem' }}>
           <Image
             src={img("/images/hero-bg.jpg")}
             alt=""
