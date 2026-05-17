@@ -255,7 +255,7 @@ export default function Home() {
         animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
-        <div className="max-w-7xl mx-auto px-5 lg:px-10" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <div className={`max-w-7xl mx-auto transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? 'px-8 lg:px-14' : 'px-5 lg:px-10'}`} style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <motion.div
             className="flex items-center justify-between"
             animate={{ height: headerMode === 'tall' ? '14rem' : '7rem' }}
@@ -264,7 +264,7 @@ export default function Home() {
             {/* Logo */}
             <motion.a
               href="#"
-              className="flex items-center -ml-7 sm:-ml-10"
+              className={`flex items-center transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? '-ml-10 sm:-ml-14' : '-ml-7 sm:-ml-10'}`}
               whileHover={{ scale: 1.06, rotate: -0.5 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 200, damping: 12 }}
@@ -516,10 +516,12 @@ export default function Home() {
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-            <h2 className="text-5xl md:text-6xl font-serif font-light text-transparent bg-clip-text bg-primary inline-block">
-              <span className="font-script text-[1.15em]">Crafted</span>{" "}
-              <span>with tradition</span>
-            </h2>
+            <div className="bg-primary px-6 py-3 rounded-lg inline-block">
+              <h2 className="text-5xl md:text-6xl font-serif font-light text-transparent" style={{ background: '#ff5f01', WebkitBackgroundClip: 'text', backgroundClip: 'text' }}>
+                <span className="font-script text-[1.15em]">Crafted</span>{" "}
+                <span>with tradition</span>
+              </h2>
+            </div>
           </motion.div>
 
           {/* Product categories */}
