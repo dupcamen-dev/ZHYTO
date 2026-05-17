@@ -832,20 +832,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-28 lg:py-36 relative overflow-hidden section-orange">
-        {/* Background image with subtle cream tint */}
-        <div className="absolute inset-0">
-          <Image
-            src={img("/images/fornofone.webp")}
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0" style={{ background: 'oklch(0.95 0.02 85 / 0.55)' }} />
-          <div className="absolute inset-0" style={{
-            background: 'radial-gradient(circle at 50% 50%, transparent 50%, oklch(0.95 0.02 85 / 0.65) 100%)'
-          }} />
-        </div>
+      <section id="faq" className="py-28 lg:py-36 relative section-orange">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -877,7 +864,7 @@ export default function Home() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full glass-card rounded-none px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer bg-white/80 backdrop-blur-md"
+                  className="w-full glass-card rounded-none px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer bg-white"
                 >
                   <span className="font-serif text-[19px] text-black">{item.q}</span>
                   <ChevronDown className={`w-4 h-4 text-primary shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
@@ -891,7 +878,7 @@ export default function Home() {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 py-4 text-black text-xl leading-relaxed bg-white/80 backdrop-blur-md">
+                      <div className="px-6 py-4 text-black text-xl leading-relaxed bg-white">
                         {item.a}
                       </div>
                     </motion.div>
