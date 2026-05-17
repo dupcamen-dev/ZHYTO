@@ -79,7 +79,7 @@ const products = [
     description: "Classic Ukrainian varenyky with creamy mashed potato",
     price: 12,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
     stock: 10
@@ -90,7 +90,7 @@ const products = [
     description: "Hearty varenyky with savoury braised cabbage",
     price: 12,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
     stock: 10
@@ -101,7 +101,7 @@ const products = [
     description: "Rich varenyky with wild forest mushroom filling",
     price: 12,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
     stock: 10
@@ -112,7 +112,7 @@ const products = [
     description: "Sweet varenyky filled with cottage cheese and cherries",
     price: 13,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
     stock: 10
@@ -123,7 +123,7 @@ const products = [
     description: "Savory varenyky with cottage cheese and fresh spinach",
     price: 13,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
     stock: 10
