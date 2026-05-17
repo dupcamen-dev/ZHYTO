@@ -134,7 +134,7 @@ const products = [
     description: "Traditional Ukrainian cheese fritters, golden and fluffy",
     price: 10,
     unit: "/ 600g",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/syrnyky-new.png"),
     badge: null,
     category: "syrnyky",
     stock: 10
@@ -145,7 +145,7 @@ const products = [
     description: "Decadent syrnyky with rich chocolate chunks",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/syrnyky-new.png"),
     badge: null,
     category: "syrnyky",
     stock: 10
@@ -156,7 +156,7 @@ const products = [
     description: "Fluffy syrnyky bursting with wild blueberries",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/syrnyky-new.png"),
     badge: null,
     category: "syrnyky",
     stock: 10
@@ -213,6 +213,12 @@ export default function Home() {
   const headerModeRef = useRef(headerMode)
   headerModeRef.current = headerMode
   const prevScrollY = useRef(0)
+  const productsTopRef = useRef(0)
+
+  useEffect(() => {
+    const el = document.getElementById('products')
+    if (el) productsTopRef.current = el.offsetTop
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -221,7 +227,6 @@ export default function Home() {
       const atTop = y < 50
       const atBottom = y > maxY - 100
       const goingDown = y > prevScrollY.current
-      const scrollPercent = y / maxY
 
       setShowScrollTop(y > 150)
 
@@ -229,12 +234,10 @@ export default function Home() {
         setHeaderMode('tall')
       } else if (atBottom) {
         setHeaderMode('normal')
+      } else if (goingDown && y >= productsTopRef.current - 100) {
+        setHeaderMode('hidden')
       } else if (goingDown) {
-        if (scrollPercent < 0.6) {
-          setHeaderMode('normal')
-        } else {
-          setHeaderMode(prev => prev === 'tall' ? 'normal' : 'hidden')
-        }
+        setHeaderMode('normal')
       } else {
         setHeaderMode('normal')
       }
