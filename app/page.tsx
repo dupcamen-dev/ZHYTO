@@ -386,7 +386,7 @@ export default function Home() {
       {/* Hero Section */}
       <motion.section 
         style={{ opacity: heroOpacity }}
-        className="relative min-h-[120dvh] flex items-center overflow-hidden"
+        className="relative min-h-[120dvh] flex flex-col overflow-hidden"
       >
         {/* Background photo */}
         <div className="absolute left-0 right-0 bottom-0 z-0" style={{ top: '14rem' }}>
@@ -408,11 +408,9 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32">
-          {/* Beige full-height card panel */}
-          <div className="hidden lg:block absolute left-5 lg:left-10 top-0 bottom-0 w-full max-w-lg bg-background" />
-          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
-            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl bg-background p-8 lg:p-12">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32 flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
+            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl bg-background p-8 lg:p-12 flex flex-col justify-center">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -467,7 +465,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex items-center justify-center shrink-0"
+              className="hidden lg:flex items-center justify-center shrink-0 self-center"
             >
               <Hero3D />
             </motion.div>
