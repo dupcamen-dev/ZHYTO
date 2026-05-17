@@ -179,6 +179,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [dbProducts, setDbProducts] = useState<typeof products | null>(null)
   const { scrollYProgress } = useScroll()
@@ -552,13 +553,13 @@ export default function Home() {
                       className="group flex"
                     >
                       <div className={'aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
-                        <div className="relative h-1/2 overflow-hidden">
+                        <button onClick={() => product.stock > 0 && setSelectedProduct(product)} className="relative h-1/2 overflow-hidden w-full text-left cursor-pointer">
                           <Image
                             src={product.image}
                             alt={product.name}
                             fill
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
                           />
                           {product.badge && (
                             <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase">
@@ -572,53 +573,12 @@ export default function Home() {
                               </span>
                             </div>
                           )}
-                        </div>
+                        </button>
 
                         <div className="p-4 flex flex-col flex-1 justify-between">
                           <h3 className="font-serif text-lg text-gray-900 leading-snug">{product.name}</h3>
 
-                          <div className="flex items-center justify-between mt-3">
-                            <div>
-                              <span className="text-primary font-serif text-2xl">£{product.price}</span>
-                              <span className="text-sm text-gray-500 ml-1">{product.unit}</span>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                              {cart[product.id] ? (
-                                <button
-                                  onClick={() => removeFromCart(product.id)}
-                                  aria-label={`Decrease quantity of ${product.name}`}
-                                  className="w-8 h-8 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700"
-                                >
-                                  <Minus className="w-3 h-3" />
-                                </button>
-                              ) : (
-                                <span className="w-8 h-8 flex items-center justify-center text-gray-300">
-                                  <Minus className="w-3 h-3" />
-                                </span>
-                              )}
-                              <span className={'text-sm w-5 text-center font-medium ' + (cart[product.id] ? 'text-gray-900' : 'text-gray-400')}>
-                                {cart[product.id] || 0}
-                              </span>
-                              <button
-                                onClick={() => { addToCart(product.id); toast.success(`${product.name} added to cart`, { duration: 2000 }) }}
-                                aria-label={`Increase quantity of ${product.name}`}
-                                disabled={product.stock === 0}
-                                className="w-8 h-8 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed text-gray-700"
-                              >
-                                <Plus className="w-3 h-3" />
-                              </button>
-                            </div>
-                          </div>
-                          {cart[product.id] ? (
-                            <button
-                              onClick={() => setCartOpen(true)}
-                              className="text-xs tracking-[0.15em] text-primary hover:text-primary/80 transition-colors mt-1 text-left"
-                            >
-                              VIEW CART →
-                            </button>
-                          ) : null}
-                        </div>
+                      </div>
                       </div>
                     </motion.div>
                   ))}
@@ -1070,6 +1030,81 @@ export default function Home() {
                 )
               )}
             </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Product Modal */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedProduct(null)}
+          >
+            <div className="absolute inset-0 bg-black/40" />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="relative bg-white w-full max-w-md p-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedProduct(null)}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="relative h-48 w-full mb-6">
+                <Image
+                  src={selectedProduct.image}
+                  alt={selectedProduct.name}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+
+              <h3 className="font-serif text-2xl text-gray-900 mb-2">{selectedProduct.name}</h3>
+              <p className="text-gray-600 text-[15px] leading-relaxed mb-4">{selectedProduct.description}</p>
+
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <span className="text-primary font-serif text-3xl">£{selectedProduct.price}</span>
+                  <span className="text-sm text-gray-500 ml-1">{selectedProduct.unit}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => removeFromCart(selectedProduct.id)}
+                    className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700 cursor-pointer"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="text-lg w-8 text-center font-medium text-gray-900">
+                    {cart[selectedProduct.id] || 0}
+                  </span>
+                  <button
+                    onClick={() => { addToCart(selectedProduct.id); toast.success(`${selectedProduct.name} added to cart`, { duration: 2000 }) }}
+                    className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700 cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                <button
+                  onClick={() => setCartOpen(true)}
+                  className="text-sm tracking-[0.15em] text-primary hover:text-primary/80 transition-colors"
+                >
+                  VIEW CART →
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
