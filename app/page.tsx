@@ -389,12 +389,12 @@ export default function Home() {
         className="relative min-h-[120dvh] flex items-center overflow-hidden"
       >
         {/* Background image — starts below header */}
-        <div className="absolute left-0 right-0 z-0" style={{ top: '14rem', bottom: '0' }}>
+        <div className="absolute inset-0 z-0">
           <Image
             src={img("/images/hero-bg.jpg")}
             alt=""
             fill
-            className="object-cover"
+            className="object-contain object-top"
             priority
           />
         </div>
@@ -512,7 +512,7 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
-        {/* Divider at bottom — so bg extends to meet products */}
+        {/* Divider at bottom of hero so bg extends to meet products */}
         <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center" style={{ transform: 'translateY(50%)' }}>
           <PastelDivider />
         </div>
