@@ -490,7 +490,7 @@ export default function Home() {
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
             <div className="bg-primary px-6 py-3 inline-block">
-              <h2 className="text-5xl md:text-6xl font-serif font-light text-transparent" style={{ background: '#ff5f01', WebkitBackgroundClip: 'text', backgroundClip: 'text' }}>
+              <h2 className="text-5xl md:text-6xl font-serif font-light text-transparent" style={{ background: '#0749f7', WebkitBackgroundClip: 'text', backgroundClip: 'text' }}>
                 <span className="font-script text-[1.15em]">Crafted</span>{" "}
                 <span>with tradition</span>
               </h2>
