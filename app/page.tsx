@@ -398,7 +398,7 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32 flex-1 flex flex-col">
+           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
           <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl relative overflow-hidden">
                 <div className="absolute inset-0 -z-10">
@@ -410,7 +410,7 @@ export default function Home() {
                     priority
                   />
                 </div>
-                <div className="relative z-10 p-8 lg:p-12 flex flex-col justify-end pb-24 lg:pb-32">
+                <div className="relative z-10 p-8 lg:p-12 flex flex-col justify-center">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
