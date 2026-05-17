@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
 import { Hero3D } from '@/components/hero-3d'
+import { ImageCompare } from '@/components/image-compare'
 import { useDeliverySettings } from '@/lib/use-delivery'
 import { toast } from 'sonner'
 
@@ -531,13 +532,21 @@ export default function Home() {
                     >
                       <div className={'aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
                         <button onClick={() => product.stock > 0 && setSelectedProduct(product)} className="relative flex-1 overflow-hidden w-full text-left cursor-pointer">
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            className="object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
-                          />
+                          {product.category === 'syrnyky' ? (
+                            <ImageCompare
+                              frontImage={product.image}
+                              backImage={img("/images/syrnyky-ingredients.png")}
+                              alt={product.name}
+                            />
+                          ) : (
+                            <Image
+                              src={product.image}
+                              alt={product.name}
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                              className="object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
+                            />
+                          )}
                           {product.badge && (
                             <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase">
                               {product.badge}
