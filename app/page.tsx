@@ -470,45 +470,8 @@ export default function Home() {
               <Hero3D />
             </motion.div>
           </div>
+          </div>
 
-          {/* Feature badges */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-wrap items-center gap-6 md:gap-10 mt-12"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center">
-                <Leaf className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-[13px] tracking-[0.2em] text-muted-foreground">NATURAL</p>
-                <p className="text-[14px] tracking-[0.15em] text-foreground">INGREDIENTS</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center">
-                <Heart className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-[13px] tracking-[0.2em] text-muted-foreground">HANDMADE</p>
-                <p className="text-[14px] tracking-[0.15em] text-foreground">WITH CARE</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center">
-                <Snowflake className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-[13px] tracking-[0.2em] text-muted-foreground">FROZEN</p>
-                <p className="text-[14px] tracking-[0.15em] text-foreground">FOR FRESHNESS</p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
         {/* Divider at bottom of hero so bg extends to meet products */}
         <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center" style={{ transform: 'translateY(50%)' }}>
           <PastelDivider />
