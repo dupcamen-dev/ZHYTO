@@ -465,13 +465,13 @@ export default function Home() {
                       transition={{ duration: 0.5 }}
                       className="group flex"
                     >
-                      <div className={`card-dark rounded-sm overflow-hidden flex flex-col w-full ${product.stock === 0 ? 'opacity-40' : ''}`}>
-                        <div className="relative h-56 overflow-hidden">
+                      <div className={'bg-white aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
+                        <div className="relative h-1/2 overflow-hidden">
                           <Image
                             src={product.image}
                             alt={product.name}
                             fill
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                           />
                           {product.badge && (
@@ -480,61 +480,58 @@ export default function Home() {
                             </span>
                           )}
                           {product.stock === 0 && (
-                            <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
-                              <span className="px-4 py-2 bg-background/80 text-foreground text-[11px] tracking-[0.2em]">
+                            <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                              <span className="px-4 py-2 bg-white/90 text-gray-900 text-[11px] tracking-[0.2em]">
                                 COMING BACK SOON
                               </span>
                             </div>
                           )}
                         </div>
 
-                        <div className="p-5 flex flex-col flex-1">
-                          <h3 className="font-serif text-xl mb-2 text-foreground">{product.name}</h3>
-                          <p className="text-[14px] text-muted-foreground mb-5 leading-relaxed flex-1">{product.description}</p>
+                        <div className="p-3 flex flex-col flex-1 justify-between">
+                          <h3 className="text-xs font-medium text-gray-900 leading-tight">{product.name}</h3>
 
-                          <div className="flex items-center justify-between mt-auto">
+                          <div className="flex items-center justify-between">
                             <div>
-                              <span className="text-primary font-serif text-2xl">£{product.price}</span>
-                              <span className="text-[11px] text-muted-foreground ml-1">{product.unit}</span>
+                              <span className="text-primary font-serif text-base">£{product.price}</span>
+                              <span className="text-[9px] text-gray-500 ml-0.5">{product.unit}</span>
                             </div>
 
-                            <div className="flex flex-col items-end gap-2">
-                              <div className="flex items-center gap-3">
-                                {cart[product.id] ? (
-                                  <button
-                                    onClick={() => removeFromCart(product.id)}
-                                    aria-label={`Decrease quantity of ${product.name}`}
-                                    className="w-9 h-9 flex items-center justify-center border border-border/40 hover:border-primary hover:text-primary transition-all text-foreground"
-                                  >
-                                    <Minus className="w-3 h-3" />
-                                  </button>
-                                ) : (
-                                  <span className="w-9 h-9 flex items-center justify-center text-muted-foreground/30">
-                                    <Minus className="w-3 h-3" />
-                                  </span>
-                                )}
-                                <span className={`text-sm w-5 text-center font-medium ${cart[product.id] ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                  {cart[product.id] || 0}
-                                </span>
-                                <button
-                                  onClick={() => { addToCart(product.id); toast.success(`${product.name} added to cart`, { duration: 2000 }) }}
-                                  aria-label={`Increase quantity of ${product.name}`}
-                                  disabled={product.stock === 0}
-                                  className="w-9 h-9 flex items-center justify-center border border-border/40 hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed text-foreground"
-                                >
-                                  <Plus className="w-3 h-3" />
-                                </button>
-                              </div>
+                            <div className="flex items-center gap-1.5">
                               {cart[product.id] ? (
                                 <button
-                                  onClick={() => setCartOpen(true)}
-                                  className="text-[11px] tracking-[0.15em] text-primary hover:text-primary/80 transition-colors border-b border-primary/60 pb-0.5"
+                                  onClick={() => removeFromCart(product.id)}
+                                  aria-label={`Decrease quantity of ${product.name}`}
+                                  className="w-6 h-6 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700"
                                 >
-                                  VIEW CART →
+                                  <Minus className="w-2.5 h-2.5" />
                                 </button>
-                              ) : null}
+                              ) : (
+                                <span className="w-6 h-6 flex items-center justify-center text-gray-300">
+                                  <Minus className="w-2.5 h-2.5" />
+                                </span>
+                              )}
+                              <span className={'text-[11px] w-3 text-center font-medium ' + (cart[product.id] ? 'text-gray-900' : 'text-gray-400')}>
+                                {cart[product.id] || 0}
+                              </span>
+                              <button
+                                onClick={() => { addToCart(product.id); toast.success(`${product.name} added to cart`, { duration: 2000 }) }}
+                                aria-label={`Increase quantity of ${product.name}`}
+                                disabled={product.stock === 0}
+                                className="w-6 h-6 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed text-gray-700"
+                              >
+                                <Plus className="w-2.5 h-2.5" />
+                              </button>
                             </div>
                           </div>
+                          {cart[product.id] ? (
+                            <button
+                              onClick={() => setCartOpen(true)}
+                              className="text-[9px] tracking-[0.15em] text-primary hover:text-primary/80 transition-colors text-left"
+                            >
+                              VIEW CART →
+                            </button>
+                          ) : null}
                         </div>
                       </div>
                     </motion.div>
