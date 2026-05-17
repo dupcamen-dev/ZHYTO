@@ -488,46 +488,46 @@ export default function Home() {
                           )}
                         </div>
 
-                        <div className="p-3 flex flex-col flex-1 justify-between">
-                          <h3 className="text-xs font-medium text-gray-900 leading-tight">{product.name}</h3>
+                        <div className="p-4 flex flex-col flex-1 justify-between">
+                          <h3 className="font-serif text-lg text-gray-900 leading-snug">{product.name}</h3>
 
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between mt-3">
                             <div>
-                              <span className="text-primary font-serif text-base">£{product.price}</span>
-                              <span className="text-[9px] text-gray-500 ml-0.5">{product.unit}</span>
+                              <span className="text-primary font-serif text-xl">£{product.price}</span>
+                              <span className="text-[11px] text-gray-500 ml-1">{product.unit}</span>
                             </div>
 
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-2">
                               {cart[product.id] ? (
                                 <button
                                   onClick={() => removeFromCart(product.id)}
                                   aria-label={`Decrease quantity of ${product.name}`}
-                                  className="w-6 h-6 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700"
+                                  className="w-8 h-8 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700"
                                 >
-                                  <Minus className="w-2.5 h-2.5" />
+                                  <Minus className="w-3 h-3" />
                                 </button>
                               ) : (
-                                <span className="w-6 h-6 flex items-center justify-center text-gray-300">
-                                  <Minus className="w-2.5 h-2.5" />
+                                <span className="w-8 h-8 flex items-center justify-center text-gray-300">
+                                  <Minus className="w-3 h-3" />
                                 </span>
                               )}
-                              <span className={'text-[11px] w-3 text-center font-medium ' + (cart[product.id] ? 'text-gray-900' : 'text-gray-400')}>
+                              <span className={'text-sm w-5 text-center font-medium ' + (cart[product.id] ? 'text-gray-900' : 'text-gray-400')}>
                                 {cart[product.id] || 0}
                               </span>
                               <button
                                 onClick={() => { addToCart(product.id); toast.success(`${product.name} added to cart`, { duration: 2000 }) }}
                                 aria-label={`Increase quantity of ${product.name}`}
                                 disabled={product.stock === 0}
-                                className="w-6 h-6 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed text-gray-700"
+                                className="w-8 h-8 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed text-gray-700"
                               >
-                                <Plus className="w-2.5 h-2.5" />
+                                <Plus className="w-3 h-3" />
                               </button>
                             </div>
                           </div>
                           {cart[product.id] ? (
                             <button
                               onClick={() => setCartOpen(true)}
-                              className="text-[9px] tracking-[0.15em] text-primary hover:text-primary/80 transition-colors text-left"
+                              className="text-xs tracking-[0.15em] text-primary hover:text-primary/80 transition-colors mt-1 text-left"
                             >
                               VIEW CART →
                             </button>
