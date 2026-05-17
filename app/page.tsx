@@ -416,9 +416,8 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-[14px] tracking-[0.35em] text-primary mb-5"
-                >
-                  AUTHENTIC. HANDMADE. TIMELESS.
+                  className="text-[14px] tracking-[0.35em] text-black mb-5">
+                AUTHENTIC. HANDMADE. TIMELESS.
                 </motion.p>
 
                 <motion.h1
@@ -459,9 +458,8 @@ export default function Home() {
                     <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
                     <ArrowRight className="w-4 h-4 opacity-80" />
                   </a>
-            </motion.div>
-            </div>
-          </div>
+                </motion.div>
+              </div>
             </div>
 
             {/* 3D Model — desktop only */}
@@ -878,16 +876,7 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="max-w-2xl mx-auto glass-card p-12 md:p-16 text-center relative overflow-hidden">
-            <div className="absolute inset-0 -z-10">
-              <Image
-                src={img("/images/hero-bg.jpg")}
-                alt=""
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="bg-background p-8 lg:p-12">
+          <div className="max-w-2xl mx-auto glass-card p-12 md:p-16 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
