@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { img } from '@/lib/constants'
@@ -208,9 +208,30 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
   const hero3dScale = useTransform(heroScale, [1, 0.95], [1, 1 / 0.95])
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('tall')
+  const prevScrollY = useRef(0)
 
   useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 150)
+    const handleScroll = () => {
+      const y = window.scrollY
+      const maxY = document.documentElement.scrollHeight - window.innerHeight
+      const atTop = y < 50
+      const atBottom = y > maxY - 100
+      const goingDown = y > prevScrollY.current
+
+      setShowScrollTop(y > 150)
+
+      if (atTop) {
+        setHeaderMode('tall')
+      } else if (atBottom) {
+        setHeaderMode('normal')
+      } else if (goingDown) {
+        setHeaderMode('hidden')
+      }
+
+      prevScrollY.current = y
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -219,14 +240,18 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       {/* Navigation */}
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50"
+        className="fixed top-0 left-0 right-0 z-50 overflow-hidden"
         style={{ backgroundColor: '#c19e74' }}
         initial={{ y: -80 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-          <div className="flex items-center justify-between h-28">
+          <motion.div
+            className="flex items-center justify-between"
+            animate={{ height: headerMode === 'tall' ? '14rem' : '7rem' }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+          >
             {/* Logo */}
             <motion.a
               href="#"
@@ -240,7 +265,11 @@ export default function Home() {
                 alt="zhyto.london"
                 width={360}
                 height={90}
-                className="h-[72px] sm:h-[90px] w-auto"
+                className={`w-auto transition-all duration-[400ms] ease-in-out ${
+                  headerMode === 'tall'
+                    ? 'h-[130px] sm:h-[170px]'
+                    : 'h-[72px] sm:h-[90px]'
+                }`}
                 priority
               />
             </motion.a>
@@ -341,7 +370,7 @@ export default function Home() {
                 {mobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
               </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
         </motion.nav>
 
