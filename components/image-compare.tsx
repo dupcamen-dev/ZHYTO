@@ -63,13 +63,12 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
         fill
         className="object-cover pointer-events-none"
         draggable={false}
-        style={{ objectPosition: 'left center' }}
       />
 
       {/* Front image (syrnyky) — clipped by position */}
       <div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        style={{ width: `${position}%` }}
+        className="absolute inset-0 pointer-events-none"
+        style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
       >
         <Image
           src={frontImage}
@@ -77,7 +76,6 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
           fill
           className="object-cover"
           draggable={false}
-          style={{ objectPosition: 'left center' }}
         />
       </div>
 
