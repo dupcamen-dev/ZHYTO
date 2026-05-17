@@ -182,54 +182,69 @@ export default function AdminProducts() {
       {/* Product list */}
       <div className="space-y-3">
         {products.map(product => (
-          <div key={product.id} className={`glass-card rounded-xl p-5 flex items-center gap-5 ${!product.available ? 'opacity-50' : ''}`}>
-            <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
-              <Image src={img(product.image)} alt={product.name} fill className="object-cover" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-0.5">
-                <h3 className="font-serif text-lg text-foreground">{product.name}</h3>
-                {product.badge && (
-                  <span className="px-2 py-0.5 bg-primary/20 text-primary text-[14px] tracking-[0.15em] rounded">
-                    {product.badge}
-                  </span>
-                )}
+          <div key={product.id} className={`glass-card rounded-xl p-4 sm:p-5 ${!product.available ? 'opacity-50' : ''}`}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+              <div className="flex items-start gap-3 sm:gap-0">
+                <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0">
+                  <Image src={img(product.image)} alt={product.name} fill className="object-cover" />
+                </div>
+                <div className="flex-1 min-w-0 sm:hidden ml-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-serif text-base text-foreground truncate">{product.name}</h3>
+                    {product.badge && (
+                      <span className="px-1.5 py-0.5 bg-primary/20 text-primary text-[11px] tracking-[0.15em] rounded shrink-0">
+                        {product.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{product.description}</p>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground">{product.description}</p>
-              <div className="flex items-center gap-3 mt-1">
-                <span className="text-primary text-base font-serif">£{product.price}{product.unit}</span>
-                <span className="text-sm tracking-[0.15em] text-muted-foreground uppercase">{product.category}</span>
-                <span className={`text-sm tracking-[0.1em] ${product.stock === 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+              <div className="hidden sm:block flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-0.5">
+                  <h3 className="font-serif text-lg text-foreground">{product.name}</h3>
+                  {product.badge && (
+                    <span className="px-2 py-0.5 bg-primary/20 text-primary text-[14px] tracking-[0.15em] rounded">
+                      {product.badge}
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-muted-foreground">{product.description}</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span className="text-primary text-sm sm:text-base font-serif">£{product.price}{product.unit}</span>
+                <span className="text-xs sm:text-sm tracking-[0.15em] text-muted-foreground uppercase">{product.category}</span>
+                <span className={`text-xs sm:text-sm tracking-[0.1em] ${product.stock === 0 ? 'text-red-400' : 'text-emerald-400'}`}>
                   {product.stock === 0 ? 'OUT OF STOCK' : `STOCK: ${product.stock}`}
                 </span>
               </div>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => toggleAvailable(product)}
-                className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors cursor-pointer ${
-                  product.available
-                    ? 'border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10'
-                    : 'border-border/50 text-muted-foreground hover:border-foreground/50'
-                }`}
-                title={product.available ? 'Disable' : 'Enable'}
-              >
-                {product.available ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={() => setEditing({ ...product })}
-                className="w-10 h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors cursor-pointer"
-                title="Edit"
-              >
-                <Pencil className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => deleteProduct(product.id)}
-                className="w-10 h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-red-400 hover:border-red-400/50 transition-colors cursor-pointer"
-                title="Delete"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-2 justify-end sm:justify-start shrink-0 sm:ml-auto">
+                <button
+                  onClick={() => toggleAvailable(product)}
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg border flex items-center justify-center transition-colors cursor-pointer ${
+                    product.available
+                      ? 'border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10'
+                      : 'border-border/50 text-muted-foreground hover:border-foreground/50'
+                  }`}
+                  title={product.available ? 'Disable' : 'Enable'}
+                >
+                  {product.available ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                </button>
+                <button
+                  onClick={() => setEditing({ ...product })}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors cursor-pointer"
+                  title="Edit"
+                >
+                  <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+                <button
+                  onClick={() => deleteProduct(product.id)}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-red-400 hover:border-red-400/50 transition-colors cursor-pointer"
+                  title="Delete"
+                >
+                  <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -300,7 +315,7 @@ export default function AdminProducts() {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Price (£)</label>
                   <input
@@ -321,7 +336,7 @@ export default function AdminProducts() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Category</label>
                   <select

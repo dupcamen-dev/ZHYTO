@@ -89,13 +89,13 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl text-foreground">Dashboard</h1>
           <p className="text-muted-foreground text-base mt-1">Overview of your shop</p>
         </div>
         {/* Period filter */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {(['week', 'month', 'all'] as Period[]).map(p => (
             <button
               key={p}

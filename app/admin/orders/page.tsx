@@ -52,13 +52,13 @@ export default function AdminOrders() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl text-foreground">Orders</h1>
           <p className="text-muted-foreground text-base mt-1">Manage and update order status</p>
         </div>
         {/* Filter */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {['all', ...statuses].map(s => (
             <button
               key={s}
@@ -135,8 +135,8 @@ export default function AdminOrders() {
                 </div>
 
                 {/* Status actions */}
-                <div className="border-t border-border/20 pt-4 flex items-center gap-2 mt-4">
-                  <span className="text-sm tracking-[0.1em] text-muted-foreground mr-2">UPDATE:</span>
+                <div className="border-t border-border/20 pt-4 flex flex-wrap items-center gap-2 mt-4">
+                  <span className="text-sm tracking-[0.1em] text-muted-foreground mr-2 shrink-0">UPDATE:</span>
                   {statuses.map(s => {
                     const c = statusConfig[s]
                     const active = s === order.status
