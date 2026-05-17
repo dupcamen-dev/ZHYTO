@@ -207,7 +207,7 @@ export default function Home() {
   const activeProducts = dbProducts || products
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
-  const hero3dScale = useTransform(heroScale, [1, 0.95], [1, 1 / 0.95])
+
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('tall')
   const headerModeRef = useRef(headerMode)
@@ -385,11 +385,11 @@ export default function Home() {
 
       {/* Hero Section */}
       <motion.section 
-        style={{ opacity: heroOpacity, scale: heroScale }}
+        style={{ opacity: heroOpacity }}
         className="relative min-h-[120dvh] flex items-center overflow-hidden"
       >
         {/* Background image — starts below header */}
-        <div className="absolute left-0 right-0 bottom-0 z-0" style={{ top: '7rem' }}>
+        <div className="absolute left-0 right-0 bottom-0 z-0" style={{ top: '14rem' }}>
           <Image
             src={img("/images/hero-bg.jpg")}
             alt=""
@@ -463,7 +463,6 @@ export default function Home() {
 
             {/* 3D Model — desktop only */}
             <motion.div
-              style={{ scale: hero3dScale }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
