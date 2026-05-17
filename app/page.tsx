@@ -451,8 +451,8 @@ export default function Home() {
                   transition={{ duration: 0.6 }}
                   className="mb-8"
                 >
-                  <h3 className="font-serif text-3xl text-foreground mb-1">{category.label}</h3>
-                  <p className="text-[13px] text-muted-foreground">{category.desc}</p>
+                  <h3 className="font-serif text-5xl text-foreground mb-2">{category.label}</h3>
+                  <p className="text-base text-muted-foreground">{category.desc}</p>
                 </motion.div>
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -493,8 +493,8 @@ export default function Home() {
 
                           <div className="flex items-center justify-between mt-3">
                             <div>
-                              <span className="text-primary font-serif text-xl">£{product.price}</span>
-                              <span className="text-[11px] text-gray-500 ml-1">{product.unit}</span>
+                              <span className="text-primary font-serif text-2xl">£{product.price}</span>
+                              <span className="text-sm text-gray-500 ml-1">{product.unit}</span>
                             </div>
 
                             <div className="flex items-center gap-2">
