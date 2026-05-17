@@ -727,11 +727,11 @@ export default function Home() {
               className="lg:col-span-2 relative"
             >
               <div className="relative">
-                <div className="overflow-hidden bg-card shadow-xl aspect-square">
+                <div className="overflow-hidden shadow-xl aspect-square">
                   <div className="w-full h-full flex items-center justify-center p-6">
-                    <div className="w-full h-full relative -rotate-90">
+                    <div className="w-full h-full relative">
                       <Image
-                        src={img("/images/ingredients.jpg")}
+                        src={img("/images/ingredients-new.png")}
                         alt="Natural ingredients"
                         fill
                         className="object-contain"
@@ -771,7 +771,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false }}
                     transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                    className="group glass-card p-6 cursor-pointer transition-all duration-500 hover:scale-[1.04] hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+                    className="group p-6 cursor-pointer transition-all duration-500 hover:scale-[1.04] hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 border border-transparent"
                   >
                     <WheatIcon className="w-10 h-10 text-primary mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
                     <h3 className="font-serif text-[17px] mb-2 text-foreground">{item.title}</h3>
