@@ -58,7 +58,7 @@ const products = [
     price: 15,
     unit: "/ kg",
     image: img("/images/pelmeni-removebg-preview.png"),
-    badge: "Bestseller",
+    badge: null,
     category: "pelmeni",
     stock: 10
   },
@@ -80,7 +80,7 @@ const products = [
     price: 12,
     unit: "/ kg",
     image: img("/images/pelmeni-removebg-preview.png"),
-    badge: "Traditional",
+    badge: null,
     category: "varenyky",
     stock: 10
   },
@@ -113,7 +113,7 @@ const products = [
     price: 13,
     unit: "/ kg",
     image: img("/images/pelmeni-removebg-preview.png"),
-    badge: "Seasonal",
+    badge: null,
     category: "varenyky",
     stock: 10
   },
@@ -135,7 +135,7 @@ const products = [
     price: 10,
     unit: "/ 600g",
     image: img("/images/pelmeni-removebg-preview.png"),
-    badge: "Chef's Choice",
+    badge: null,
     category: "syrnyky",
     stock: 10
   },
