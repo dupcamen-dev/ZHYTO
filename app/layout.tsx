@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Caveat, Geist } from 'next/font/google'
+import localFont from 'next/font/local'
+import { Cormorant_Garamond, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
@@ -14,10 +15,10 @@ const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant',
 })
 
-const caveat = Caveat({ 
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-caveat',
+const zhyto = localFont({
+  src: './fonts/Zhyto-Regular.otf',
+  variable: '--font-zhyto',
+  display: 'swap',
 })
 
 const geist = Geist({ 
@@ -48,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${caveat.variable} ${geist.variable} bg-background`}>
+    <html lang="en" className={`${cormorant.variable} ${zhyto.variable} ${geist.variable} bg-background`}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <CartProvider>

@@ -87,7 +87,7 @@
 @theme inline {
   --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
-  --font-script: var(--font-caveat), cursive;
+  --font-script: var(--font-zhyto), cursive;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);
