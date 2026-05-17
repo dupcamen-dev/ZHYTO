@@ -3,7 +3,6 @@ import { Cormorant_Garamond, Dancing_Script, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
-import { SoundProvider } from '@/components/sound-provider'
 import { CookieConsent } from '@/components/cookie-consent'
 import { Toaster } from '@/components/ui/sonner'
 import { NoiseOverlay } from '@/components/noise-overlay'
@@ -53,9 +52,7 @@ export default function RootLayout({
       <body className="font-serif antialiased">
         <AuthProvider>
           <CartProvider>
-            <SoundProvider>
-              {children}
-            </SoundProvider>
+{children}
             <NoiseOverlay />
             <CookieConsent />
             <Toaster />
