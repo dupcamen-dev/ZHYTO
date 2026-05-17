@@ -409,6 +409,8 @@ export default function Home() {
 
         {/* Content */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32">
+          {/* Beige full-height card panel */}
+          <div className="hidden lg:block absolute left-5 lg:left-10 top-0 bottom-0 w-full max-w-lg bg-background" />
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl bg-background p-8 lg:p-12">
                 <motion.p
