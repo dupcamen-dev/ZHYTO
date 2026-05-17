@@ -683,9 +683,9 @@ export default function Home() {
               className="lg:col-span-2 relative"
             >
               <div className="relative">
-                <div className="overflow-hidden shadow-xl aspect-square">
+                <div className="overflow-hidden aspect-square">
                   <div className="w-full h-full flex items-center justify-center p-6">
-                    <div className="w-full h-full relative">
+                    <div className="w-full h-full relative -rotate-90">
                       <Image
                         src={img("/images/ingredients-new.png")}
                         alt="Natural ingredients"
@@ -694,10 +694,6 @@ export default function Home() {
                       />
                     </div>
                   </div>
-                </div>
-                <div className="absolute -bottom-3 -right-3 glass-strong px-5 py-3 shadow-lg">
-                  <p className="text-2xl font-script text-primary">100%</p>
-                  <p className="text-[9px] tracking-[0.2em] text-muted-foreground">NATURAL</p>
                 </div>
               </div>
             </motion.div>
