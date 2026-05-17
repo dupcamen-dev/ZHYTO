@@ -208,8 +208,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <a href="#" className="text-2xl font-serif tracking-[0.15em] text-foreground">
-              zhyto.london
+            <a href="#" className="flex items-center shrink-0">
+              <Image
+                src={img("/images/logo-header.png")}
+                alt="zhyto.london"
+                width={160}
+                height={40}
+                className="h-8 sm:h-10 w-auto"
+                priority
+              />
             </a>
 
             {/* Nav Links - Desktop */}
@@ -298,19 +305,6 @@ export default function Home() {
         style={{ opacity: heroOpacity, scale: heroScale }}
         className="relative min-h-[100dvh] flex items-center"
       >
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 grayscale brightness-[0.6] contrast-[1.1]">
-            <Image
-              src={img("/images/hero-bg.jpg")}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
-        </div>
-
         {/* Content */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-20 sm:pt-24 pb-16">
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
