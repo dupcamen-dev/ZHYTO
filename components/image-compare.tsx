@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 
 interface ImageCompareProps {
@@ -12,7 +12,7 @@ interface ImageCompareProps {
 export function ImageCompare({ frontImage, backImage, alt = "" }: ImageCompareProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState(50)
-  const [dragging, setDragging] = useState(false)
+  const draggingRef = useRef(false)
 
   const updatePosition = useCallback((clientX: number) => {
     const el = containerRef.current
@@ -23,40 +23,44 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   }, [])
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
-    setDragging(true)
+    e.preventDefault()
+    draggingRef.current = true
     updatePosition(e.clientX)
   }, [updatePosition])
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
-    setDragging(true)
+    draggingRef.current = true
     updatePosition(e.touches[0].clientX)
   }, [updatePosition])
 
-  const onMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!dragging) return
-    updatePosition(e.clientX)
-  }, [dragging, updatePosition])
+  useEffect(() => {
+    const handleMove = (e: MouseEvent | TouchEvent) => {
+      if (!draggingRef.current) return
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+      updatePosition(clientX)
+    }
+    const handleUp = () => { draggingRef.current = false }
 
-  const onTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!dragging) return
-    updatePosition(e.touches[0].clientX)
-  }, [dragging, updatePosition])
+    window.addEventListener('mousemove', handleMove)
+    window.addEventListener('mouseup', handleUp)
+    window.addEventListener('touchmove', handleMove, { passive: true })
+    window.addEventListener('touchend', handleUp)
 
-  const stopDragging = useCallback(() => setDragging(false), [])
+    return () => {
+      window.removeEventListener('mousemove', handleMove)
+      window.removeEventListener('mouseup', handleUp)
+      window.removeEventListener('touchmove', handleMove)
+      window.removeEventListener('touchend', handleUp)
+    }
+  }, [updatePosition])
 
   return (
     <div
       ref={containerRef}
       className="relative w-full h-full overflow-hidden select-none cursor-ew-resize"
       onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={stopDragging}
-      onMouseLeave={stopDragging}
       onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={stopDragging}
     >
-      {/* Back image (ingredients) — always visible */}
       <Image
         src={backImage}
         alt={alt}
@@ -65,7 +69,6 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
         draggable={false}
       />
 
-      {/* Front image (syrnyky) — clipped by position */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
@@ -79,7 +82,6 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
         />
       </div>
 
-      {/* Divider line */}
       <div
         className="absolute top-0 bottom-0 w-0.5 bg-white pointer-events-none"
         style={{ left: `${position}%` }}

@@ -531,7 +531,7 @@ export default function Home() {
                       className="group flex"
                     >
                       <div className={'aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
-                        <button onClick={() => product.stock > 0 && setSelectedProduct(product)} className="relative flex-1 overflow-hidden w-full text-left cursor-pointer">
+                        <button className="relative flex-1 overflow-hidden w-full text-left">
                           {product.category === 'syrnyky' ? (
                             <ImageCompare
                               frontImage={product.image}
@@ -561,7 +561,7 @@ export default function Home() {
                           )}
                         </button>
 
-                        <div className="p-4">
+                        <div className="p-4 cursor-pointer" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
                           <h3 className="font-serif text-lg text-gray-900 leading-snug">{product.name}</h3>
 
                       </div>
