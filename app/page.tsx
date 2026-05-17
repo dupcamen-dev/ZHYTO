@@ -246,7 +246,7 @@ export default function Home() {
         animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
-        <div className="max-w-7xl mx-auto px-4 lg:px-8" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <div className="max-w-7xl mx-auto px-5 lg:px-10" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <motion.div
             className="flex items-center justify-between"
             animate={{ height: headerMode === 'tall' ? '14rem' : '7rem' }}
@@ -255,7 +255,7 @@ export default function Home() {
             {/* Logo */}
             <motion.a
               href="#"
-              className="flex items-center -ml-6 sm:-ml-8"
+              className="flex items-center -ml-7 sm:-ml-10"
               whileHover={{ scale: 1.06, rotate: -0.5 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 200, damping: 12 }}
@@ -275,12 +275,12 @@ export default function Home() {
             </motion.a>
 
             {/* Nav Links - Desktop */}
-            <div className="hidden lg:flex items-center gap-8 xl:gap-10">
+            <div className="hidden lg:flex items-center gap-12 xl:gap-14">
               {navLinks.map((link) => (
                 <motion.a
                   key={link.name}
                   href={link.href}
-                  className="relative text-[15px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors duration-300 font-medium"
+                  className="relative text-[13px] tracking-[0.15em] text-foreground/80 hover:text-primary transition-colors duration-300 font-medium"
                   whileHover={{ y: -1 }}
                 >
                   {link.name}
@@ -331,7 +331,7 @@ export default function Home() {
                 ) : (
                   <motion.button
                     onClick={() => setCheckoutOpen(true)}
-                    className="hidden sm:inline-flex items-center gap-2 text-[15px] tracking-[0.15em] text-foreground hover:text-primary transition-colors border-2 border-primary/20 rounded-full px-5 py-2 hover:border-primary/50 cursor-pointer bg-primary/5"
+                    className="hidden sm:inline-flex items-center gap-2 text-[13px] tracking-[0.12em] text-foreground hover:text-primary transition-colors border-2 border-primary/20 rounded-full px-5 py-2 hover:border-primary/50 cursor-pointer bg-primary/5"
                     whileHover={{ scale: 1.05, borderColor: '#0749f780' }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -389,7 +389,7 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 lg:px-8 pt-20 sm:pt-24 pb-16">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-20 sm:pt-24 pb-16">
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
               <motion.p
@@ -498,7 +498,7 @@ export default function Home() {
 
       {/* Products Section */}
       <section id="products" className="py-28 lg:py-36 relative section-orange">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -624,7 +624,7 @@ export default function Home() {
 
       {/* About Section */}
       <section id="about" className="py-28 lg:py-36 relative bg-background">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -689,7 +689,7 @@ export default function Home() {
 
       {/* Ingredients Section */}
       <section id="ingredients" className="py-28 lg:py-36 relative section-orange overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
           {/* Heading */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -775,7 +775,7 @@ export default function Home() {
 
       {/* Delivery Section */}
       <section id="delivery" className="py-28 lg:py-36 bg-background">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -833,7 +833,7 @@ export default function Home() {
 
       {/* FAQ Section */}
       <section id="faq" className="py-28 lg:py-36 relative section-orange">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -897,7 +897,7 @@ export default function Home() {
         <div className="absolute bottom-10 right-10 w-48 h-48 rounded-full border border-primary/10 -z-10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div className="max-w-2xl mx-auto glass-card rounded-2xl p-12 md:p-16 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -947,7 +947,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-border/30 py-14 bg-background">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-2xl font-serif tracking-[0.15em]">
               zhyto.london
