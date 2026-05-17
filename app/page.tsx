@@ -411,54 +411,56 @@ export default function Home() {
           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32">
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-[14px] tracking-[0.35em] text-primary mb-5"
-              >
-                AUTHENTIC. HANDMADE. TIMELESS.
-              </motion.p>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-light leading-[1.05] mb-6"
-              >
-                <span className="text-foreground block">Dumplings</span>
-                <span className="font-script text-primary text-[1.1em]">with soul</span>
-              </motion.h1>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="w-14 h-px bg-primary/60 mb-6"
-              />
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="text-lg md:text-xl text-foreground/80 leading-[1.8] mb-8 max-w-md"
-              >
-                We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1 }}
-              >
-                <a 
-                  href="#products" 
-                  className="group inline-flex items-center gap-4 text-primary text-[16px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
+              <div className="bg-background p-6 lg:p-8">
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="text-[14px] tracking-[0.35em] text-primary mb-5"
                 >
-                  <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
-                  <ArrowRight className="w-4 h-4 opacity-80" />
-                </a>
-              </motion.div>
+                  AUTHENTIC. HANDMADE. TIMELESS.
+                </motion.p>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-light leading-[1.05] mb-6"
+                >
+                  <span className="text-foreground block">Dumplings</span>
+                  <span className="font-script text-primary text-[1.1em]">with soul</span>
+                </motion.h1>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="w-14 h-px bg-primary/60 mb-6"
+                />
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="text-lg md:text-xl text-foreground/80 leading-[1.8] mb-8 max-w-md"
+                >
+                  We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1 }}
+                >
+                  <a 
+                    href="#products" 
+                    className="group inline-flex items-center gap-4 text-primary text-[16px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
+                  >
+                    <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
+                    <ArrowRight className="w-4 h-4 opacity-80" />
+                  </a>
+                </motion.div>
+              </div>
             </div>
 
             {/* 3D Model — desktop only */}
@@ -477,7 +479,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-wrap items-center gap-6 md:gap-10 mt-12"
+            className="flex flex-wrap items-center gap-6 md:gap-10 mt-12 bg-background p-6"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center">

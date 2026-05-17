@@ -154,7 +154,7 @@ function Model() {
       <group ref={innerRef}>
         <primitive
           object={scene}
-          scale={6.5}
+          scale={10}
           rotation={[0, 0, 0]}
         />
       </group>
