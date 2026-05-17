@@ -4,90 +4,90 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  color-scheme: dark;
-  /* Premium Dark Palette - Black & Gold/Wheat */
-  --background: oklch(0.1 0.01 50);
-  --foreground: oklch(0.95 0.01 85);
-  --card: oklch(0.12 0.01 50 / 0.8);
-  --card-foreground: oklch(0.95 0.01 85);
-  --popover: oklch(0.12 0.01 50 / 0.95);
-  --popover-foreground: oklch(0.95 0.01 85);
+  color-scheme: light;
+  /* Warm Beige Palette — 80% #c2a57b tones */
+  --background: oklch(0.94 0.02 72);
+  --foreground: oklch(0.15 0.03 55);
+  --card: oklch(0.90 0.025 72 / 0.8);
+  --card-foreground: oklch(0.15 0.03 55);
+  --popover: oklch(0.90 0.025 72 / 0.95);
+  --popover-foreground: oklch(0.15 0.03 55);
   
-  /* Golden wheat accent */
-  --primary: oklch(0.72 0.12 80);
-  --primary-foreground: oklch(0.1 0.01 50);
+  /* Blue accent #0749f7 */
+  --primary: oklch(0.45 0.28 265);
+  --primary-foreground: oklch(0.97 0 0);
   
-  /* Soft cream for text */
-  --secondary: oklch(0.18 0.01 50);
-  --secondary-foreground: oklch(0.85 0.02 85);
+  /* #c2a57b beige */
+  --secondary: oklch(0.68 0.05 72);
+  --secondary-foreground: oklch(0.15 0.03 55);
   
-  /* Muted tones */
-  --muted: oklch(0.2 0.01 50);
-  --muted-foreground: oklch(0.6 0.02 85);
+  /* Muted beige tones */
+  --muted: oklch(0.87 0.025 72);
+  --muted-foreground: oklch(0.5 0.04 65);
   
-  /* Gold accent */
-  --accent: oklch(0.68 0.14 75);
-  --accent-foreground: oklch(0.1 0.01 50);
+  /* Accent beige */
+  --accent: oklch(0.68 0.05 72);
+  --accent-foreground: oklch(0.15 0.03 55);
   
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.95 0.01 85);
+  --destructive-foreground: oklch(0.95 0 0);
   
-  /* Subtle borders */
-  --border: oklch(0.25 0.01 50);
-  --input: oklch(0.2 0.01 50);
-  --ring: oklch(0.72 0.12 80);
+  /* Subtle beige borders */
+  --border: oklch(0.78 0.04 72);
+  --input: oklch(0.78 0.04 72);
+  --ring: oklch(0.45 0.28 265);
   
   /* Chart colors */
-  --chart-1: oklch(0.72 0.12 80);
-  --chart-2: oklch(0.68 0.14 75);
-  --chart-3: oklch(0.55 0.08 50);
+  --chart-1: oklch(0.45 0.28 265);
+  --chart-2: oklch(0.68 0.05 72);
+  --chart-3: oklch(0.55 0.08 55);
   --chart-4: oklch(0.7 0.1 60);
   --chart-5: oklch(0.8 0.06 85);
   
   --radius: 0.5rem;
   
-  --sidebar: oklch(0.12 0.01 50);
-  --sidebar-foreground: oklch(0.95 0.01 85);
-  --sidebar-primary: oklch(0.72 0.12 80);
-  --sidebar-primary-foreground: oklch(0.1 0.01 50);
-  --sidebar-accent: oklch(0.18 0.01 50);
-  --sidebar-accent-foreground: oklch(0.95 0.01 85);
-  --sidebar-border: oklch(0.25 0.01 50);
-  --sidebar-ring: oklch(0.72 0.12 80);
+  --sidebar: oklch(0.90 0.025 72);
+  --sidebar-foreground: oklch(0.15 0.03 55);
+  --sidebar-primary: oklch(0.45 0.28 265);
+  --sidebar-primary-foreground: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.87 0.025 72);
+  --sidebar-accent-foreground: oklch(0.15 0.03 55);
+  --sidebar-border: oklch(0.78 0.04 72);
+  --sidebar-ring: oklch(0.45 0.28 265);
   
-  /* Glass effects for dark theme */
-  --glass-bg: oklch(0.15 0.01 50 / 0.6);
-  --glass-bg-strong: oklch(0.12 0.01 50 / 0.85);
-  --glass-border: oklch(0.3 0.02 80 / 0.3);
-  --glass-shadow: oklch(0 0 0 / 0.4);
-  --glass-card-bg: oklch(0.14 0.01 50 / 0.7);
-  --glass-card-border: oklch(0.3 0.02 80 / 0.2);
+  /* Glass effects for beige theme */
+  --glass-bg: oklch(0.92 0.02 72 / 0.6);
+  --glass-bg-strong: oklch(0.90 0.025 72 / 0.85);
+  --glass-border: oklch(0.72 0.04 75 / 0.3);
+  --glass-shadow: oklch(0.4 0.04 55 / 0.12);
+  --glass-card-bg: oklch(0.93 0.02 72 / 0.7);
+  --glass-card-border: oklch(0.72 0.04 75 / 0.2);
 }
 
-/* Light section overrides */
+/* Darker section override for depth */
 .section-light {
-  background: oklch(0.95 0.02 85);
-  --background: oklch(0.95 0.02 85);
-  --foreground: oklch(0.1 0.01 50);
-  --card: oklch(0.92 0.02 85 / 0.8);
-  --card-foreground: oklch(0.1 0.01 50);
-  --muted: oklch(0.9 0.01 85);
-  --muted-foreground: oklch(0.45 0.02 50);
-  --primary: oklch(0.5 0.1 50);
-  --primary-foreground: oklch(0.95 0.01 85);
-  --border: oklch(0.85 0.02 80);
-  --glass-bg: oklch(0.92 0.02 85 / 0.6);
-  --glass-bg-strong: oklch(0.92 0.01 88 / 0.85);
-  --glass-border: oklch(0.8 0.02 80 / 0.3);
-  --glass-shadow: oklch(0 0 0 / 0.08);
-  --glass-card-bg: oklch(0.93 0.02 85 / 0.7);
-  --glass-card-border: oklch(0.85 0.02 80 / 0.3);
+  background: oklch(0.88 0.025 70);
+  --background: oklch(0.88 0.025 70);
+  --foreground: oklch(0.12 0.03 55);
+  --card: oklch(0.92 0.02 72 / 0.8);
+  --card-foreground: oklch(0.12 0.03 55);
+  --muted: oklch(0.85 0.02 70);
+  --muted-foreground: oklch(0.45 0.04 60);
+  --primary: oklch(0.45 0.28 265);
+  --primary-foreground: oklch(0.97 0 0);
+  --border: oklch(0.72 0.04 70);
+  --glass-bg: oklch(0.90 0.02 72 / 0.6);
+  --glass-bg-strong: oklch(0.88 0.025 70 / 0.85);
+  --glass-border: oklch(0.68 0.04 75 / 0.3);
+  --glass-shadow: oklch(0.4 0.04 55 / 0.15);
+  --glass-card-bg: oklch(0.94 0.02 72 / 0.7);
+  --glass-card-border: oklch(0.72 0.04 75 / 0.3);
 }
 
 @theme inline {
-  --font-sans: var(--font-cormorant), 'Geist', serif;
+  --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
-  --font-script: var(--font-dancing), cursive;
+  --font-script: var(--font-caveat), cursive;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -145,7 +145,7 @@
   }
 }
 
-/* Premium glass effects for dark theme */
+/* Glass effects */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(40px) saturate(150%);
@@ -153,7 +153,7 @@
   border: 1px solid var(--glass-border);
   box-shadow: 
     0 8px 40px var(--glass-shadow),
-    inset 0 1px 0 oklch(1 0 0 / 0.05);
+    inset 0 1px 0 oklch(1 0 0 / 0.3);
 }
 
 .glass-strong {
@@ -163,7 +163,7 @@
   border: 1px solid var(--glass-border);
   box-shadow: 
     0 16px 64px var(--glass-shadow),
-    inset 0 1px 0 oklch(1 0 0 / 0.08);
+    inset 0 1px 0 oklch(1 0 0 / 0.3);
 }
 
 .glass-card {
@@ -173,39 +173,39 @@
   border: 1px solid var(--glass-card-border);
   box-shadow: 
     0 4px 32px var(--glass-shadow),
-    inset 0 1px 0 oklch(1 0 0 / 0.04);
+    inset 0 1px 0 oklch(1 0 0 / 0.2);
 }
 
-/* Dark card for use on light sections */
+/* Light card for use on darker sections */
 .card-dark {
-  --foreground: oklch(0.95 0.01 85);
-  --muted-foreground: oklch(0.65 0.02 85);
-  --primary: oklch(0.72 0.12 80);
-  --primary-foreground: oklch(0.1 0.01 50);
-  background: oklch(0.12 0.01 50 / 0.95);
-  border: 1px solid oklch(0.25 0.02 80 / 0.3);
+  --foreground: oklch(0.12 0.03 55);
+  --muted-foreground: oklch(0.45 0.04 60);
+  --primary: oklch(0.45 0.28 265);
+  --primary-foreground: oklch(0.97 0 0);
+  background: oklch(0.94 0.02 72 / 0.95);
+  border: 1px solid oklch(0.72 0.04 75 / 0.3);
   border-radius: 4px;
 }
 
 .glass-nav {
-  background: oklch(0.1 0.01 50 / 0.9);
+  background: oklch(0.94 0.02 72 / 0.9);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border-bottom: 1px solid oklch(0.25 0.01 50 / 0.5);
+  border-bottom: 1px solid oklch(0.72 0.04 75 / 0.4);
 }
 
-/* Gold glow effect */
+/* Blue glow effect for accent */
 .gold-glow {
-  box-shadow: 0 0 40px oklch(0.72 0.12 80 / 0.2);
+  box-shadow: 0 0 40px oklch(0.45 0.28 265 / 0.25);
 }
 
-/* Premium text */
+/* Color utilities */
 .text-gold {
-  color: oklch(0.72 0.12 80);
+  color: #c2a57b;
 }
 
 .text-cream {
-  color: oklch(0.9 0.02 85);
+  color: oklch(0.94 0.02 72);
 }
 
 /* Custom scrollbar */
@@ -214,22 +214,22 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: oklch(0.12 0.01 50);
+  background: oklch(0.90 0.025 72);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.3 0.02 80);
+  background: oklch(0.68 0.05 72);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.72 0.12 80);
+  background: oklch(0.45 0.28 265);
 }
 
 /* Selection */
 ::selection {
-  background: oklch(0.72 0.12 80 / 0.3);
-  color: oklch(0.95 0.01 85);
+  background: oklch(0.45 0.28 265 / 0.25);
+  color: oklch(0.15 0.03 55);
 }
 
 /* Circular badge rotation */

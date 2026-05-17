@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Dancing_Script, Geist } from 'next/font/google'
+import { Cormorant_Garamond, Caveat, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
@@ -14,10 +14,10 @@ const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant',
 })
 
-const dancing = Dancing_Script({ 
+const caveat = Caveat({ 
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-dancing',
+  variable: '--font-caveat',
 })
 
 const geist = Geist({ 
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1a1612',
+  themeColor: '#c2a57b',
   width: 'device-width',
   initialScale: 1,
 }
@@ -48,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dancing.variable} ${geist.variable} bg-background`}>
+    <html lang="en" className={`${cormorant.variable} ${caveat.variable} ${geist.variable} bg-background`}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <CartProvider>
