@@ -516,7 +516,7 @@ export default function Home() {
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-            <div className="bg-primary px-6 py-3 rounded-lg inline-block">
+            <div className="bg-primary px-6 py-3 inline-block">
               <h2 className="text-5xl md:text-6xl font-serif font-light text-transparent" style={{ background: '#ff5f01', WebkitBackgroundClip: 'text', backgroundClip: 'text' }}>
                 <span className="font-script text-[1.15em]">Crafted</span>{" "}
                 <span>with tradition</span>
@@ -676,7 +676,7 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="relative"
             >
-              <div className="relative h-[520px] rounded-lg overflow-hidden">
+              <div className="relative h-[520px] overflow-hidden">
                 <Image
                   src={img("/images/about-us.webp")}
                   alt="Handmade varenyky process"
@@ -687,7 +687,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
               </div>
-              <div className="absolute -bottom-6 -left-6 glass-strong p-8 rounded-lg">
+              <div className="absolute -bottom-6 -left-6 glass-strong p-8">
                 <p className="text-4xl font-script text-primary mb-1">15+</p>
                 <p className="text-[14px] tracking-[0.2em] text-muted-foreground">YEARS OF TRADITION</p>
               </div>
@@ -727,7 +727,7 @@ export default function Home() {
               className="lg:col-span-2 relative"
             >
               <div className="relative">
-                <div className="rounded-2xl overflow-hidden bg-card shadow-xl aspect-square">
+                <div className="overflow-hidden bg-card shadow-xl aspect-square">
                   <div className="w-full h-full flex items-center justify-center p-6">
                     <div className="w-full h-full relative -rotate-90">
                       <Image
@@ -739,7 +739,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="absolute -bottom-3 -right-3 glass-strong px-5 py-3 rounded-xl shadow-lg">
+                <div className="absolute -bottom-3 -right-3 glass-strong px-5 py-3 shadow-lg">
                   <p className="text-2xl font-script text-primary">100%</p>
                   <p className="text-[9px] tracking-[0.2em] text-muted-foreground">NATURAL</p>
                 </div>
@@ -771,7 +771,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false }}
                     transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                    className="group glass-card rounded-xl p-6 cursor-pointer transition-all duration-500 hover:scale-[1.04] hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+                    className="group glass-card p-6 cursor-pointer transition-all duration-500 hover:scale-[1.04] hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
                   >
                     <WheatIcon className="w-10 h-10 text-primary mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
                     <h3 className="font-serif text-[17px] mb-2 text-foreground">{item.title}</h3>
@@ -795,7 +795,7 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div className="glass-card p-10 rounded-lg">
+              <div className="glass-card p-10">
                 <h3 className="font-serif text-2xl mb-8 text-foreground">Delivery Information</h3>
                 <div className="space-y-5 text-[15px]">
                   <div className="flex justify-between border-b border-border/30 pb-5">
@@ -909,7 +909,7 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="max-w-2xl mx-auto glass-card rounded-2xl p-12 md:p-16 text-center">
+          <div className="max-w-2xl mx-auto glass-card p-12 md:p-16 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
