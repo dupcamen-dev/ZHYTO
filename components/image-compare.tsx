@@ -29,6 +29,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   }, [updatePosition])
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
+    e.preventDefault()
     draggingRef.current = true
     updatePosition(e.touches[0].clientX)
   }, [updatePosition])
@@ -57,7 +58,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden select-none cursor-ew-resize"
+      className="relative w-full h-full overflow-hidden select-none cursor-ew-resize touch-none"
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
     >
