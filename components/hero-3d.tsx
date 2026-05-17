@@ -154,7 +154,7 @@ function Model() {
       <group ref={innerRef}>
         <primitive
           object={scene}
-          scale={8}
+          scale={6.5}
           rotation={[0, 0, 0]}
         />
       </group>
@@ -174,7 +174,7 @@ export function Hero3D() {
       )}
       <div className="w-full h-full">
         <Canvas
-          camera={{ position: [0, 0, 38], fov: 50 }}
+          camera={{ position: [0, 0, 50], fov: 55 }}
           gl={{ antialias: true }}
           style={{ opacity: ready ? 1 : 0 }}
           onCreated={() => setReady(true)}
