@@ -562,7 +562,7 @@ export default function Home() {
                             alt={product.name}
                             fill
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            className="object-contain transition-transform duration-700 group-hover:scale-110 pointer-events-none"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
                           />
                           {product.badge && (
                             <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase">
@@ -578,7 +578,7 @@ export default function Home() {
                           )}
                         </button>
 
-                        <div className="p-4 flex flex-col flex-1 justify-between">
+                        <div className="p-4">
                           <h3 className="font-serif text-lg text-gray-900 leading-snug">{product.name}</h3>
 
                       </div>
