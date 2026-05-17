@@ -209,6 +209,8 @@ export default function Home() {
   const hero3dScale = useTransform(heroScale, [1, 0.95], [1, 1 / 0.95])
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('tall')
+  const headerModeRef = useRef(headerMode)
+  headerModeRef.current = headerMode
   const prevScrollY = useRef(0)
 
   useEffect(() => {
@@ -218,6 +220,7 @@ export default function Home() {
       const atTop = y < 50
       const atBottom = y > maxY - 100
       const goingDown = y > prevScrollY.current
+      const scrollPercent = y / maxY
 
       setShowScrollTop(y > 150)
 
@@ -226,7 +229,13 @@ export default function Home() {
       } else if (atBottom) {
         setHeaderMode('normal')
       } else if (goingDown) {
-        setHeaderMode('hidden')
+        if (scrollPercent < 0.6) {
+          setHeaderMode('normal')
+        } else {
+          setHeaderMode(prev => prev === 'tall' ? 'normal' : 'hidden')
+        }
+      } else {
+        setHeaderMode('normal')
       }
 
       prevScrollY.current = y
@@ -507,9 +516,9 @@ export default function Home() {
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-            <h2 className="text-5xl md:text-6xl font-serif font-light">
-              <span className="font-script text-primary text-[1.15em]">Crafted</span>{" "}
-              <span className="text-foreground">with tradition</span>
+            <h2 className="text-5xl md:text-6xl font-serif font-light text-transparent bg-clip-text bg-primary inline-block">
+              <span className="font-script text-[1.15em]">Crafted</span>{" "}
+              <span>with tradition</span>
             </h2>
           </motion.div>
 
