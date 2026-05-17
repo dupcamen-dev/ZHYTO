@@ -389,7 +389,7 @@ export default function Home() {
         className="relative min-h-[120dvh] flex items-center overflow-hidden"
       >
         {/* Background image — starts below header */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute left-0 right-0 z-0" style={{ top: '14rem', bottom: '0' }}>
           <Image
             src={img("/images/hero-bg.jpg")}
             alt=""
@@ -512,9 +512,11 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
+        {/* Divider at bottom — so bg extends to meet products */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center" style={{ transform: 'translateY(50%)' }}>
+          <PastelDivider />
+        </div>
       </motion.section>
-
-      <PastelDivider className="py-4 -mb-8" />
 
       {/* Products Section */}
       <section id="products" className="py-28 lg:py-36 relative section-orange">
