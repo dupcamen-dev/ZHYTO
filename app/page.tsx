@@ -424,10 +424,10 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-light leading-[1.05] mb-6"
+                  className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light leading-[1.05] mb-6"
                 >
                   <span className="text-foreground block">Dumplings</span>
-                  <span className="font-script text-primary text-[1.1em]">with soul</span>
+                  <span className="font-script text-primary text-[1em]">with soul</span>
                 </motion.h1>
 
                 <motion.div
@@ -658,9 +658,13 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
               </div>
-              <div className="absolute -bottom-6 -left-6 glass-strong p-8">
-                <p className="text-4xl font-script text-primary mb-1">15+</p>
-                <p className="text-[14px] tracking-[0.2em] text-muted-foreground">YEARS OF TRADITION</p>
+              <div className="absolute -bottom-6 -left-6 w-36 h-36 sm:w-44 sm:h-44">
+                <Image
+                  src={img("/images/about-card.png")}
+                  alt=""
+                  fill
+                  className="object-contain"
+                />
               </div>
             </motion.div>
           </div>
@@ -762,7 +766,15 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div className="glass-card p-10">
+              <div className="glass-card p-10 relative overflow-hidden">
+                <div className="absolute inset-0 -z-10">
+                  <Image
+                    src={img("/images/about-card.png")}
+                    alt=""
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <h3 className="font-serif text-2xl mb-8 text-foreground">Delivery Information</h3>
                 <div className="space-y-5 text-[15px]">
                   <div className="flex justify-between border-b border-border/30 pb-5">
@@ -876,7 +888,15 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="max-w-2xl mx-auto glass-card p-12 md:p-16 text-center">
+          <div className="max-w-2xl mx-auto glass-card p-12 md:p-16 text-center relative overflow-hidden">
+            <div className="absolute inset-0 -z-10">
+              <Image
+                src={img("/images/about-card.png")}
+                alt=""
+                fill
+                className="object-cover"
+              />
+            </div>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
