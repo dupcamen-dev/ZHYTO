@@ -386,18 +386,8 @@ export default function Home() {
       {/* Hero Section */}
       <motion.section 
         style={{ opacity: heroOpacity }}
-        className="relative min-h-[120dvh] flex items-center overflow-hidden"
+        className="relative min-h-[120dvh] flex items-center overflow-hidden bg-background"
       >
-        {/* Background image — starts below tall header */}
-        <div className="absolute left-0 right-0 bottom-0 z-0" style={{ top: '14rem' }}>
-          <Image
-            src={img("/images/hero-bg.jpg")}
-            alt=""
-            fill
-            className="object-contain object-top"
-            priority
-          />
-        </div>
         {/* Pastel brushstroke decoration behind heading */}
         <div className="absolute left-6 lg:left-12 top-1/3 -translate-y-1/2 pointer-events-none opacity-25 hidden lg:block">
           <svg width="500" height="300" viewBox="0 0 500 300" fill="none">
@@ -411,7 +401,6 @@ export default function Home() {
           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32">
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
-              <div className="bg-background p-6 lg:p-8">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -459,7 +448,6 @@ export default function Home() {
                     <ArrowRight className="w-4 h-4 opacity-80" />
                   </a>
                 </motion.div>
-              </div>
             </div>
 
             {/* 3D Model — desktop only */}
@@ -478,7 +466,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-wrap items-center gap-6 md:gap-10 mt-12 bg-background p-6"
+            className="flex flex-wrap items-center gap-6 md:gap-10 mt-12"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center">
@@ -658,13 +646,17 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
               </div>
-              <div className="absolute -bottom-6 -left-6 w-36 h-36 sm:w-44 sm:h-44">
+              <div className="absolute -bottom-8 -left-8 w-48 h-48 sm:w-60 sm:h-60 overflow-hidden">
                 <Image
                   src={img("/images/about-card.png")}
                   alt=""
                   fill
-                  className="object-contain"
+                  className="object-cover"
                 />
+                <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white">
+                  <span className="text-5xl sm:text-[3.5rem] font-bold leading-none mb-2 drop-shadow-lg">15+</span>
+                  <span className="text-xs sm:text-sm tracking-[0.3em] drop-shadow-lg">YEARS OF TRADITION</span>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -766,7 +758,7 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div className="glass-card p-10 relative overflow-hidden">
+              <div className="relative overflow-hidden p-10 border border-white/20">
                 <div className="absolute inset-0 -z-10">
                   <Image
                     src={img("/images/about-card.png")}
@@ -888,7 +880,7 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="max-w-2xl mx-auto glass-card p-12 md:p-16 text-center relative overflow-hidden">
+          <div className="max-w-2xl mx-auto p-12 md:p-16 text-center relative overflow-hidden border border-white/20">
             <div className="absolute inset-0 -z-10">
               <Image
                 src={img("/images/about-card.png")}
