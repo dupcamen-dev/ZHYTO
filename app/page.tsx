@@ -386,8 +386,18 @@ export default function Home() {
       {/* Hero Section */}
       <motion.section 
         style={{ opacity: heroOpacity }}
-        className="relative min-h-[120dvh] flex items-center overflow-hidden bg-background"
+        className="relative min-h-[120dvh] flex items-center overflow-hidden"
       >
+        {/* Background photo */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={img("/images/hero-bg.jpg")}
+            alt=""
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
         {/* Pastel brushstroke decoration behind heading */}
         <div className="absolute left-6 lg:left-12 top-1/3 -translate-y-1/2 pointer-events-none opacity-25 hidden lg:block">
           <svg width="500" height="300" viewBox="0 0 500 300" fill="none">
@@ -399,8 +409,8 @@ export default function Home() {
 
         {/* Content */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32">
-          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
-            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
+            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl bg-background p-8 lg:p-12 flex flex-col justify-center">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
