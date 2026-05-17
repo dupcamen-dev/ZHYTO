@@ -203,18 +203,19 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       {/* Navigation */}
       <nav
-        className="fixed top-0 left-0 right-0 z-50 glass-nav"
+        className="fixed top-0 left-0 right-0 z-50"
+        style={{ backgroundColor: '#c19e74' }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <a href="#" className="flex items-center shrink-0">
+            <a href="#" className="flex items-center -ml-6 sm:-ml-8">
               <Image
                 src={img("/images/logo-header.png")}
                 alt="zhyto.london"
-                width={160}
-                height={40}
-                className="h-8 sm:h-10 w-auto"
+                width={220}
+                height={55}
+                className="h-14 sm:h-[55px] w-auto"
                 priority
               />
             </a>
