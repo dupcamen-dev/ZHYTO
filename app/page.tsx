@@ -377,7 +377,7 @@ export default function Home() {
       {/* Hero Section */}
       <motion.section 
         style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative min-h-[100dvh] flex items-center overflow-hidden"
+        className="relative min-h-[120dvh] flex items-center overflow-hidden"
       >
         {/* Pastel brushstroke decoration behind heading */}
         <div className="absolute left-6 lg:left-12 top-1/3 -translate-y-1/2 pointer-events-none opacity-25 hidden lg:block">
@@ -389,7 +389,7 @@ export default function Home() {
         </div>
 
         {/* Content */}
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-20 sm:pt-24 pb-16">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32">
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl">
               <motion.p
