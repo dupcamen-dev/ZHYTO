@@ -389,7 +389,7 @@ export default function Home() {
         className="relative min-h-[120dvh] flex items-center overflow-hidden"
       >
         {/* Background image — starts below header */}
-        <div className="absolute left-0 right-0 bottom-0 z-0" style={{ top: '14rem' }}>
+        <div className="absolute inset-0 z-0">
           <Image
             src={img("/images/hero-bg.jpg")}
             alt=""
@@ -653,7 +653,7 @@ export default function Home() {
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   loading="lazy"
-                  className="object-cover"
+            className="object-contain"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
               </div>
