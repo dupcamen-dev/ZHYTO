@@ -63,6 +63,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
         fill
         className="object-cover pointer-events-none"
         draggable={false}
+        style={{ objectPosition: 'left center' }}
       />
 
       {/* Front image (syrnyky) — clipped by position */}
