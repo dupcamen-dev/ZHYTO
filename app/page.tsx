@@ -202,34 +202,63 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav
+      <motion.nav
         className="fixed top-0 left-0 right-0 z-50"
-        style={{ backgroundColor: '#c19e74' }}
+        style={{
+          backgroundColor: '#c19e74',
+          borderBottom: '1px solid rgba(7, 73, 247, 0.08)',
+        }}
+        initial={{ y: -80 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
+        {/* Shimmer blue accent line */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-[2px]"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, #0749f7 50%, transparent 100%)',
+            backgroundSize: '200% 100%',
+          }}
+          animate={{ backgroundPosition: ['100% 0', '-100% 0'] }}
+          transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
+        />
+
         <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-24">
             {/* Logo */}
-            <a href="#" className="flex items-center -ml-6 sm:-ml-8">
+            <motion.a
+              href="#"
+              className="flex items-center -ml-8 sm:-ml-10"
+              whileHover={{ scale: 1.04 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+            >
               <Image
                 src={img("/images/logo-header.png")}
                 alt="zhyto.london"
-                width={220}
-                height={55}
-                className="h-14 sm:h-[55px] w-auto"
+                width={280}
+                height={70}
+                className="h-[60px] sm:h-[70px] w-auto drop-shadow-sm"
                 priority
               />
-            </a>
+            </motion.a>
 
             {/* Nav Links - Desktop */}
-            <div className="hidden lg:flex items-center gap-10">
+            <div className="hidden lg:flex items-center gap-8 xl:gap-10">
               {navLinks.map((link) => (
-                <a
+                <motion.a
                   key={link.name}
                   href={link.href}
-                  className="text-[16px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors duration-300"
+                  className="relative text-[15px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors duration-300 font-medium"
+                  whileHover={{ y: -1 }}
                 >
                   {link.name}
-                </a>
+                  <motion.div
+                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary rounded-full"
+                    initial={{ scaleX: 0, opacity: 0 }}
+                    whileHover={{ scaleX: 1, opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </motion.a>
               ))}
             </div>
 
@@ -239,67 +268,79 @@ export default function Home() {
               {!loading && (
                 user ? (
                   <div className="flex items-center gap-3">
-                      <Link
+                      <motion.a
                         href="/account"
-                        className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-primary hover:text-primary transition-all"
+                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
                         title="My Account"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <User className="w-3.5 h-3.5" />
-                      </Link>
-                      <Link
+                        <User className="w-4 h-4" />
+                      </motion.a>
+                      <motion.a
                         href="/admin"
-                        className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-primary hover:text-primary transition-all text-[13px] tracking-[0.1em] font-medium"
+                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-[13px] tracking-[0.1em] font-medium"
                         title="Admin"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
                       >
                         A
-                    </Link>
-                    <button
+                    </motion.a>
+                    <motion.button
                       onClick={signOut}
-                      className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-destructive hover:text-destructive transition-all"
+                      className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-destructive hover:text-destructive hover:bg-destructive/5 transition-all cursor-pointer"
                       title="Sign out"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      <LogOut className="w-3 h-3" />
-                    </button>
+                      <LogOut className="w-3.5 h-3.5" />
+                    </motion.button>
                   </div>
                 ) : (
-                  <button
+                  <motion.button
                     onClick={() => setCheckoutOpen(true)}
-                    className="hidden sm:inline-flex items-center gap-2 text-[15px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50 cursor-pointer"
+                    className="hidden sm:inline-flex items-center gap-2 text-[15px] tracking-[0.15em] text-foreground hover:text-primary transition-colors border-2 border-primary/20 rounded-full px-5 py-2 hover:border-primary/50 cursor-pointer bg-primary/5"
+                    whileHover={{ scale: 1.05, borderColor: '#0749f780' }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <User className="w-3.5 h-3.5" />
+                    <User className="w-4 h-4" />
                     SIGN IN
-                  </button>
+                  </motion.button>
                 )
               )}
-              <button
+              <motion.button
                 onClick={() => setCartOpen(true)}
                 aria-label="Open cart"
-                className="relative w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300"
+                className="relative w-11 h-11 rounded-full border-2 border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
+                whileHover={{ scale: 1.1, rotate: -5 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <ShoppingCart className="w-4 h-4" />
+                <ShoppingCart className="w-4.5 h-4.5" />
                 {totalItems > 0 && (
                   <motion.span
                     key={totalItems}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center"
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center shadow-lg"
                   >
                     {totalItems}
                   </motion.span>
                 )}
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-                className="lg:hidden w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all duration-300"
+                className="lg:hidden w-11 h-11 rounded-full border-2 border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ rotate: 90, scale: 0.95 }}
               >
-                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-              </button>
+                {mobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
+              </motion.button>
             </div>
           </div>
         </div>
-        </nav>
+        </motion.nav>
 
       {/* Hero Section */}
       <motion.section 
