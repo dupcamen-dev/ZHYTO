@@ -497,7 +497,7 @@ export default function Home() {
       <PastelDivider className="py-4 -mb-8" />
 
       {/* Products Section */}
-      <section id="products" className="py-28 lg:py-36 relative section-light">
+      <section id="products" className="py-28 lg:py-36 relative section-orange">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -688,7 +688,7 @@ export default function Home() {
       <PastelDivider className="py-6 -mb-10" />
 
       {/* Ingredients Section */}
-      <section id="ingredients" className="py-28 lg:py-36 relative section-light overflow-hidden">
+      <section id="ingredients" className="py-28 lg:py-36 relative section-orange overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           {/* Heading */}
           <motion.div
@@ -832,7 +832,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-28 lg:py-36 relative overflow-hidden section-light">
+      <section id="faq" className="py-28 lg:py-36 relative overflow-hidden section-orange">
         {/* Background image with subtle cream tint */}
         <div className="absolute inset-0">
           <Image
