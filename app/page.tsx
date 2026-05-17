@@ -57,7 +57,7 @@ const products = [
     description: "Hearty Ukrainian dumplings with seasoned beef and pork filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni.webp"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: "Bestseller",
     category: "pelmeni",
     stock: 10
@@ -68,7 +68,7 @@ const products = [
     description: "Light and tender pelmeni with poultry filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni.webp"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "pelmeni",
     stock: 10
@@ -79,7 +79,7 @@ const products = [
     description: "Classic Ukrainian varenyky with creamy mashed potato",
     price: 12,
     unit: "/ kg",
-    image: img("/images/hero-varenyky.jpg"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: "Traditional",
     category: "varenyky",
     stock: 10
@@ -90,7 +90,7 @@ const products = [
     description: "Hearty varenyky with savoury braised cabbage",
     price: 12,
     unit: "/ kg",
-    image: img("/images/hero-varenyky.jpg"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "varenyky",
     stock: 10
@@ -101,7 +101,7 @@ const products = [
     description: "Rich varenyky with wild forest mushroom filling",
     price: 12,
     unit: "/ kg",
-    image: img("/images/hero-varenyky.jpg"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "varenyky",
     stock: 10
@@ -112,7 +112,7 @@ const products = [
     description: "Sweet varenyky filled with cottage cheese and cherries",
     price: 13,
     unit: "/ kg",
-    image: img("/images/hero-varenyky.jpg"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: "Seasonal",
     category: "varenyky",
     stock: 10
@@ -123,7 +123,7 @@ const products = [
     description: "Savory varenyky with cottage cheese and fresh spinach",
     price: 13,
     unit: "/ kg",
-    image: img("/images/hero-varenyky.jpg"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "varenyky",
     stock: 10
@@ -134,7 +134,7 @@ const products = [
     description: "Traditional Ukrainian cheese fritters, golden and fluffy",
     price: 10,
     unit: "/ 600g",
-    image: img("/images/syrnyky.webp"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: "Chef's Choice",
     category: "syrnyky",
     stock: 10
@@ -145,7 +145,7 @@ const products = [
     description: "Decadent syrnyky with rich chocolate chunks",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/syrnyky.webp"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "syrnyky",
     stock: 10
@@ -156,7 +156,7 @@ const products = [
     description: "Fluffy syrnyky bursting with wild blueberries",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/syrnyky.webp"),
+    image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "syrnyky",
     stock: 10
