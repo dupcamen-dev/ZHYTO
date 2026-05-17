@@ -190,7 +190,7 @@ export default function AdminProducts() {
               <div className="flex items-center gap-3 mb-0.5">
                 <h3 className="font-serif text-lg text-foreground">{product.name}</h3>
                 {product.badge && (
-                  <span className="px-2 py-0.5 bg-primary/20 text-primary text-[11px] tracking-[0.15em] rounded">
+                  <span className="px-2 py-0.5 bg-primary/20 text-primary text-[14px] tracking-[0.15em] rounded">
                     {product.badge}
                   </span>
                 )}

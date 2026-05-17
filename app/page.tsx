@@ -218,7 +218,7 @@ export default function Home() {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-[13px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors duration-300"
+                  className="text-[16px] tracking-[0.2em] text-foreground/80 hover:text-primary transition-colors duration-300"
                 >
                   {link.name}
                 </a>
@@ -240,7 +240,7 @@ export default function Home() {
                       </Link>
                       <Link
                         href="/admin"
-                        className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-primary hover:text-primary transition-all text-[10px] tracking-[0.1em] font-medium"
+                        className="hidden sm:flex w-8 h-8 rounded-full border border-border/50 items-center justify-center hover:border-primary hover:text-primary transition-all text-[13px] tracking-[0.1em] font-medium"
                         title="Admin"
                       >
                         A
@@ -256,7 +256,7 @@ export default function Home() {
                 ) : (
                   <button
                     onClick={() => setCheckoutOpen(true)}
-                    className="hidden sm:inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50 cursor-pointer"
+                    className="hidden sm:inline-flex items-center gap-2 text-[15px] tracking-[0.15em] text-foreground/70 hover:text-primary transition-colors border border-border/50 rounded-full px-4 py-1.5 hover:border-primary/50 cursor-pointer"
                   >
                     <User className="w-3.5 h-3.5" />
                     SIGN IN
@@ -357,7 +357,7 @@ export default function Home() {
               >
                 <a 
                   href="#products" 
-                  className="group inline-flex items-center gap-4 text-primary text-[13px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
+                  className="group inline-flex items-center gap-4 text-primary text-[16px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
                 >
                   <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
                   <ArrowRight className="w-4 h-4 opacity-80" />
@@ -389,8 +389,8 @@ export default function Home() {
                 <Leaf className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="text-[10px] tracking-[0.2em] text-muted-foreground">NATURAL</p>
-                <p className="text-[11px] tracking-[0.15em] text-foreground">INGREDIENTS</p>
+                <p className="text-[13px] tracking-[0.2em] text-muted-foreground">NATURAL</p>
+                <p className="text-[14px] tracking-[0.15em] text-foreground">INGREDIENTS</p>
               </div>
             </div>
             
@@ -399,8 +399,8 @@ export default function Home() {
                 <Heart className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="text-[10px] tracking-[0.2em] text-muted-foreground">HANDMADE</p>
-                <p className="text-[11px] tracking-[0.15em] text-foreground">WITH CARE</p>
+                <p className="text-[13px] tracking-[0.2em] text-muted-foreground">HANDMADE</p>
+                <p className="text-[14px] tracking-[0.15em] text-foreground">WITH CARE</p>
               </div>
             </div>
             
@@ -409,8 +409,8 @@ export default function Home() {
                 <Snowflake className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="text-[10px] tracking-[0.2em] text-muted-foreground">FROZEN</p>
-                <p className="text-[11px] tracking-[0.15em] text-foreground">FOR FRESHNESS</p>
+                <p className="text-[13px] tracking-[0.2em] text-muted-foreground">FROZEN</p>
+                <p className="text-[14px] tracking-[0.15em] text-foreground">FOR FRESHNESS</p>
               </div>
             </div>
           </motion.div>
@@ -475,13 +475,13 @@ export default function Home() {
                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                           />
                           {product.badge && (
-                            <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-primary-foreground text-[10px] tracking-[0.2em] uppercase">
+                            <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase">
                               {product.badge}
                             </span>
                           )}
                           {product.stock === 0 && (
                             <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-                              <span className="px-4 py-2 bg-white/90 text-gray-900 text-[11px] tracking-[0.2em]">
+                              <span className="px-4 py-2 bg-white/90 text-gray-900 text-[14px] tracking-[0.2em]">
                                 COMING BACK SOON
                               </span>
                             </div>
@@ -562,17 +562,17 @@ export default function Home() {
               
               <div className="w-10 h-px bg-primary/60 mb-10" />
               
-              <p className="text-muted-foreground leading-[1.9] mb-6 text-[16px]">
+              <p className="text-muted-foreground leading-[1.9] mb-6 text-xl">
                 Every dumpling we create carries generations of tradition. Using recipes passed down through my family, I bring authentic Ukrainian flavours to London, one handcrafted piece at a time.
               </p>
               
-              <p className="text-muted-foreground leading-[1.9] mb-10 text-[16px]">
+              <p className="text-muted-foreground leading-[1.9] mb-10 text-xl">
                 Each batch is made with locally sourced ingredients and the same love my grandmother put into every meal. No shortcuts, no compromises — just pure, honest food.
               </p>
               
               <a 
                 href="#contact" 
-                className="inline-flex items-center gap-4 text-primary text-[12px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
+                className="inline-flex items-center gap-4 text-primary text-[15px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
               >
                 <span className="border-b border-primary/60 pb-1">GET IN TOUCH</span>
                 <ArrowRight className="w-4 h-4 opacity-80" />
@@ -599,7 +599,7 @@ export default function Home() {
               </div>
               <div className="absolute -bottom-6 -left-6 glass-strong p-8 rounded-lg">
                 <p className="text-4xl font-script text-primary mb-1">15+</p>
-                <p className="text-[11px] tracking-[0.2em] text-muted-foreground">YEARS OF TRADITION</p>
+                <p className="text-[14px] tracking-[0.2em] text-muted-foreground">YEARS OF TRADITION</p>
               </div>
             </motion.div>
           </div>
@@ -683,7 +683,7 @@ export default function Home() {
                   >
                     <WheatIcon className="w-10 h-10 text-primary mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
                     <h3 className="font-serif text-[17px] mb-2 text-foreground">{item.title}</h3>
-                    <p className="text-[13px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                    <p className="text-[16px] text-muted-foreground leading-relaxed">{item.desc}</p>
                   </motion.div>
                 ))}
               </div>
@@ -739,10 +739,10 @@ export default function Home() {
                 <span className="text-foreground">to your door</span>
               </h2>
               <div className="w-10 h-px bg-primary/60 mb-10" />
-              <p className="text-muted-foreground leading-[1.9] mb-6 text-[16px]">
+              <p className="text-muted-foreground leading-[1.9] mb-6 text-xl">
                 Our dumplings are flash-frozen to preserve freshness and delivered in insulated packaging. Simply cook from frozen in 5-7 minutes.
               </p>
-              <p className="text-muted-foreground leading-[1.9] text-[16px]">
+              <p className="text-muted-foreground leading-[1.9] text-xl">
                 We deliver across London, bringing the taste of authentic Ukrainian cuisine directly to your kitchen.
               </p>
             </motion.div>
@@ -810,7 +810,7 @@ export default function Home() {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 py-4 text-black text-[16px] leading-relaxed bg-white/80 backdrop-blur-md">
+                      <div className="px-6 py-4 text-black text-xl leading-relaxed bg-white/80 backdrop-blur-md">
                         {item.a}
                       </div>
                     </motion.div>
@@ -850,25 +850,25 @@ export default function Home() {
                 <a href="#products">
                   <Button 
                     size="lg" 
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 tracking-[0.2em] text-[11px] rounded-none gold-glow"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 tracking-[0.2em] text-[14px] rounded-none gold-glow"
                   >
                     ORDER NOW
                   </Button>
                 </a>
                 <a 
                   href="mailto:hello@zhyto.london"
-                  className="text-[12px] tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors border-b border-border/50 hover:border-primary pb-1"
+                  className="text-[15px] tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors border-b border-border/50 hover:border-primary pb-1"
                 >
                   HELLO@ZHYTO.LONDON
                 </a>
               </div>
               
               <div className="flex items-center justify-center gap-8 pt-6 border-t border-border/20">
-                <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-[11px] tracking-[0.2em]">
+                <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-[14px] tracking-[0.2em]">
                   INSTAGRAM
                 </a>
                 <span className="text-border/40">|</span>
-                <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-[11px] tracking-[0.2em]">
+                <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-[14px] tracking-[0.2em]">
                   WHATSAPP
                 </a>
               </div>
@@ -886,10 +886,10 @@ export default function Home() {
             </div>
             
             <div className="flex flex-col items-center md:items-center gap-1">
-              <p className="text-[12px] text-foreground/70 tracking-[0.15em]">
+              <p className="text-[15px] text-foreground/70 tracking-[0.15em]">
                 © 2026 zhyto.london. ALL RIGHTS RESERVED.
               </p>
-              <p className="text-[11px] text-muted-foreground/50 tracking-[0.1em]">
+              <p className="text-[14px] text-muted-foreground/50 tracking-[0.1em]">
                 Designed &amp; Built by{' '}
                 <a
                   href="https://millionpixels.dev"
@@ -903,10 +903,10 @@ export default function Home() {
             </div>
             
             <div className="flex items-center gap-8">
-              <Link href="/privacy" className="text-[11px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
+              <Link href="/privacy" className="text-[14px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
                 PRIVACY
               </Link>
-              <Link href="/terms" className="text-[11px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
+              <Link href="/terms" className="text-[14px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
                 TERMS
               </Link>
             </div>

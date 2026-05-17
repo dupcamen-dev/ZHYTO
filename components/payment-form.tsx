@@ -175,10 +175,10 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
   const renderCardForm = () => (
     <form onSubmit={handleCardSubmit} className="space-y-4">
       <div className="glass-card rounded-lg p-5 space-y-4">
-        <p className="text-[11px] tracking-[0.2em] text-foreground/60">CARD DETAILS</p>
+        <p className="text-base tracking-[0.2em] text-foreground/60">CARD DETAILS</p>
 
         <div className="space-y-1.5">
-          <label className="text-[11px] tracking-[0.1em] text-muted-foreground">Card Number</label>
+          <label className="text-base tracking-[0.1em] text-muted-foreground">Card Number</label>
           <div className="bg-background/80 border border-border/50 rounded-lg px-4 py-3 focus-within:border-primary transition-colors">
             <CardNumberElement options={elementOptions} />
           </div>
@@ -186,13 +186,13 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
 
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <label className="text-[11px] tracking-[0.1em] text-muted-foreground">Expiry Date</label>
+            <label className="text-base tracking-[0.1em] text-muted-foreground">Expiry Date</label>
             <div className="bg-background/80 border border-border/50 rounded-lg px-4 py-3 focus-within:border-primary transition-colors">
               <CardExpiryElement options={elementOptions} />
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-[11px] tracking-[0.1em] text-muted-foreground">CVV</label>
+            <label className="text-base tracking-[0.1em] text-muted-foreground">CVV</label>
             <div className="bg-background/80 border border-border/50 rounded-lg px-4 py-3 focus-within:border-primary transition-colors">
               <CardCvcElement options={elementOptions} />
             </div>
@@ -202,15 +202,15 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
 
       {error && (
         <div className="bg-destructive/10 border border-destructive/30 rounded-lg px-4 py-3">
-          <p className="text-[12px] text-destructive leading-relaxed">{error}</p>
+          <p className="text-[18px] text-destructive leading-relaxed">{error}</p>
         </div>
       )}
 
       <div className="flex gap-3 pt-2">
-        <Button type="button" variant="outline" size="lg" onClick={onBack} disabled={loading} className="flex-1 text-[12px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent">
+        <Button type="button" variant="outline" size="lg" onClick={onBack} disabled={loading} className="flex-1 text-[18px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent">
           CHANGE METHOD
         </Button>
-        <Button type="submit" disabled={!stripe || !clientSecret || loading || !addressFilled} size="lg" className="flex-1 text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50">
+        <Button type="submit" disabled={!stripe || !clientSecret || loading || !addressFilled} size="lg" className="flex-1 text-[18px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50">
           {loading ? 'PROCESSING...' : `PAY £${amount.toFixed(2)}`}
         </Button>
       </div>
@@ -222,7 +222,7 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
       <div className="glass-card rounded-lg p-5 text-center space-y-4">
         <div className="flex items-center justify-center gap-3 text-foreground/60">
           <Smartphone className="w-5 h-5 text-primary" />
-          <span className="text-[13px] tracking-[0.15em]">Pay with your wallet</span>
+          <span className="text-lg tracking-[0.15em]">Pay with your wallet</span>
         </div>
 
         {canMakePayment && paymentRequest ? (
@@ -241,14 +241,14 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
                 }}
               />
             </div>
-            <button onClick={onBack} className="text-[11px] tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+            <button onClick={onBack} className="text-base tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors cursor-pointer">
               CHANGE METHOD
             </button>
           </>
         ) : (
-          <div className="text-[13px] text-muted-foreground py-4">
+          <div className="text-lg text-muted-foreground py-4">
             <p>Apple Pay / Google Pay is not available on this device.</p>
-            <button onClick={onBack} className="text-primary hover:underline mt-2 inline-block text-[12px] tracking-[0.15em] cursor-pointer">
+            <button onClick={onBack} className="text-primary hover:underline mt-2 inline-block text-[18px] tracking-[0.15em] cursor-pointer">
               TRY ANOTHER METHOD
             </button>
           </div>
@@ -257,7 +257,7 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
 
       {error && (
         <div className="bg-destructive/10 border border-destructive/30 rounded-lg px-4 py-3">
-          <p className="text-[12px] text-destructive leading-relaxed">{error}</p>
+          <p className="text-[18px] text-destructive leading-relaxed">{error}</p>
         </div>
       )}
     </div>
@@ -267,8 +267,8 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
     if (showBankDetails) {
       return (
         <div className="glass-card rounded-lg p-5 space-y-4">
-          <p className="text-[11px] tracking-[0.2em] text-foreground/60">BANK TRANSFER DETAILS</p>
-          <p className="text-[12px] text-muted-foreground leading-relaxed">
+          <p className="text-base tracking-[0.2em] text-foreground/60">BANK TRANSFER DETAILS</p>
+          <p className="text-[18px] text-muted-foreground leading-relaxed">
             Please transfer the amount to the account below. Your order will be processed once the payment is received.
           </p>
           <div className="bg-background/80 border border-border/20 rounded-lg p-4 space-y-3">
@@ -279,9 +279,9 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
               { label: 'Reference', value: `ZHYTO-${Date.now().toString(36).toUpperCase()}` },
             ].map(item => (
               <div key={item.label} className="flex items-center justify-between gap-4">
-                <span className="text-[11px] tracking-[0.1em] text-muted-foreground shrink-0">{item.label}</span>
+                <span className="text-base tracking-[0.1em] text-muted-foreground shrink-0">{item.label}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[13px] font-mono text-foreground">{item.value}</span>
+                  <span className="text-lg font-mono text-foreground">{item.value}</span>
                   <button
                     onClick={() => copyToClipboard(item.value, item.label)}
                     className="text-primary/60 hover:text-primary transition-colors cursor-pointer"
@@ -293,7 +293,7 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
               </div>
             ))}
           </div>
-          <Button type="button" onClick={onBack} size="lg" className="w-full text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6">
+          <Button type="button" onClick={onBack} size="lg" className="w-full text-[18px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6">
             BACK TO METHODS
           </Button>
         </div>
@@ -305,28 +305,28 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
         <div className="glass-card rounded-lg p-5 space-y-4">
           <div className="flex items-center gap-3 text-foreground/60">
             <Banknote className="w-5 h-5 text-primary" />
-            <span className="text-[13px] tracking-[0.15em]">Pay by Bank Transfer</span>
+            <span className="text-lg tracking-[0.15em]">Pay by Bank Transfer</span>
           </div>
-          <p className="text-[12px] text-muted-foreground leading-relaxed">
+          <p className="text-[18px] text-muted-foreground leading-relaxed">
             Pay directly from your bank account. After confirming, you will receive the bank details to complete the transfer.
           </p>
           <div className="bg-background/80 border border-border/20 rounded-lg p-4 text-center">
             <p className="font-serif text-3xl text-primary mb-1">£{amount.toFixed(2)}</p>
-            <p className="text-[11px] text-foreground/60 tracking-[0.1em]">Total to pay</p>
+            <p className="text-base text-foreground/60 tracking-[0.1em]">Total to pay</p>
           </div>
         </div>
 
         {error && (
           <div className="bg-destructive/10 border border-destructive/30 rounded-lg px-4 py-3">
-            <p className="text-[12px] text-destructive leading-relaxed">{error}</p>
+            <p className="text-[18px] text-destructive leading-relaxed">{error}</p>
           </div>
         )}
 
         <div className="flex gap-3 pt-2">
-          <Button type="button" variant="outline" size="lg" onClick={onBack} disabled={loading} className="flex-1 text-[12px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent">
+          <Button type="button" variant="outline" size="lg" onClick={onBack} disabled={loading} className="flex-1 text-[18px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent">
             CHANGE METHOD
           </Button>
-          <Button type="button" onClick={handleBankSubmit} disabled={!stripe || !clientSecret || loading || !addressFilled} size="lg" className="flex-1 text-[12px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50">
+          <Button type="button" onClick={handleBankSubmit} disabled={!stripe || !clientSecret || loading || !addressFilled} size="lg" className="flex-1 text-[18px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50">
             {loading ? 'PROCESSING...' : 'CONFIRM BANK TRANSFER'}
           </Button>
         </div>

@@ -28,14 +28,14 @@ export function CookieConsent() {
           className="fixed bottom-0 left-0 right-0 z-[100] p-4 sm:p-6 pointer-events-none"
         >
           <div className="max-w-7xl mx-auto glass-strong rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-2xl pointer-events-auto">
-            <div className="flex-1 text-[14px] text-foreground/80 leading-relaxed">
+            <div className="flex-1 text-base text-foreground/80 leading-relaxed">
               We use cookies to improve your experience. By continuing, you agree to our{' '}
               <a href="/privacy" className="text-primary hover:text-primary/80 underline underline-offset-2">Privacy Policy</a>.
             </div>
             <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={accept}
-                className="px-6 py-2.5 bg-primary text-primary-foreground text-[12px] tracking-[0.2em] hover:bg-primary/90 transition-colors rounded-lg gold-glow cursor-pointer"
+                className="px-6 py-2.5 bg-primary text-primary-foreground text-[15px] tracking-[0.2em] hover:bg-primary/90 transition-colors rounded-lg gold-glow cursor-pointer"
               >
                 ACCEPT
               </button>

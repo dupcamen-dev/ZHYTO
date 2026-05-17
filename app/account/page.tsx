@@ -54,7 +54,7 @@ export default function AccountPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-12">
           <div>
-            <Link href="/" className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors mb-4">
+            <Link href="/" className="inline-flex items-center gap-2 text-[15px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors mb-4">
               <ArrowLeft className="w-3.5 h-3.5" />
               BACK TO SHOP
             </Link>
@@ -67,7 +67,7 @@ export default function AccountPage() {
             variant="outline"
             size="sm"
             onClick={signOut}
-            className="text-[12px] tracking-[0.15em] rounded-none border-border/50 gap-2"
+            className="text-[15px] tracking-[0.15em] rounded-none border-border/50 gap-2"
           >
             <LogOut className="w-3.5 h-3.5" />
             SIGN OUT
@@ -104,18 +104,18 @@ export default function AccountPage() {
                   <div key={order.id} className="glass-card rounded-xl p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <p className="text-[11px] tracking-[0.2em] text-muted-foreground mb-1">
+                        <p className="text-[14px] tracking-[0.2em] text-muted-foreground mb-1">
                           {new Date(order.created_at).toLocaleDateString('en-GB', {
                             day: 'numeric', month: 'long', year: 'numeric'
                           })}
                         </p>
-                        <p className="text-[11px] font-mono text-muted-foreground/50">
+                        <p className="text-[14px] font-mono text-muted-foreground/50">
                           #{order.id.slice(0, 8)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full ${status.dot}`} />
-                        <span className={`text-[12px] tracking-[0.1em] font-medium ${status.color}`}>
+                        <span className={`text-[15px] tracking-[0.1em] font-medium ${status.color}`}>
                           {status.label}
                         </span>
                       </div>
@@ -131,7 +131,7 @@ export default function AccountPage() {
                     </div>
 
                     <div className="border-t border-border/20 pt-3 flex items-center justify-between">
-                      <span className="text-[12px] text-muted-foreground">
+                      <span className="text-[15px] text-muted-foreground">
                         {order.delivery_address}
                       </span>
                       <span className="font-serif text-lg text-primary">£{order.total}</span>

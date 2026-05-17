@@ -51,7 +51,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
           <SheetTitle className="font-serif text-xl sm:text-2xl tracking-[0.1em] text-foreground">
             Your Cart
           </SheetTitle>
-          <SheetDescription className="text-[14px] tracking-[0.2em] text-foreground/60">
+          <SheetDescription className="text-base tracking-[0.2em] text-foreground/60">
             {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
           </SheetDescription>
         </SheetHeader>
@@ -59,11 +59,11 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
         {cartItems.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <p className="text-muted-foreground text-[15px] tracking-[0.15em] mb-2">YOUR CART IS EMPTY</p>
+              <p className="text-muted-foreground text-[18px] tracking-[0.15em] mb-2">YOUR CART IS EMPTY</p>
               <SheetClose asChild>
                 <Button 
                   variant="outline" 
-                  className="mt-4 text-[13px] tracking-[0.2em] rounded-none border-border/50"
+                  className="mt-4 text-lg tracking-[0.2em] rounded-none border-border/50"
                   onClick={() => { document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }) }}
                 >
                   CONTINUE SHOPPING
@@ -86,8 +86,8 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-serif text-[16px] text-foreground mb-1">{item.name}</h4>
-                      <p className="text-primary font-serif text-[16px] mb-3">£{item.price}</p>
+                      <h4 className="font-serif text-lg text-foreground mb-1">{item.name}</h4>
+                      <p className="text-primary font-serif text-lg mb-3">£{item.price}</p>
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => removeFromCart(item.id)}
@@ -95,7 +95,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                         >
                           <Minus className="w-2.5 h-2.5" />
                         </button>
-                        <span className="text-[15px] w-6 text-center font-medium text-foreground">
+                        <span className="text-[18px] w-6 text-center font-medium text-foreground">
                           {item.qty}
                         </span>
                         <button
@@ -118,15 +118,15 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
             </div>
 
             <div className="border-t border-border/30 p-4 sm:p-6 space-y-3">
-              <div className="flex justify-between text-[15px]">
+              <div className="flex justify-between text-[18px]">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="text-foreground">£{subtotal}</span>
               </div>
-              <div className="flex justify-between text-[15px]">
+              <div className="flex justify-between text-[18px]">
                 <span className="text-muted-foreground">Delivery</span>
                 <span className="text-foreground">{delivery === null ? 'N/A' : delivery === 0 ? 'FREE' : `£${delivery}`}</span>
               </div>
-              <div className="flex justify-between text-[17px] font-serif pt-2 border-t border-border/20">
+              <div className="flex justify-between text-[20px] font-serif pt-2 border-t border-border/20">
                 <span className="text-foreground">Total</span>
                 <span className="text-primary">£{total}</span>
               </div>
@@ -143,12 +143,12 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                       <div className="w-2 h-2 rounded-full bg-border/50" />
                     </div>
                   </div>
-                  <div className="flex justify-between text-[11px] tracking-[0.1em] text-foreground/60">
+                  <div className="flex justify-between text-base tracking-[0.1em] text-foreground/60">
                     <span>£0</span>
                     <span>£{settings.min_order}</span>
                     <span>£{settings.free_threshold}</span>
                   </div>
-                  <p className="text-[12px] text-foreground/60 tracking-[0.1em]">
+                  <p className="text-[18px] text-foreground/60 tracking-[0.1em]">
                     {subtotal < settings.min_order
                       ? `Add £${(settings.min_order - subtotal).toFixed(0)} more — min. order £${settings.min_order}`
                       : `Add £${(settings.free_threshold - subtotal).toFixed(0)} more for free delivery`}
@@ -156,7 +156,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                   {cartItems.length > 0 && (
                     <button
                       onClick={() => clearCart()}
-                      className="w-full text-[11px] tracking-[0.15em] text-foreground/40 hover:text-destructive transition-colors py-1"
+                      className="w-full text-base tracking-[0.15em] text-foreground/40 hover:text-destructive transition-colors py-1"
                     >
                       CLEAR ALL
                     </button>
@@ -166,7 +166,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
 
               <div className="flex gap-3 pt-2">
                 <SheetClose asChild>
-                  <Button variant="outline" size="lg" className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50">
+                  <Button variant="outline" size="lg" className="flex-1 text-lg tracking-[0.2em] rounded-none border-border/50">
                     CONTINUE
                   </Button>
                 </SheetClose>
@@ -177,7 +177,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                   }}
                   size="lg"
                   disabled={subtotal < settings.min_order}
-                  className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="flex-1 text-lg tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   CHECKOUT
                 </Button>

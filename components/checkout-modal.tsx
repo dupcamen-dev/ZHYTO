@@ -176,8 +176,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               <Icon className="w-5 h-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[14px] text-foreground font-medium">{config.label}</p>
-              <p className="text-[11px] text-muted-foreground tracking-[0.1em]">{config.desc}</p>
+              <p className="text-base text-foreground font-medium">{config.label}</p>
+              <p className="text-base text-muted-foreground tracking-[0.1em]">{config.desc}</p>
             </div>
             {submitting && selectedMethod === key && (
               <Loader className="w-4 h-4 text-primary animate-spin" />
@@ -194,7 +194,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       {selectedMethod && hasStripe && (
         <button
           onClick={handleBackToMethods}
-          className="inline-flex items-center gap-2 text-[12px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-[18px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           {clientSecret ? 'CHANGE METHOD' : 'BACK'}
@@ -204,18 +204,18 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       {/* User summary */}
       {user && (
         <div className="glass-card rounded-lg p-4 space-y-2">
-          <div className="flex items-center gap-2 text-[11px] tracking-[0.2em] text-foreground/60 mb-2">
+          <div className="flex items-center gap-2 text-base tracking-[0.2em] text-foreground/60 mb-2">
             <Package className="w-3.5 h-3.5" />
             ACCOUNT
           </div>
-          <p className="text-[15px] text-foreground">{user.user_metadata?.full_name || 'Guest'}</p>
-          <p className="text-[13px] text-foreground/60">{user.email}</p>
+          <p className="text-[18px] text-foreground">{user.user_metadata?.full_name || 'Guest'}</p>
+          <p className="text-[16px] text-foreground/60">{user.email}</p>
         </div>
       )}
 
       {/* Delivery address */}
       <div className="space-y-1.5">
-        <Label htmlFor="delivery-address" className="text-[12px] text-foreground/60 tracking-[0.1em]">
+        <Label htmlFor="delivery-address" className="text-[18px] text-foreground/60 tracking-[0.1em]">
           Delivery Address *
         </Label>
         <Textarea
@@ -229,7 +229,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
       {/* Order total */}
       <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
-        <span className="text-[13px] text-foreground/60">
+        <span className="text-[16px] text-foreground/60">
           {cartItems.reduce((s, i) => s + i.qty, 0)} items
         </span>
         <span className="font-serif text-lg text-primary">£{total}</span>
@@ -242,7 +242,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
           {/* Delivery threshold info */}
           {delivery !== null && delivery > 0 && (
-            <div className="flex items-center gap-3 text-[13px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
+            <div className="flex items-center gap-3 text-[16px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
               <Truck className="w-4 h-4 shrink-0 text-primary" />
               <span>
                 {delivery === settings.fee
@@ -259,14 +259,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 variant="outline"
                 size="lg"
                 onClick={() => onOpenChange(false)}
-                className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+                className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
               >
                 CANCEL
               </Button>
               <Button
                 type="button"
                 disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
-                className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
               >
                 {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
               </Button>
@@ -295,7 +295,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           /* Mock payment — when Stripe is not configured or still loading */
           <div className="space-y-4">
             <div className="glass-card rounded-lg p-5">
-              <p className="text-[11px] tracking-[0.2em] text-foreground/60 mb-4">PAYMENT METHOD</p>
+              <p className="text-base tracking-[0.2em] text-foreground/60 mb-4">PAYMENT METHOD</p>
               <div className="flex items-center gap-3 mb-4">
                 {(() => {
                   const config = methodConfig[selectedMethod]
@@ -303,14 +303,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   return (
                     <>
                       <Icon className="w-5 h-5 text-primary" />
-                      <span className="text-[13px] text-foreground">{config.label}</span>
+                      <span className="text-[16px] text-foreground">{config.label}</span>
                     </>
                   )
                 })()}
               </div>
               <div className="bg-border/10 border border-border/20 rounded-lg p-4 text-center">
                 <p className="font-serif text-3xl text-primary mb-1">£{total}</p>
-                <p className="text-[12px] text-foreground/60 tracking-[0.1em]">Total to pay</p>
+                <p className="text-[18px] text-foreground/60 tracking-[0.1em]">Total to pay</p>
               </div>
             </div>
 
@@ -319,7 +319,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               onClick={handleMockPayment}
               disabled={submitting || !deliveryAddress.trim()}
               size="lg"
-              className="w-full text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+              className="w-full text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
             >
               {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
             </Button>
@@ -336,7 +336,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
             {showPayment ? 'Pay securely' : user ? 'Checkout' : 'Sign in'}
           </DialogTitle>
-          <DialogDescription className="text-[13px] tracking-[0.2em] text-foreground/60">
+          <DialogDescription className="text-[16px] tracking-[0.2em] text-foreground/60">
             {showPayment
               ? 'Complete your payment — your details are secure'
               : user
@@ -351,22 +351,22 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               {/* Empty cart — pure login modal */}
               {cartItems.length === 0 && !user && (
                 <div className="glass-card rounded-lg p-5 space-y-4">
-                  <p className="text-[11px] tracking-[0.2em] text-foreground/60 text-center">
+                  <p className="text-base tracking-[0.2em] text-foreground/60 text-center">
                     SIGN IN TO YOUR ACCOUNT
                   </p>
-                  <p className="text-[13px] text-muted-foreground text-center leading-relaxed">
+                  <p className="text-[16px] text-muted-foreground text-center leading-relaxed">
                     Sign in with your Google or Apple account
                   </p>
                   <button
                     onClick={signInWithGoogle}
-                    className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-[14px] text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-base text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
                   >
                     <Chrome className="w-5 h-5" />
                     Continue with Google
                   </button>
                   <button
                     onClick={signInWithApple}
-                    className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-[14px] text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-base text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
                   >
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
                       <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
@@ -381,15 +381,15 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 <>
                   {/* Order summary */}
                   <div className="glass-card rounded-lg p-4 space-y-2">
-                    <p className="text-[11px] tracking-[0.2em] text-foreground/60 mb-3">ORDER SUMMARY</p>
+                    <p className="text-base tracking-[0.2em] text-foreground/60 mb-3">ORDER SUMMARY</p>
                     {cartItems.map(item => (
-                      <div key={item.id} className="flex justify-between text-[14px]">
+                      <div key={item.id} className="flex justify-between text-base">
                         <span className="text-foreground">{item.name} × {item.qty}</span>
                         <span className="text-primary">£{item.price * item.qty}</span>
                       </div>
                     ))}
                     <div className="border-t border-border/20 pt-2 mt-2 space-y-1">
-                      <div className="flex justify-between text-[13px]">
+                      <div className="flex justify-between text-[16px]">
                         <span className="text-foreground/60">Delivery</span>
                         <span className="text-foreground/60">{delivery === null ? 'N/A' : delivery === 0 ? 'FREE' : `£${delivery}`}</span>
                       </div>
@@ -403,22 +403,22 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   {/* Auth step — only when not logged in */}
                   {!user && !authLoading && (
                     <div className="glass-card rounded-lg p-5 space-y-4">
-                      <p className="text-[11px] tracking-[0.2em] text-foreground/60 text-center">
+                      <p className="text-base tracking-[0.2em] text-foreground/60 text-center">
                         SIGN IN TO CHECKOUT
                       </p>
-                      <p className="text-[13px] text-muted-foreground text-center leading-relaxed">
+                      <p className="text-[16px] text-muted-foreground text-center leading-relaxed">
                         Sign in with your Google or Apple account — no forms needed
                       </p>
                       <button
                         onClick={signInWithGoogle}
-                        className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-[14px] text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                        className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-base text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
                       >
                         <Chrome className="w-5 h-5" />
                         Continue with Google
                       </button>
                       <button
                         onClick={signInWithApple}
-                        className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-[14px] text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                        className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-base text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
                       >
                         <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
                           <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
@@ -437,7 +437,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
                   {/* Delivery threshold info */}
                   {delivery !== null && delivery > 0 && (
-                    <div className="flex items-center gap-3 text-[13px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
+                    <div className="flex items-center gap-3 text-[16px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
                       <Truck className="w-4 h-4 shrink-0 text-primary" />
                       <span>
                         {delivery === 5
@@ -454,14 +454,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                       size="lg"
                       onClick={() => onOpenChange(false)}
                       disabled={submitting}
-                      className="flex-1 text-[13px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+                      className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
                     >
                       CANCEL
                     </Button>
                     <Button
                       type="button"
                       disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
-                      className="flex-1 text-[13px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                      className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
                     >
                       {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
                     </Button>
