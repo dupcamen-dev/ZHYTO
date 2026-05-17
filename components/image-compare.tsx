@@ -37,6 +37,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (!draggingRef.current) return
+      e.preventDefault()
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
       updatePosition(clientX)
     }
@@ -44,7 +45,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
 
     window.addEventListener('mousemove', handleMove)
     window.addEventListener('mouseup', handleUp)
-    window.addEventListener('touchmove', handleMove, { passive: true })
+    window.addEventListener('touchmove', handleMove, { passive: false })
     window.addEventListener('touchend', handleUp)
 
     return () => {
