@@ -7,11 +7,11 @@
   color-scheme: light;
   /* Warm Beige Palette — 80% #c2a57b tones */
   --background: oklch(0.94 0.02 72);
-  --foreground: oklch(0.15 0.03 55);
+  --foreground: oklch(0.1 0.03 50);
   --card: oklch(0.90 0.025 72 / 0.8);
-  --card-foreground: oklch(0.15 0.03 55);
+  --card-foreground: oklch(0.1 0.03 50);
   --popover: oklch(0.90 0.025 72 / 0.95);
-  --popover-foreground: oklch(0.15 0.03 55);
+  --popover-foreground: oklch(0.1 0.03 50);
   
   /* Blue accent #0749f7 */
   --primary: oklch(0.45 0.28 265);
@@ -68,11 +68,11 @@
 .section-light {
   background: oklch(0.88 0.025 70);
   --background: oklch(0.88 0.025 70);
-  --foreground: oklch(0.12 0.03 55);
+  --foreground: oklch(0.08 0.03 50);
   --card: oklch(0.92 0.02 72 / 0.8);
-  --card-foreground: oklch(0.12 0.03 55);
+  --card-foreground: oklch(0.08 0.03 50);
   --muted: oklch(0.85 0.02 70);
-  --muted-foreground: oklch(0.45 0.04 60);
+  --muted-foreground: oklch(0.35 0.04 55);
   --primary: oklch(0.45 0.28 265);
   --primary-foreground: oklch(0.97 0 0);
   --border: oklch(0.72 0.04 70);
@@ -86,7 +86,7 @@
 
 @theme inline {
   --font-sans: var(--font-geist), system-ui, sans-serif;
-  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
   --font-script: var(--font-zhyto), cursive;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);

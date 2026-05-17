@@ -33,6 +33,22 @@ function WheatIcon({ className }: { className?: string }) {
   )
 }
 
+// Pastel brushstroke divider
+function PastelDivider({ className }: { className?: string }) {
+  return (
+    <div className={`flex justify-center ${className || ''}`}>
+      <svg width="180" height="32" viewBox="0 0 180 32" fill="none" className="opacity-40">
+        <path d="M10 16 Q30 4 60 14 Q90 26 120 12 Q150 2 170 16"
+          stroke="#0749f7" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.3" />
+        <path d="M15 20 Q35 8 65 18 Q95 30 125 16 Q155 6 175 20"
+          stroke="#c19e74" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.25" />
+        <path d="M5 12 Q25 0 55 10 Q85 22 115 8 Q145 -2 165 12"
+          stroke="#c19e74" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.15" />
+      </svg>
+    </div>
+  )
+}
+
 // Product data
 const products = [
   {
@@ -204,40 +220,27 @@ export default function Home() {
       {/* Navigation */}
       <motion.nav
         className="fixed top-0 left-0 right-0 z-50"
-        style={{
-          backgroundColor: '#c19e74',
-          borderBottom: '1px solid rgba(7, 73, 247, 0.08)',
-        }}
+        style={{ backgroundColor: '#c19e74' }}
         initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        {/* Shimmer blue accent line */}
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-[2px]"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, #0749f7 50%, transparent 100%)',
-            backgroundSize: '200% 100%',
-          }}
-          animate={{ backgroundPosition: ['100% 0', '-100% 0'] }}
-          transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
-        />
-
         <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-          <div className="flex items-center justify-between h-24">
+          <div className="flex items-center justify-between h-28">
             {/* Logo */}
             <motion.a
               href="#"
-              className="flex items-center -ml-8 sm:-ml-10"
-              whileHover={{ scale: 1.04 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+              className="flex items-center -ml-10 sm:-ml-12"
+              whileHover={{ scale: 1.06, rotate: -0.5 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 12 }}
             >
               <Image
                 src={img("/images/logo-header.png")}
                 alt="zhyto.london"
-                width={280}
-                height={70}
-                className="h-[60px] sm:h-[70px] w-auto drop-shadow-sm"
+                width={360}
+                height={90}
+                className="h-[72px] sm:h-[90px] w-auto"
                 priority
               />
             </motion.a>
@@ -345,8 +348,17 @@ export default function Home() {
       {/* Hero Section */}
       <motion.section 
         style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative min-h-[100dvh] flex items-center"
+        className="relative min-h-[100dvh] flex items-center overflow-hidden"
       >
+        {/* Pastel brushstroke decoration behind heading */}
+        <div className="absolute left-6 lg:left-12 top-1/3 -translate-y-1/2 pointer-events-none opacity-25 hidden lg:block">
+          <svg width="500" height="300" viewBox="0 0 500 300" fill="none">
+            <ellipse cx="200" cy="150" rx="280" ry="120" fill="#0749f7" opacity="0.06" />
+            <path d="M50 160 Q150 80 250 150 Q350 220 450 140" stroke="#c19e74" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.3" />
+            <path d="M30 140 Q130 60 230 130 Q330 200 430 120" stroke="#0749f7" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.15" />
+          </svg>
+        </div>
+
         {/* Content */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 pt-20 sm:pt-24 pb-16">
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-start gap-8 lg:gap-12">
@@ -452,6 +464,8 @@ export default function Home() {
           </motion.div>
         </div>
       </motion.section>
+
+      <PastelDivider className="py-4 -mb-8" />
 
       {/* Products Section */}
       <section id="products" className="py-28 lg:py-36 relative section-light">
@@ -641,6 +655,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <PastelDivider className="py-6 -mb-10" />
 
       {/* Ingredients Section */}
       <section id="ingredients" className="py-28 lg:py-36 relative section-light overflow-hidden">

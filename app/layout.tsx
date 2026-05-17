@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
-import { Cormorant_Garamond, Geist } from 'next/font/google'
+import { Playfair_Display, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
@@ -9,10 +9,10 @@ import { Toaster } from '@/components/ui/sonner'
 import { NoiseOverlay } from '@/components/noise-overlay'
 import './globals.css'
 
-const cormorant = Cormorant_Garamond({ 
+const playfair = Playfair_Display({ 
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-cormorant',
+  variable: '--font-playfair',
 })
 
 const zhyto = localFont({
@@ -49,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${zhyto.variable} ${geist.variable} bg-background`}>
+    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} bg-background`}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <CartProvider>
