@@ -410,7 +410,7 @@ export default function Home() {
                     priority
                   />
                 </div>
-                <div className="relative z-10 p-8 lg:p-12 flex flex-col justify-center pt-48 sm:pt-56">
+                <div className="relative z-10 p-8 lg:p-12 flex flex-col justify-end pb-24 lg:pb-32">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
