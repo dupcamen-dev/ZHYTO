@@ -274,11 +274,7 @@ export default function Home() {
                 alt="zhyto.london"
                 width={360}
                 height={90}
-                className={`w-auto transition-all duration-[400ms] ease-in-out ${
-                  headerMode === 'tall'
-                    ? 'h-[130px] sm:h-[170px]'
-                    : 'h-[72px] sm:h-[90px]'
-                }`}
+                className="h-[72px] sm:h-[90px] w-auto transition-all duration-[400ms] ease-in-out"
                 priority
               />
             </motion.a>
