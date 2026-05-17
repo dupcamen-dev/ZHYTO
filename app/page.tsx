@@ -388,16 +388,6 @@ export default function Home() {
         style={{ opacity: heroOpacity }}
         className="relative min-h-[120dvh] flex flex-col overflow-hidden"
       >
-        {/* Background photo */}
-        <div className="absolute left-0 right-0 bottom-0 z-0" style={{ top: '14rem' }}>
-          <Image
-            src={img("/images/hero-bg.jpg")}
-            alt=""
-            fill
-            className="object-contain"
-            priority
-          />
-        </div>
         {/* Pastel brushstroke decoration behind heading */}
         <div className="absolute left-6 lg:left-12 top-1/3 -translate-y-1/2 pointer-events-none opacity-25 hidden lg:block">
           <svg width="500" height="300" viewBox="0 0 500 300" fill="none">
@@ -410,7 +400,17 @@ export default function Home() {
         {/* Content */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-36 sm:pt-48 pb-32 flex-1 flex flex-col">
           <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
-            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl bg-background p-8 lg:p-12 flex flex-col justify-center">
+            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl relative overflow-hidden">
+                <div className="absolute inset-0 -z-10">
+                  <Image
+                    src={img("/images/hero-bg.jpg")}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+                <div className="relative z-10 p-8 lg:p-12 flex flex-col justify-center">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -458,6 +458,7 @@ export default function Home() {
                     <ArrowRight className="w-4 h-4 opacity-80" />
                   </a>
                 </motion.div>
+              </div>
             </div>
 
             {/* 3D Model — desktop only */}
