@@ -578,7 +578,7 @@ export default function Home() {
                           )}
                         </div>
 
-                        <div className="bg-white p-4 flex flex-col flex-1 justify-between">
+                        <div className="p-4 flex flex-col flex-1 justify-between">
                           <h3 className="font-serif text-lg text-gray-900 leading-snug">{product.name}</h3>
 
                           <div className="flex items-center justify-between mt-3">
