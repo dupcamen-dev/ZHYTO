@@ -719,8 +719,8 @@ export default function Home() {
       </section>
 
       {/* Delivery Section */}
-      <section id="delivery" className="py-28 lg:py-36 bg-background">
-        <div className="max-w-7xl mx-auto px-5 lg:px-10">
+      <section id="delivery" className="py-28 lg:py-36 bg-background overflow-hidden">
+        <div className="max-w-7xl mx-auto lg:px-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -764,7 +764,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
-              className="order-1 lg:order-2"
+              className="order-1 lg:order-2 px-5 lg:px-0"
             >
               <p className="text-[13px] tracking-[0.35em] text-primary mb-5">DELIVERY</p>
               <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
