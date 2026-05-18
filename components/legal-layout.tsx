@@ -19,7 +19,7 @@ export function LegalLayout({ children }: { children: React.ReactNode }) {
 
       <footer className="border-t border-border/30 py-8">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="text-[11px] text-foreground/60 tracking-[0.15em]">
+          <p className="text-[11px] text-muted-foreground tracking-[0.15em]">
             &copy; 2026 zhyto.london. All rights reserved.
           </p>
         </div>
@@ -31,10 +31,8 @@ export function LegalLayout({ children }: { children: React.ReactNode }) {
           font-size: 2.5rem;
           font-weight: 300;
           margin-bottom: 1rem;
-          color: oklch(0.95 0.01 85);
         }
         .prose-custom .date {
-          color: oklch(0.6 0.02 85);
           font-size: 0.875rem;
           margin-bottom: 3rem;
           letter-spacing: 0.05em;
@@ -45,11 +43,9 @@ export function LegalLayout({ children }: { children: React.ReactNode }) {
           font-weight: 500;
           margin-top: 2.5rem;
           margin-bottom: 1rem;
-          color: oklch(0.72 0.12 80);
           letter-spacing: 0.05em;
         }
         .prose-custom p {
-          color: oklch(0.75 0.02 85);
           font-size: 1rem;
           line-height: 1.8;
           margin-bottom: 1.25rem;
@@ -59,13 +55,12 @@ export function LegalLayout({ children }: { children: React.ReactNode }) {
           padding-left: 1.5rem;
         }
         .prose-custom li {
-          color: oklch(0.75 0.02 85);
           font-size: 1rem;
           line-height: 1.8;
           margin-bottom: 0.25rem;
         }
         .prose-custom li::marker {
-          color: oklch(0.72 0.12 80);
+          color: var(--primary);
         }
       `}</style>
     </main>
