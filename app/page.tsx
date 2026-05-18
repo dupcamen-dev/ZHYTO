@@ -636,7 +636,7 @@ export default function Home() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
                   <span className="text-5xl sm:text-[3.5rem] font-bold leading-none mb-2 drop-shadow-lg">15+</span>
                   <span className="text-xs sm:text-sm tracking-[0.3em] drop-shadow-lg">YEARS OF TRADITION</span>
                 </div>
@@ -870,7 +870,6 @@ export default function Home() {
               backgroundPosition: 'center',
             }}
           >
-            <div className="absolute inset-0 bg-black/30 pointer-events-none" />
             <motion.div
               className="relative z-10"
               initial={{ opacity: 0, y: 30 }}
@@ -878,12 +877,12 @@ export default function Home() {
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
             >
-              <p className="text-[14px] tracking-[0.35em] text-primary mb-5">GET IN TOUCH</p>
+              <p className="text-[14px] tracking-[0.35em] text-white/90 drop-shadow-lg mb-5">GET IN TOUCH</p>
               <h2 className="text-5xl md:text-6xl font-serif font-light mb-8">
-                <span className="text-foreground">Ready to</span>{" "}
-                <span className="font-script text-primary text-[1.15em]">order?</span>
+                <span className="text-[#c19e74] drop-shadow-lg">Ready to</span>{" "}
+                <span className="font-script text-white text-[1.15em] drop-shadow-lg">order?</span>
               </h2>
-              <p className="text-muted-foreground leading-[1.9] mb-12 text-[16px]">
+              <p className="text-white/70 drop-shadow-lg leading-[1.9] mb-12 text-[16px]">
                 Contact us for orders, catering inquiries, or just to say hello.
               </p>
               
@@ -898,18 +897,18 @@ export default function Home() {
                 </a>
                 <a 
                   href="mailto:hello@zhyto.london"
-                  className="text-[15px] tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors border-b border-border/50 hover:border-primary pb-1"
+                  className="text-[15px] tracking-[0.2em] text-[#c19e74] hover:text-white transition-colors border-b border-[#c19e74]/50 hover:border-white pb-1 drop-shadow-lg"
                 >
                   HELLO@ZHYTO.LONDON
                 </a>
               </div>
               
-              <div className="flex items-center justify-center gap-8 pt-6 border-t border-border/20">
-                <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-[14px] tracking-[0.2em]">
+              <div className="flex items-center justify-center gap-8 pt-6 border-t border-white/20">
+                <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors text-[14px] tracking-[0.2em] drop-shadow-lg">
                   INSTAGRAM
                 </a>
-                <span className="text-border/40">|</span>
-                <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-[14px] tracking-[0.2em]">
+                <span className="text-white/30">|</span>
+                <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors text-[14px] tracking-[0.2em] drop-shadow-lg">
                   WHATSAPP
                 </a>
               </div>
