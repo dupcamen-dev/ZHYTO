@@ -553,21 +553,11 @@ export default function Home() {
                     >
                       <div className={'aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
                         <div className="relative flex-1 overflow-hidden w-full">
-                          {product.category === 'syrnyky' ? (
-                            <ImageCompare
-                              frontImage={product.image}
-                              backImage={img("/images/syrnyky-ingredients.png")}
-                              alt={product.name}
-                            />
-                          ) : (
-                            <Image
-                              src={product.image}
-                              alt={product.name}
-                              fill
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                              className="object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
-                            />
-                          )}
+                          <ImageCompare
+                            frontImage={product.image}
+                            backImage={product.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png")}
+                            alt={product.name}
+                          />
                           {product.badge && (
                             <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase">
                               {product.badge}
@@ -1102,11 +1092,10 @@ export default function Home() {
               </button>
 
               <div className="relative h-48 w-full mb-6">
-                <Image
-                  src={selectedProduct.image}
+                <ImageCompare
+                  frontImage={selectedProduct.image}
+                  backImage={selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png")}
                   alt={selectedProduct.name}
-                  fill
-                  className="object-contain"
                 />
               </div>
 
