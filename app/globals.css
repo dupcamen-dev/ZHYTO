@@ -7,21 +7,21 @@
   color-scheme: light !important;
   /* Solid beige #c19e74 — 80% of site */
   --background: #c19e74;
-  --foreground: oklch(0.08 0.03 50);
+  --foreground: #1a1613;
   --card: #ffffff;
-  --card-foreground: oklch(0.08 0.03 50);
+  --card-foreground: #1a1613;
   --popover: #ffffff;
-  --popover-foreground: oklch(0.08 0.03 50);
+  --popover-foreground: #1a1613;
   
   /* Blue accent #0749f7 */
-  --primary: oklch(0.45 0.28 265);
+  --primary: #0749f7;
   --primary-foreground: #ffffff;
   
   --secondary: #e8d5b8;
-  --secondary-foreground: oklch(0.12 0.03 55);
+  --secondary-foreground: #1a1613;
   
   --muted: #e8d5b8;
-  --muted-foreground: oklch(0.35 0.04 60);
+  --muted-foreground: #6b5b4a;
   
   --accent: #e8d5b8;
   --accent-foreground: oklch(0.12 0.03 55);
@@ -83,11 +83,11 @@
 .section-orange {
   background: #f5ead6;
   --background: #f5ead6;
-  --foreground: oklch(0.08 0.03 50);
+  --foreground: #1a1613;
   --card: #ffffff;
-  --card-foreground: oklch(0.08 0.03 50);
+  --card-foreground: #1a1613;
   --muted: oklch(0.85 0.02 70);
-  --muted-foreground: oklch(0.35 0.04 55);
+  --muted-foreground: #6b5b4a;
   --primary: #0749f7;
   --primary-foreground: #ffffff;
   --border: oklch(0.72 0.04 70);

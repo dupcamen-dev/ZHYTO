@@ -251,18 +251,16 @@ export default function Home() {
       const atBottom = y > maxY - 100
       const goingDown = y > prevScrollY.current
 
-      setShowScrollTop(y > 150)
+      setShowScrollTop(y > 300)
 
-      if (atTop && window.innerWidth >= 1024) {
-        setHeaderMode('tall')
+      if (atTop) {
+        setHeaderMode(window.innerWidth >= 1024 ? 'tall' : 'normal')
+      } else if (!goingDown) {
+        setHeaderMode('normal')
       } else if (atBottom) {
         setHeaderMode('normal')
       } else if (goingDown && y >= productsTopRef.current - 100) {
         setHeaderMode('hidden')
-      } else if (goingDown) {
-        setHeaderMode('normal')
-      } else {
-        setHeaderMode('normal')
       }
 
       prevScrollY.current = y
@@ -1093,7 +1091,7 @@ export default function Home() {
             exit={{ opacity: 0, scale: 0.5 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             aria-label="Scroll to top"
-            className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors gold-glow"
+            className="fixed bottom-24 lg:bottom-8 right-6 lg:right-8 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors gold-glow"
           >
             <ArrowUp className="w-5 h-5" />
           </motion.button>
