@@ -102,8 +102,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className={`
         fixed inset-y-0 left-0 z-50 w-72 border-r border-border/30 flex flex-col bg-card/50
         transform transition-transform duration-300 ease-in-out
-        lg:relative lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:hidden
       `}>
         {sidebar}
       </aside>
