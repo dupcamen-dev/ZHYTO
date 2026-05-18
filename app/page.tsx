@@ -1019,7 +1019,7 @@ export default function Home() {
               animate={{ clipPath: 'circle(140% at 50% 50%)' }}
               exit={{ clipPath: 'circle(0% at 50% 50%)' }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-50 flex flex-col items-center justify-start pt-28 gap-10 h-full overflow-y-auto pb-10"
+              className="relative z-50 flex flex-col items-center justify-start pt-40 gap-10 h-full overflow-y-auto pb-10"
             >
                {navLinks.map((link, i) => (
                 <motion.a
