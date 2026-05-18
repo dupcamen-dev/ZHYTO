@@ -412,7 +412,7 @@ export default function Home() {
         className="relative min-h-[120dvh] flex flex-col overflow-hidden"
       >
         {/* Content */}
-           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
+           <div className="relative z-10 w-full max-w-7xl mx-auto sm:px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
           <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
             <div className="w-full lg:w-auto max-w-lg xl:max-w-xl relative overflow-hidden">
                 <div className="absolute inset-0 -z-10">
@@ -474,7 +474,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="text-center pb-8 lg:pb-12"
+            className="text-center pb-8 lg:pb-12 px-5 sm:px-0"
           >
             <a
               href="#products"
@@ -579,7 +579,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
-              className="order-2 lg:order-1"
+              className="order-1 lg:order-1"
             >
               <p className="text-[13px] tracking-[0.35em] text-primary mb-5">OUR STORY</p>
               <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
@@ -612,7 +612,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
-              className="relative order-1 lg:order-2"
+              className="relative order-2 lg:order-2"
             >
               <div className="relative min-h-[400px] lg:min-h-[650px] overflow-hidden">
                 <Image
