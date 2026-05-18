@@ -43,7 +43,7 @@ const products = [
     description: "Hearty Ukrainian dumplings with seasoned beef and pork filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/pelmeni-removebg-preview.webp"),
     background_image: '',
     badge: null,
     category: "pelmeni",
@@ -57,7 +57,7 @@ const products = [
     description: "Light and tender pelmeni with poultry filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.png"),
+    image: img("/images/pelmeni-removebg-preview.webp"),
     background_image: '',
     badge: null,
     category: "pelmeni",
@@ -71,7 +71,7 @@ const products = [
     description: "Classic Ukrainian varenyky with creamy mashed potato",
     price: 12,
     unit: "/ kg",
-    image: img("/images/hero-varenyky.jpg"),
+    image: img("/images/hero-varenyky.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -85,7 +85,7 @@ const products = [
     description: "Hearty varenyky with savoury braised cabbage",
     price: 12,
     unit: "/ kg",
-    image: img("/images/varenyky-new.png"),
+    image: img("/images/varenyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -99,7 +99,7 @@ const products = [
     description: "Rich varenyky with wild forest mushroom filling",
     price: 12,
     unit: "/ kg",
-    image: img("/images/varenyky-new.png"),
+    image: img("/images/varenyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -113,7 +113,7 @@ const products = [
     description: "Sweet varenyky filled with cottage cheese and cherries",
     price: 13,
     unit: "/ kg",
-    image: img("/images/varenyky-new.png"),
+    image: img("/images/varenyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -127,7 +127,7 @@ const products = [
     description: "Savory varenyky with cottage cheese and fresh spinach",
     price: 13,
     unit: "/ kg",
-    image: img("/images/varenyky-new.png"),
+    image: img("/images/varenyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -141,7 +141,7 @@ const products = [
     description: "Traditional Ukrainian cheese fritters, golden and fluffy",
     price: 10,
     unit: "/ 600g",
-    image: img("/images/syrnyky-new.png"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "syrnyky",
@@ -155,7 +155,7 @@ const products = [
     description: "Decadent syrnyky with rich chocolate chunks",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/syrnyky-new.png"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "syrnyky",
@@ -169,7 +169,7 @@ const products = [
     description: "Fluffy syrnyky bursting with wild blueberries",
     price: 11,
     unit: "/ 600g",
-    image: img("/images/syrnyky-new.png"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "syrnyky",
@@ -304,7 +304,7 @@ export default function Home() {
               transition={{ type: 'spring', stiffness: 200, damping: 12 }}
             >
               <Image
-                src={img("/images/logo-header.png")}
+                src={img("/images/logo-header.webp")}
                 alt="zhyto.london"
                 width={520}
                 height={130}
@@ -425,7 +425,7 @@ export default function Home() {
             <div className="w-full lg:w-auto max-w-3xl xl:max-w-4xl relative overflow-hidden">
                 <div className="absolute inset-0 -z-10">
                   <Image
-                    src={img("/images/hero-bg.jpg")}
+                    src={img("/images/hero-bg.webp")}
                     alt=""
                     fill
                     className="object-cover"
@@ -572,7 +572,7 @@ export default function Home() {
                         <div className="relative flex-1 overflow-hidden w-full">
                           <ImageCompare
                             frontImage={product.image}
-                            backImage={product.background_image || (product.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png"))}
+                            backImage={product.background_image || (product.category === 'syrnyky' ? img("/images/syrnyky-ingredients.webp") : img("/images/ingredients-new.webp"))}
                             alt={product.name}
                           />
                           {product.badge && (
@@ -658,7 +658,7 @@ export default function Home() {
               </div>
               <div className="absolute -bottom-6 -left-6 lg:-bottom-8 lg:-left-8 w-44 h-44 lg:w-56 lg:h-56 overflow-hidden">
                 <Image
-                  src={img("/images/about-card.png")}
+                  src={img("/images/about-card.webp")}
                   alt=""
                   fill
                   className="object-cover"
@@ -706,7 +706,7 @@ export default function Home() {
                   <div className="w-full h-full flex items-center justify-center p-6">
                     <div className="w-full h-full relative">
                       <Image
-                        src={img("/images/ingredients-new.png")}
+                        src={img("/images/ingredients-new.webp")}
                         alt="Natural ingredients"
                         fill
                         className="object-contain"
@@ -769,7 +769,7 @@ export default function Home() {
               <div
                 className="relative overflow-hidden sm:px-12 py-16"
                 style={{
-                  backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
+                  backgroundImage: `url(${img("/images/hero-bg.webp")})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
@@ -917,7 +917,7 @@ export default function Home() {
           <div
             className="max-w-5xl mx-auto py-8 px-0 sm:p-16 md:p-20 lg:p-24 text-center relative overflow-hidden max-sm:max-w-full max-sm:bg-cover sm:bg-[length:70%]"
             style={{
-              backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
+              backgroundImage: `url(${img("/images/hero-bg.webp")})`,
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
             }}
@@ -1135,7 +1135,7 @@ export default function Home() {
               <div className="relative h-48 lg:h-64 w-full mb-6">
                 <ImageCompare
                   frontImage={selectedProduct.image}
-                  backImage={selectedProduct.background_image || (selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png"))}
+                  backImage={selectedProduct.background_image || (selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.webp") : img("/images/ingredients-new.webp"))}
                   alt={selectedProduct.name}
                 />
               </div>
