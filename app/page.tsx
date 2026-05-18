@@ -325,6 +325,30 @@ export default function Home() {
             animate={{ height: headerMode === 'tall' ? '12rem' : '9rem' }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
+            {/* Cart - Mobile Left */}
+            <div className="lg:hidden flex items-center">
+              <motion.button
+                onClick={() => setCartOpen(true)}
+                aria-label="Open cart"
+                className="relative w-11 h-11 rounded-full border-2 border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
+                whileHover={{ scale: 1.1, rotate: -5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ShoppingCart className="w-4.5 h-4.5" />
+                {totalItems > 0 && (
+                  <motion.span
+                    key={totalItems}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center shadow-lg"
+                  >
+                    {totalItems}
+                  </motion.span>
+                )}
+              </motion.button>
+            </div>
+
             {/* Logo */}
             <motion.a
               href="#"
@@ -364,8 +388,30 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Cart, Auth & Mobile Toggle */}
+            {/* Cart (desktop), Auth & Mobile Toggle */}
             <div className="flex items-center gap-4 lg:ml-8">
+              {/* Cart - Desktop */}
+              <motion.button
+                onClick={() => setCartOpen(true)}
+                aria-label="Open cart"
+                className="hidden lg:flex relative w-11 h-11 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
+                whileHover={{ scale: 1.1, rotate: -5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ShoppingCart className="w-4.5 h-4.5" />
+                {totalItems > 0 && (
+                  <motion.span
+                    key={totalItems}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center shadow-lg"
+                  >
+                    {totalItems}
+                  </motion.span>
+                )}
+              </motion.button>
+
               {/* User button */}
               {!loading && (
                 user ? (
@@ -410,26 +456,7 @@ export default function Home() {
                   </motion.button>
                 )
               )}
-              <motion.button
-                onClick={() => setCartOpen(true)}
-                aria-label="Open cart"
-                className="relative w-11 h-11 rounded-full border-2 border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
-                whileHover={{ scale: 1.1, rotate: -5 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <ShoppingCart className="w-4.5 h-4.5" />
-                {totalItems > 0 && (
-                  <motion.span
-                    key={totalItems}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center shadow-lg"
-                  >
-                    {totalItems}
-                  </motion.span>
-                )}
-              </motion.button>
+              {/* Mobile Menu Toggle */}
               <motion.button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
