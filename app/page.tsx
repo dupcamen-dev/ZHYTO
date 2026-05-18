@@ -61,7 +61,9 @@ const products = [
     image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "pelmeni",
-    stock: 10
+    stock: 10,
+    ingredients: "Dough: flour, water, eggs, salt. Filling: beef, pork, onion, garlic, salt, black pepper.",
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce."
   },
   {
     id: 2,
@@ -72,7 +74,9 @@ const products = [
     image: img("/images/pelmeni-removebg-preview.png"),
     badge: null,
     category: "pelmeni",
-    stock: 10
+    stock: 10,
+    ingredients: "Dough: flour, water, eggs, salt. Filling: chicken, turkey, onion, garlic, salt, black pepper.",
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce."
   },
   {
     id: 3,
@@ -83,7 +87,9 @@ const products = [
     image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Dough: flour, water, eggs, salt. Filling: mashed potato, fried onion, butter, salt, black pepper.",
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with fried onions, sour cream and fresh dill."
   },
   {
     id: 4,
@@ -94,7 +100,9 @@ const products = [
     image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Dough: flour, water, eggs, salt. Filling: braised cabbage, carrot, onion, tomato paste, salt, black pepper.",
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs."
   },
   {
     id: 5,
@@ -105,7 +113,9 @@ const products = [
     image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Dough: flour, water, eggs, salt. Filling: wild mushrooms, onion, butter, salt, black pepper.",
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh dill."
   },
   {
     id: 6,
@@ -116,7 +126,9 @@ const products = [
     image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Dough: flour, water, eggs, salt. Filling: cottage cheese, cherries, sugar, vanilla extract.",
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream, honey or a dusting of icing sugar."
   },
   {
     id: 7,
@@ -127,7 +139,9 @@ const products = [
     image: img("/images/varenyky-new.png"),
     badge: null,
     category: "varenyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Dough: flour, water, eggs, salt. Filling: cottage cheese, spinach, garlic, salt, black pepper.",
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs."
   },
   {
     id: 8,
@@ -138,7 +152,9 @@ const products = [
     image: img("/images/syrnyky-new.png"),
     badge: null,
     category: "syrnyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, salt. Served with sour cream.",
+    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream, jam or honey."
   },
   {
     id: 9,
@@ -149,7 +165,9 @@ const products = [
     image: img("/images/syrnyky-new.png"),
     badge: null,
     category: "syrnyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, dark chocolate chunks, salt.",
+    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or a drizzle of melted chocolate."
   },
   {
     id: 10,
@@ -160,7 +178,9 @@ const products = [
     image: img("/images/syrnyky-new.png"),
     badge: null,
     category: "syrnyky",
-    stock: 10
+    stock: 10,
+    ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, wild blueberries, salt.",
+    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or honey."
   },
 ]
 
@@ -200,6 +220,8 @@ export default function Home() {
           badge: p.badge,
           category: p.category,
           stock: p.stock ?? 10,
+          ingredients: p.ingredients,
+          cooking: p.cooking,
         })))
       }
     })
@@ -1087,6 +1109,20 @@ export default function Home() {
                   <span className="text-sm text-gray-500 ml-1">{selectedProduct.unit}</span>
                 </div>
               </div>
+
+              {selectedProduct.ingredients && (
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">INGREDIENTS</h4>
+                  <p className="text-sm text-gray-600 leading-relaxed">{selectedProduct.ingredients}</p>
+                </div>
+              )}
+
+              {selectedProduct.cooking && (
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">COOKING INSTRUCTIONS</h4>
+                  <p className="text-sm text-gray-600 leading-relaxed">{selectedProduct.cooking}</p>
+                </div>
+              )}
 
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
