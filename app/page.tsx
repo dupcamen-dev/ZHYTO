@@ -462,10 +462,21 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-light leading-[1.05] mb-8"
+            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-light leading-[1.05] mb-8 relative"
           >
             <span className="text-foreground block">Dumplings</span>
-            <span className="font-script text-[#c2a57b] text-[1em] uppercase">with soul</span>
+            <span className="font-script text-[#c2a57b] text-[1em] uppercase relative inline-block">
+              with soul
+              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] -z-10">
+                <Image
+                  src={img("/images/hero-soul-bg.png")}
+                  alt=""
+                  fill
+                  className="object-contain opacity-40"
+                  priority
+                />
+              </div>
+            </span>
           </motion.h1>
 
           <motion.div
