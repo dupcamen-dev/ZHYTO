@@ -24,20 +24,20 @@ interface Product {
 const fallbackCategories = ['varenyky', 'syrnyky', 'pelmeni']
 
 const fallbackProducts: Product[] = [
-  { id: 1, name: 'Varenyky with potato', description: 'Classic Ukrainian varenyky with creamy mashed potato', price: 12, unit: '/ kg', image: '/images/hero-varenyky.webp', badge: 'Traditional', category: 'varenyky', available: true, stock: 10, sort_order: 1 },
-  { id: 2, name: 'Varenyky with cabbage', description: 'Hearty varenyky with savoury braised cabbage', price: 12, unit: '/ kg', image: '/images/hero-varenyky.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 2 },
-  { id: 3, name: 'Varenyky with mushroom', description: 'Rich varenyky with wild forest mushroom filling', price: 12, unit: '/ kg', image: '/images/hero-varenyky.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 3 },
-  { id: 4, name: 'Varenyky with cheese & cherries', description: 'Sweet varenyky filled with cottage cheese and cherries', price: 13, unit: '/ kg', image: '/images/hero-varenyky.webp', badge: 'Seasonal', category: 'varenyky', available: true, stock: 10, sort_order: 4 },
-  { id: 5, name: 'Varenyky with cheese & spinach', description: 'Savory varenyky with cottage cheese and fresh spinach', price: 13, unit: '/ kg', image: '/images/hero-varenyky.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 5 },
+  { id: 1, name: 'Varenyky with potato', description: 'Classic Ukrainian varenyky with creamy mashed potato', price: 12, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: 'Traditional', category: 'varenyky', available: true, stock: 10, sort_order: 1 },
+  { id: 2, name: 'Varenyky with cabbage', description: 'Hearty varenyky with savoury braised cabbage', price: 12, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 2 },
+  { id: 3, name: 'Varenyky with mushroom', description: 'Rich varenyky with wild forest mushroom filling', price: 12, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 3 },
+  { id: 4, name: 'Varenyky with cheese & cherries', description: 'Sweet varenyky filled with cottage cheese and cherries', price: 13, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: 'Seasonal', category: 'varenyky', available: true, stock: 10, sort_order: 4 },
+  { id: 5, name: 'Varenyky with cheese & spinach', description: 'Savory varenyky with cottage cheese and fresh spinach', price: 13, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 5 },
   { id: 6, name: 'Syrnyky', description: 'Traditional Ukrainian cheese fritters, golden and fluffy', price: 10, unit: '/ 600g',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 6 },
   { id: 7, name: 'Syrnyky with chocolate', description: 'Decadent syrnyky with rich chocolate chunks', price: 11, unit: '/ 600g',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 7 },
   { id: 8, name: 'Syrnyky with blueberries', description: 'Fluffy syrnyky bursting with wild blueberries', price: 11, unit: '/ 600g',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 8 },
-  { id: 9, name: 'Pelmeni (beef & pork)', description: 'Hearty Ukrainian dumplings with seasoned beef and pork filling', price: 15, unit: '/ kg',   image: '/images/pelmeni.webp', background_image: '', badge: 'Bestseller', category: 'pelmeni', available: true, stock: 10, sort_order: 9 },
-  { id: 10, name: 'Pelmeni (chicken & turkey)', description: 'Light and tender pelmeni with poultry filling', price: 15, unit: '/ kg',   image: '/images/pelmeni.webp', background_image: '', badge: null, category: 'pelmeni', available: true, stock: 10, sort_order: 10 },
+  { id: 9, name: 'Pelmeni (beef & pork)', description: 'Hearty Ukrainian dumplings with seasoned beef and pork filling', price: 15, unit: '/ kg',   image: '/images/syrnyky-new.webp', background_image: '', badge: 'Bestseller', category: 'pelmeni', available: true, stock: 10, sort_order: 9 },
+  { id: 10, name: 'Pelmeni (chicken & turkey)', description: 'Light and tender pelmeni with poultry filling', price: 15, unit: '/ kg',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'pelmeni', available: true, stock: 10, sort_order: 10 },
 ]
 const emptyProduct = {
   name: '', description: '', price: 0, unit: '/ kg',
-  image: '/images/hero-varenyky.webp', background_image: '', badge: null,
+  image: '/images/syrnyky-new.webp', background_image: '', badge: null,
   category: 'varenyky', available: true, stock: 10, sort_order: 0,
 }
 
@@ -156,7 +156,7 @@ export default function AdminProducts() {
 
     const payload = {
       name: editing.name, description: editing.description, price: editing.price,
-      unit: editing.unit, image: editing.image || '/images/hero-varenyky.webp',
+      unit: editing.unit, image: editing.image || '/images/syrnyky-new.webp',
       background_image: editing.background_image || null, badge: editing.badge || null, category: editing.category,
       available: editing.available ?? true, stock: editing.stock ?? 10,
     }
@@ -400,7 +400,7 @@ export default function AdminProducts() {
                       value={editing.image || ''}
                       onChange={e => setEditing(f => ({ ...f, image: e.target.value }))}
                       className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none"
-                      placeholder="/images/hero-varenyky.webp"
+                      placeholder="/images/syrnyky-new.webp"
                     />
                     <button
                       type="button"

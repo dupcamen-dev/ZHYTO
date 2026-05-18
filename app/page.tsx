@@ -43,7 +43,7 @@ const products = [
     description: "Hearty Ukrainian dumplings with seasoned beef and pork filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.webp"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "pelmeni",
@@ -57,7 +57,7 @@ const products = [
     description: "Light and tender pelmeni with poultry filling",
     price: 15,
     unit: "/ kg",
-    image: img("/images/pelmeni-removebg-preview.webp"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "pelmeni",
@@ -71,7 +71,7 @@ const products = [
     description: "Classic Ukrainian varenyky with creamy mashed potato",
     price: 12,
     unit: "/ kg",
-    image: img("/images/hero-varenyky.webp"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -85,7 +85,7 @@ const products = [
     description: "Hearty varenyky with savoury braised cabbage",
     price: 12,
     unit: "/ kg",
-    image: img("/images/varenyky-new.webp"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -99,7 +99,7 @@ const products = [
     description: "Rich varenyky with wild forest mushroom filling",
     price: 12,
     unit: "/ kg",
-    image: img("/images/varenyky-new.webp"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -113,7 +113,7 @@ const products = [
     description: "Sweet varenyky filled with cottage cheese and cherries",
     price: 13,
     unit: "/ kg",
-    image: img("/images/varenyky-new.webp"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -127,7 +127,7 @@ const products = [
     description: "Savory varenyky with cottage cheese and fresh spinach",
     price: 13,
     unit: "/ kg",
-    image: img("/images/varenyky-new.webp"),
+    image: img("/images/syrnyky-new.webp"),
     background_image: '',
     badge: null,
     category: "varenyky",
@@ -572,7 +572,7 @@ export default function Home() {
                         <div className="relative flex-1 overflow-hidden w-full">
                           <ImageCompare
                             frontImage={product.image}
-                            backImage={product.background_image || (product.category === 'syrnyky' ? img("/images/syrnyky-ingredients.webp") : img("/images/ingredients-new.webp"))}
+                            backImage={product.background_image || img("/images/syrnyky-ingredients.webp")}
                             alt={product.name}
                           />
                           {product.badge && (
@@ -706,7 +706,7 @@ export default function Home() {
                   <div className="w-full h-full flex items-center justify-center p-6">
                     <div className="w-full h-full relative">
                       <Image
-                        src={img("/images/ingredients-new.webp")}
+                        src={img("/images/syrnyky-ingredients.webp")}
                         alt="Natural ingredients"
                         fill
                         className="object-contain"
@@ -1135,7 +1135,7 @@ export default function Home() {
               <div className="relative h-48 lg:h-64 w-full mb-6">
                 <ImageCompare
                   frontImage={selectedProduct.image}
-                  backImage={selectedProduct.background_image || (selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.webp") : img("/images/ingredients-new.webp"))}
+                  backImage={selectedProduct.background_image || (selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.webp") : img("/images/syrnyky-ingredients.webp"))}
                   alt={selectedProduct.name}
                 />
               </div>
