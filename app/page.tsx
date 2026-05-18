@@ -454,7 +454,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[16px] sm:text-[18px] tracking-[0.4em] text-primary mb-8">
+            className="text-[16px] sm:text-[18px] tracking-[0.4em] text-white mb-8">
             AUTHENTIC. HANDMADE. TIMELESS.
           </motion.p>
 
@@ -464,7 +464,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-light leading-[1.05] mb-8 relative"
           >
-            <span className="text-foreground block">Dumplings</span>
+            <span className="text-white block">Dumplings</span>
             <span className="font-script text-foreground text-[1em] uppercase relative inline-block">
               with soul
               <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[400%] -z-10">
