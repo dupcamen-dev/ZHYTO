@@ -280,7 +280,7 @@ export default function Home() {
         <div className={`max-w-7xl mx-auto transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? 'px-8 lg:px-14' : 'px-5 lg:px-10'}`} style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <motion.div
             className="flex items-center justify-between"
-            animate={{ height: headerMode === 'tall' ? '14rem' : '7rem' }}
+            animate={{ height: headerMode === 'tall' ? '12rem' : '7rem' }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
             {/* Logo */}
@@ -298,8 +298,8 @@ export default function Home() {
                 height={90}
                 className="h-14 sm:h-[76px] lg:h-[100px] w-auto transition-all duration-[400ms] ease-in-out max-w-[180px] sm:max-w-none"
                 style={{
-                  maskImage: 'radial-gradient(ellipse 70% 50% at center, black 60%, transparent 100%)',
-                  WebkitMaskImage: 'radial-gradient(ellipse 70% 50% at center, black 60%, transparent 100%)',
+                  maskImage: 'radial-gradient(ellipse 90% 50% at center, black 60%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 90% 50% at center, black 60%, transparent 100%)',
                 }}
                 priority
               />
@@ -414,7 +414,7 @@ export default function Home() {
         {/* Content */}
            <div className="relative z-10 w-full max-w-7xl mx-auto sm:px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
           <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
-            <div className="w-full lg:w-auto max-w-lg xl:max-w-xl relative overflow-hidden">
+            <div className="w-full lg:w-auto max-w-2xl xl:max-w-3xl relative overflow-hidden">
                 <div className="absolute inset-0 -z-10">
                   <Image
                     src={img("/images/hero-bg.jpg")}
@@ -424,7 +424,7 @@ export default function Home() {
                     priority
                   />
                 </div>
-                <div className="relative z-10 p-8 lg:p-12 flex flex-col pt-20 lg:pt-24">
+                <div className="relative z-10 p-8 lg:p-12 flex flex-col pt-16 lg:pt-20">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -671,7 +671,7 @@ export default function Home() {
               <div className="relative">
                 <div className="overflow-hidden aspect-square">
                   <div className="w-full h-full flex items-center justify-center p-6">
-                    <div className="w-full h-full relative -rotate-90">
+                    <div className="w-full h-full relative">
                       <Image
                         src={img("/images/ingredients-new.png")}
                         alt="Natural ingredients"
@@ -734,7 +734,7 @@ export default function Home() {
               className="order-2 lg:order-1"
             >
               <div
-                className="relative overflow-hidden px-12 py-24"
+                className="relative overflow-hidden px-12 py-16"
                 style={{
                   backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
                   backgroundSize: 'cover',
@@ -820,7 +820,7 @@ export default function Home() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full glass-card rounded-none px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 transition-all cursor-pointer bg-white"
+                  className="w-full glass-card rounded-none px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer bg-white"
                 >
                   <span className="font-serif text-[19px] text-black">{item.q}</span>
                   <ChevronDown className={`w-4 h-4 text-primary shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
@@ -848,10 +848,6 @@ export default function Home() {
 
       {/* Contact Section */}
       <section id="contact" className="py-28 lg:py-36 relative bg-background overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute top-10 left-10 w-32 h-32 rounded-full border border-primary/10 -z-10" />
-        <div className="absolute bottom-10 right-10 w-48 h-48 rounded-full border border-primary/10 -z-10" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
         <div className="max-w-7xl mx-auto sm:px-5 lg:px-10">
           <div
@@ -918,10 +914,10 @@ export default function Home() {
             </div>
             
             <div className="flex flex-col items-center md:items-center gap-2">
-              <p className="text-sm md:text-lg text-cream tracking-[0.15em]">
+              <p className="text-sm md:text-base xl:text-lg text-cream tracking-[0.15em]">
                 © 2026 zhyto.london. ALL RIGHTS RESERVED.
               </p>
-              <p className="text-xs md:text-base text-cream tracking-[0.1em]">
+              <p className="text-xs md:text-sm xl:text-base text-cream tracking-[0.1em]">
                 Designed &amp; Built by{' '}
                 <a
                   href="https://millionpixels.dev"
@@ -1061,7 +1057,7 @@ export default function Home() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="relative bg-white w-full max-w-md p-8"
+              className="relative bg-white w-full max-w-xl p-8 lg:p-12"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -1072,7 +1068,7 @@ export default function Home() {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="relative h-48 w-full mb-6">
+              <div className="relative h-48 lg:h-64 w-full mb-6">
                 <ImageCompare
                   frontImage={selectedProduct.image}
                   backImage={selectedProduct.background_image || (selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png"))}

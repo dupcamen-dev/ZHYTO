@@ -88,7 +88,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
         className="absolute top-0 bottom-0 w-0.5 bg-white pointer-events-none"
         style={{ left: `${position}%` }}
       >
-        <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center">
+        <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#666" strokeWidth="1.5" strokeLinecap="round">
             <path d="M6 3L2 8L6 13" />
             <path d="M10 3L14 8L10 13" />
