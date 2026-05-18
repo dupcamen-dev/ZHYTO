@@ -472,7 +472,7 @@ export default function Home() {
                   src={img("/images/hero-soul-bg.png")}
                   alt=""
                   fill
-                  className="object-contain"
+                  className="object-contain rotate-[10deg]"
                   priority
                 />
               </div>
