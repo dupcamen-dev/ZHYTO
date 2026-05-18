@@ -314,7 +314,7 @@ export default function Home() {
             </motion.a>
 
             {/* Nav Links - Desktop */}
-            <div className="hidden lg:flex items-center gap-12 xl:gap-14">
+            <div className="hidden lg:flex items-center gap-7 xl:gap-8">
               {navLinks.map((link) => (
                 <motion.a
                   key={link.name}
@@ -335,7 +335,7 @@ export default function Home() {
             </div>
 
             {/* Cart, Auth & Mobile Toggle */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 lg:ml-8">
               {/* User button */}
               {!loading && (
                 user ? (
@@ -421,9 +421,9 @@ export default function Home() {
       >
         {/* Content */}
            <div className="relative z-10 w-full max-w-7xl mx-auto sm:px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
-          <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
-            <div className="w-full lg:w-auto max-w-3xl xl:max-w-4xl relative overflow-hidden">
-                <div className="absolute inset-0 -z-10">
+          <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12 overflow-visible">
+            <div className="w-full lg:w-auto max-w-3xl xl:max-w-4xl relative">
+                <div className="absolute inset-0 -z-10 overflow-hidden">
                   <Image
                     src={img("/images/hero-bg.webp")}
                     alt=""
@@ -474,7 +474,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex flex-col items-center justify-center shrink-0 self-center gap-6"
+              className="hidden lg:flex flex-col items-center justify-center shrink-0 self-center gap-6 -ml-16"
             >
               <Hero3D />
               <a
