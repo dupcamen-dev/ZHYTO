@@ -18,23 +18,6 @@ import { ImageCompare } from '@/components/image-compare'
 import { useDeliverySettings } from '@/lib/use-delivery'
 import { toast } from 'sonner'
 
-// Wheat icon for badge
-function WheatIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 60 60" className={className} fill="currentColor">
-      <circle cx="30" cy="12" r="4" />
-      <ellipse cx="30" cy="8" rx="2" ry="6" />
-      <path d="M30 16 L30 55" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M30 20 Q24 24 18 20" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M30 20 Q36 24 42 20" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M30 28 Q22 34 14 28" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M30 28 Q38 34 46 28" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M30 36 Q20 44 10 36" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M30 36 Q40 44 50 36" stroke="currentColor" strokeWidth="1.5" fill="none" />
-    </svg>
-  )
-}
-
 // Product data
 const products = [
   {
@@ -685,88 +668,6 @@ export default function Home() {
                   <span className="text-4xl lg:text-[3.5rem] font-bold leading-none mb-1">15+</span>
                   <span className="text-[10px] lg:text-sm tracking-[0.3em]">YEARS OF TRADITION</span>
                 </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Ingredients Section */}
-      <section id="ingredients" className="py-28 lg:py-36 relative section-orange overflow-hidden">
-        <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          {/* Heading */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-20"
-          >
-            <p className="text-[13px] tracking-[0.35em] text-primary mb-5">QUALITY FIRST</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-light">
-              <span className="font-script text-primary text-[1.15em]">Natural</span>{" "}
-              <span className="text-foreground">ingredients only</span>
-            </h2>
-          </motion.div>
-
-          {/* Content */}
-          <div className="grid lg:grid-cols-5 gap-16 items-center">
-            {/* Image - takes 2/5 */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.8 }}
-              className="lg:col-span-2 relative"
-            >
-              <div className="relative">
-                <div className="overflow-hidden aspect-square">
-                  <div className="w-full h-full flex items-center justify-center p-6">
-                    <div className="w-full h-full relative">
-                      <Image
-                        src={img("/images/ingredients-new.webp")}
-                        alt="Natural ingredients"
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Text + Features - takes 3/5 */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="lg:col-span-3"
-            >
-              <div className="w-12 h-px bg-primary/60 mb-8" />
-              <p className="text-muted-foreground leading-[1.9] text-[18px] mb-10">
-                We source the finest local ingredients. No preservatives, no artificial additives — just wholesome, natural food the way it should be.
-              </p>
-
-              <div className="grid sm:grid-cols-3 gap-6">
-                {[
-                  { title: "Organic Flour", desc: "Stone-ground from heritage wheat varieties" },
-                  { title: "Premium Dairy", desc: "Rich cottage cheese & fresh cream" },
-                  { title: "Fresh Produce", desc: "Seasonal vegetables and fruits" },
-                ].map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false }}
-                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                    className="group p-6 cursor-pointer transition-all duration-500 hover:scale-[1.04] hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 border border-transparent"
-                  >
-                    <WheatIcon className="w-10 h-10 text-primary mb-4 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
-                    <h3 className="font-serif text-[17px] mb-2 text-foreground">{item.title}</h3>
-                    <p className="text-[16px] text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </motion.div>
-                ))}
               </div>
             </motion.div>
           </div>
