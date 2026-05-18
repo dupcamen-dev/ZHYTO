@@ -331,7 +331,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[90vh] flex flex-col p-4 sm:p-6">
+      <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[90dvh] sm:max-h-[90vh] flex flex-col p-4 sm:p-6 max-sm:max-w-full max-sm:rounded-none max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:translate-x-0">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
             {showPayment ? 'Pay securely' : user ? 'Checkout' : 'Sign in'}
@@ -345,7 +345,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 pr-4">
+        <ScrollArea className="flex-1 min-h-0 pr-4">
           {!showPayment ? (
             <div className="space-y-5">
               {/* Empty cart — pure login modal */}
