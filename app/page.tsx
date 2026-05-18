@@ -253,7 +253,7 @@ export default function Home() {
 
       setShowScrollTop(y > 150)
 
-      if (atTop) {
+      if (atTop && window.innerWidth >= 1024) {
         setHeaderMode('tall')
       } else if (atBottom) {
         setHeaderMode('normal')
@@ -517,13 +517,13 @@ export default function Home() {
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-            <div className="inline-block relative px-10 py-5">
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 100" preserveAspectRatio="none" style={{ width: 'calc(100% + 3rem)', left: '-1.5rem' }}>
-                <path d="M 10 50 C 80 15, 200 30, 300 42 C 400 54, 500 28, 590 50 C 500 75, 400 80, 300 65 C 200 50, 80 72, 10 55 Z" fill="#c9953e" opacity="0.9" />
+            <div className="inline-block relative px-14 py-7">
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 140" preserveAspectRatio="none" style={{ width: 'calc(100% + 5rem)', left: '-2.5rem', filter: 'blur(2px)' }}>
+                <path d="M 15 70 C 100 15, 250 35, 400 55 C 550 75, 700 30, 785 70 C 700 105, 550 115, 400 95 C 250 75, 100 100, 15 80 Z" fill="#0749f7" opacity="0.85" />
               </svg>
-              <h2 className="relative z-10 text-5xl md:text-6xl font-serif font-light text-white">
-                <span className="font-script text-[1.15em]">Crafted</span>{" "}
-                <span>with tradition</span>
+              <h2 className="relative z-10 text-5xl md:text-6xl font-serif font-light">
+                <span className="font-script text-[1.15em] text-[#c19e74] uppercase">Crafted</span>{" "}
+                <span className="text-cream">with tradition</span>
               </h2>
             </div>
           </motion.div>
@@ -989,22 +989,32 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 lg:hidden"
           >
-            <div className="absolute inset-0 bg-background/95 backdrop-blur-xl" onClick={() => setMobileMenuOpen(false)} />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-background/95 backdrop-blur-xl"
+              onClick={() => setMobileMenuOpen(false)}
+            />
             <motion.nav
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
+              initial={{ clipPath: 'circle(0% at 50% 50%)' }}
+              animate={{ clipPath: 'circle(140% at 50% 50%)' }}
+              exit={{ clipPath: 'circle(0% at 50% 50%)' }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-50 flex flex-col items-center justify-center h-full gap-10"
             >
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.name}
                   href={link.href}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: 0.15 + i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-lg tracking-[0.25em] text-foreground hover:text-primary transition-colors"
                 >
@@ -1015,9 +1025,10 @@ export default function Home() {
                 user ? (
                   <>
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: navLinks.length * 0.1 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: 0.15 + navLinks.length * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <Link
                         href="/account"
@@ -1028,9 +1039,10 @@ export default function Home() {
                       </Link>
                     </motion.div>
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: (navLinks.length + 1) * 0.1 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: 0.15 + (navLinks.length + 1) * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <Link
                         href="/admin"
@@ -1041,9 +1053,10 @@ export default function Home() {
                       </Link>
                     </motion.div>
                     <motion.button
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: (navLinks.length + 2) * 0.1 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: 0.15 + (navLinks.length + 2) * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                       onClick={() => { signOut(); setMobileMenuOpen(false) }}
                       className="text-lg tracking-[0.25em] text-destructive/60 hover:text-destructive transition-colors"
                     >
@@ -1052,9 +1065,10 @@ export default function Home() {
                   </>
                 ) : (
                   <motion.button
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: navLinks.length * 0.1 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ delay: 0.15 + navLinks.length * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => { setMobileMenuOpen(false); setCheckoutOpen(true) }}
                     className="text-lg tracking-[0.25em] text-primary hover:text-primary/80 transition-colors"
                   >
