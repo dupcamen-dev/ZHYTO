@@ -918,35 +918,35 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/30 py-14 bg-background">
+      <footer className="py-28 bg-black">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-2xl font-serif tracking-[0.15em]">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="text-4xl font-serif tracking-[0.15em] text-cream">
               zhyto.london
             </div>
             
-            <div className="flex flex-col items-center md:items-center gap-1">
-              <p className="text-[15px] text-foreground/70 tracking-[0.15em]">
+            <div className="flex flex-col items-center md:items-center gap-2">
+              <p className="text-lg text-cream/80 tracking-[0.15em]">
                 © 2026 zhyto.london. ALL RIGHTS RESERVED.
               </p>
-              <p className="text-[14px] text-muted-foreground/50 tracking-[0.1em]">
+              <p className="text-base text-cream/60 tracking-[0.1em]">
                 Designed &amp; Built by{' '}
                 <a
                   href="https://millionpixels.dev"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground/50 hover:text-primary transition-colors"
+                  className="text-cream/60 hover:text-cream transition-colors"
                 >
                   Million Pixels
                 </a>
               </p>
             </div>
             
-            <div className="flex items-center gap-8">
-              <Link href="/privacy" className="text-[14px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
+            <div className="flex items-center gap-10">
+              <Link href="/privacy" className="text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
                 PRIVACY
               </Link>
-              <Link href="/terms" className="text-[14px] text-muted-foreground hover:text-primary transition-colors tracking-[0.15em]">
+              <Link href="/terms" className="text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
                 TERMS
               </Link>
             </div>
