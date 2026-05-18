@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  color-scheme: light !important;
+  color-scheme: only light !important;
   /* Solid beige #c19e74 — 80% of site */
   --background: #c19e74;
   --foreground: #1a1613;
@@ -61,7 +61,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: light !important;
+    color-scheme: only light !important;
     --background: #c19e74;
     --foreground: #1a1613;
     --card: #ffffff;

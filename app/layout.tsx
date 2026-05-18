@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#c2a57b',
-  colorScheme: 'light',
+  colorScheme: 'only light',
   width: 'device-width',
   initialScale: 1,
 }
@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} bg-background`} style={{ colorScheme: 'light' }}>
+    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} bg-background`} style={{ colorScheme: 'only light' }}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <CartProvider>
