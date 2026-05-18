@@ -552,7 +552,7 @@ export default function Home() {
                       className="group flex"
                     >
                       <div className={'aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
-                        <button className="relative flex-1 overflow-hidden w-full text-left" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
+                        <button type="button" className="relative flex-1 overflow-hidden w-full text-left" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
                           {product.category === 'syrnyky' ? (
                             <ImageCompare
                               frontImage={product.image}
@@ -582,9 +582,9 @@ export default function Home() {
                           )}
                         </button>
 
-                        <div className="p-4 cursor-pointer" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
+                        <button type="button" className="p-4 w-full text-left" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
                           <h3 className="font-serif text-lg text-gray-900 leading-snug">{product.name}</h3>
-                        </div>
+                        </button>
                       </div>
                     </motion.div>
                   ))}
@@ -1092,6 +1092,7 @@ export default function Home() {
               onClick={(e) => e.stopPropagation()}
             >
               <button
+                type="button"
                 onClick={() => setSelectedProduct(null)}
                 className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
               >
@@ -1134,6 +1135,7 @@ export default function Home() {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <button
+                    type="button"
                     onClick={() => removeFromCart(selectedProduct.id)}
                     className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700 cursor-pointer"
                   >
@@ -1143,6 +1145,7 @@ export default function Home() {
                     {cart[selectedProduct.id] || 0}
                   </span>
                   <button
+                    type="button"
                     onClick={() => { addToCart(selectedProduct.id); toast.success(`${selectedProduct.name} added to cart`, { duration: 2000 }) }}
                     className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700 cursor-pointer"
                   >
@@ -1150,8 +1153,9 @@ export default function Home() {
                   </button>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setCartOpen(true)}
-                  className="text-sm tracking-[0.15em] text-primary hover:text-primary/80 transition-colors"
+                  className="text-sm tracking-[0.15em] text-primary hover:text-primary/80 transition-colors cursor-pointer"
                 >
                   VIEW CART →
                 </button>

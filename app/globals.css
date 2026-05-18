@@ -304,3 +304,8 @@
 .animate-rotate-slow {
   animation: rotate-slow 20s linear infinite;
 }
+
+/* Prevent double-tap zoom on mobile */
+button, a, [role="button"], input, select, textarea {
+  touch-action: manipulation;
+}
