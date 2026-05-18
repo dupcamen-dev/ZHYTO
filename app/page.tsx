@@ -503,6 +503,98 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Products Section */}
+      <section id="products" className="py-28 lg:py-36 relative z-20 section-orange -mt-32 lg:-mt-40">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-20"
+          >
+            <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
+            <h2 className="text-5xl md:text-6xl font-serif font-light">
+              <span className="font-script text-[1.15em] text-primary uppercase">Crafted</span>{" "}
+              <span className="text-black">with tradition</span>
+            </h2>
+          </motion.div>
+
+          {/* Product categories */}
+          {[
+            { key: 'varenyky', label: 'Varenyky', desc: 'Classic Ukrainian dumplings' },
+            { key: 'syrnyky', label: 'Syrnyky', desc: 'Golden cheese fritters' },
+            { key: 'pelmeni', label: 'Pelmeni', desc: 'Traditional meat-filled dumplings' },
+          ].map((category, catIndex) => {
+            const catProducts = activeProducts.filter(p => p.category === category.key)
+            if (catProducts.length === 0) return null
+            return (
+              <div key={category.key} className={catIndex > 0 ? 'mt-16' : ''}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false }}
+                  transition={{ duration: 0.6 }}
+                  className="mb-8"
+                >
+                  <h3 className="font-serif text-5xl text-foreground mb-2">{category.label}</h3>
+                  <p className="text-base text-muted-foreground">{category.desc}</p>
+                </motion.div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                  {catProducts.map((product) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false }}
+                      transition={{ duration: 0.5 }}
+                      className="group flex"
+                    >
+                      <div className={'aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
+                        <button className="relative flex-1 overflow-hidden w-full text-left" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
+                          {product.category === 'syrnyky' ? (
+                            <ImageCompare
+                              frontImage={product.image}
+                              backImage={img("/images/syrnyky-ingredients.png")}
+                              alt={product.name}
+                            />
+                          ) : (
+                            <Image
+                              src={product.image}
+                              alt={product.name}
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                              className="object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
+                            />
+                          )}
+                          {product.badge && (
+                            <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase">
+                              {product.badge}
+                            </span>
+                          )}
+                          {product.stock === 0 && (
+                            <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                              <span className="px-4 py-2 bg-white/90 text-gray-900 text-[14px] tracking-[0.2em]">
+                                COMING BACK SOON
+                              </span>
+                            </div>
+                          )}
+                        </button>
+
+                        <div className="p-4 cursor-pointer" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
+                          <h3 className="font-serif text-lg text-gray-900 leading-snug">{product.name}</h3>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
       {/* About Section */}
       <section id="about" className="py-28 lg:py-36 relative bg-background">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
