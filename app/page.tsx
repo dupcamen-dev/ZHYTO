@@ -507,7 +507,7 @@ export default function Home() {
       </motion.section>
 
       {/* Products Section */}
-      <section id="products" className="py-28 lg:py-36 relative section-orange">
+      <section id="products" className="py-28 lg:py-36 relative z-20 section-orange -mt-32 lg:-mt-40">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -517,12 +517,15 @@ export default function Home() {
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-              <div className="bg-primary px-6 py-3 inline-block">
-                <h2 className="text-5xl md:text-6xl font-serif font-light text-[#c19e74]">
-                  <span className="font-script text-[1.15em]">Crafted</span>{" "}
-                  <span>with tradition</span>
-                </h2>
-              </div>
+            <div className="inline-block relative px-10 py-5">
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 100" preserveAspectRatio="none" style={{ width: 'calc(100% + 3rem)', left: '-1.5rem' }}>
+                <path d="M 10 50 C 80 15, 200 30, 300 42 C 400 54, 500 28, 590 50 C 500 75, 400 80, 300 65 C 200 50, 80 72, 10 55 Z" fill="#c9953e" opacity="0.9" />
+              </svg>
+              <h2 className="relative z-10 text-5xl md:text-6xl font-serif font-light text-white">
+                <span className="font-script text-[1.15em]">Crafted</span>{" "}
+                <span>with tradition</span>
+              </h2>
+            </div>
           </motion.div>
 
           {/* Product categories */}
