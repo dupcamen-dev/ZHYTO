@@ -748,7 +748,7 @@ export default function Home() {
               <div
                 className="relative overflow-hidden px-12 py-24"
                 style={{
-                  backgroundImage: `url(${img("/images/about-card.png")})`,
+                  backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
