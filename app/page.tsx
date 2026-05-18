@@ -538,7 +538,7 @@ export default function Home() {
             <motion.div
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="text-primary/40"
+              className="text-white/60"
             >
               <ChevronDown className="w-5 h-5 mx-auto" />
               <span className="text-[10px] tracking-[0.3em] block mt-1">SCROLL</span>
