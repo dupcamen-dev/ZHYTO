@@ -13,6 +13,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   const containerRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState(50)
   const draggingRef = useRef(false)
+  const touchStartPosRef = useRef({ x: 0, y: 0 })
 
   const updatePosition = useCallback((clientX: number) => {
     const el = containerRef.current
@@ -29,17 +30,29 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   }, [updatePosition])
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
-    draggingRef.current = true
-    updatePosition(e.touches[0].clientX)
-  }, [updatePosition])
+    touchStartPosRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+  }, [])
 
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
-      if (!draggingRef.current) return
-      e.preventDefault()
-      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-      updatePosition(clientX)
+      if ('touches' in e) {
+        if (!draggingRef.current) {
+          const dx = Math.abs(e.touches[0].clientX - touchStartPosRef.current.x)
+          const dy = Math.abs(e.touches[0].clientY - touchStartPosRef.current.y)
+          if (dx > dy && dx > 8) {
+            draggingRef.current = true
+            e.preventDefault()
+            updatePosition(e.touches[0].clientX)
+          }
+          return
+        }
+        e.preventDefault()
+        updatePosition(e.touches[0].clientX)
+      } else {
+        if (!draggingRef.current) return
+        e.preventDefault()
+        updatePosition(e.clientX)
+      }
     }
     const handleUp = () => { draggingRef.current = false }
 
