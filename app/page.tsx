@@ -465,14 +465,14 @@ export default function Home() {
             className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-light leading-[1.05] mb-8 relative"
           >
             <span className="text-foreground block">Dumplings</span>
-            <span className="font-script text-[#c2a57b] text-[1em] uppercase relative inline-block">
+            <span className="font-script text-foreground text-[1em] uppercase relative inline-block">
               with soul
-              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] -z-10">
+              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[400%] -z-10">
                 <Image
                   src={img("/images/hero-soul-bg.png")}
                   alt=""
                   fill
-                  className="object-contain opacity-40"
+                  className="object-contain"
                   priority
                 />
               </div>
