@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} bg-background`}>
+    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} bg-background`} style={{ colorScheme: 'light' }}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <CartProvider>

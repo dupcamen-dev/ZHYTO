@@ -517,15 +517,10 @@ export default function Home() {
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-            <div className="inline-block relative px-14 py-7">
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 140" preserveAspectRatio="none" style={{ width: 'calc(100% + 5rem)', left: '-2.5rem', filter: 'blur(2px)' }}>
-                <path d="M 15 70 C 100 15, 250 35, 400 55 C 550 75, 700 30, 785 70 C 700 105, 550 115, 400 95 C 250 75, 100 100, 15 80 Z" fill="#0749f7" opacity="0.85" />
-              </svg>
-              <h2 className="relative z-10 text-5xl md:text-6xl font-serif font-light">
-                <span className="font-script text-[1.15em] text-[#c19e74] uppercase">Crafted</span>{" "}
-                <span className="text-cream">with tradition</span>
-              </h2>
-            </div>
+            <h2 className="text-5xl md:text-6xl font-serif font-light">
+              <span className="font-script text-[1.15em] text-primary uppercase">Crafted</span>{" "}
+              <span className="text-black">with tradition</span>
+            </h2>
           </motion.div>
 
           {/* Product categories */}
