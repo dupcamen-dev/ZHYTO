@@ -42,9 +42,9 @@ function PastelDivider({ className }: { className?: string }) {
         <path d="M10 16 Q30 4 60 14 Q90 26 120 12 Q150 2 170 16"
           stroke="#0749f7" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.3" />
         <path d="M15 20 Q35 8 65 18 Q95 30 125 16 Q155 6 175 20"
-          stroke="#c19e74" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.25" />
+          stroke="#c2a57b" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.25" />
         <path d="M5 12 Q25 0 55 10 Q85 22 115 8 Q145 -2 165 12"
-          stroke="#c19e74" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.15" />
+          stroke="#c2a57b" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.15" />
       </svg>
     </div>
   )
@@ -275,7 +275,7 @@ export default function Home() {
       {/* Navigation */}
       <motion.nav
         className="fixed top-0 left-0 right-0 z-50 overflow-visible"
-        style={{ backgroundColor: '#c19e74' }}
+        style={{ backgroundColor: '#c2a57b' }}
         initial={{ y: -80 }}
         animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
@@ -418,7 +418,7 @@ export default function Home() {
         <div className="absolute left-6 lg:left-12 top-1/3 -translate-y-1/2 pointer-events-none opacity-25 hidden lg:block">
           <svg width="500" height="300" viewBox="0 0 500 300" fill="none">
             <ellipse cx="200" cy="150" rx="280" ry="120" fill="#0749f7" opacity="0.06" />
-            <path d="M50 160 Q150 80 250 150 Q350 220 450 140" stroke="#c19e74" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.3" />
+            <path d="M50 160 Q150 80 250 150 Q350 220 450 140" stroke="#c2a57b" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.3" />
             <path d="M30 140 Q130 60 230 130 Q330 200 430 120" stroke="#0749f7" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.15" />
           </svg>
         </div>
@@ -452,7 +452,7 @@ export default function Home() {
                   className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light leading-[1.05] mb-6"
                 >
                   <span className="text-white block drop-shadow-lg">Dumplings</span>
-                  <span className="font-script text-[#c19e74] text-[1em] drop-shadow-lg uppercase">with soul</span>
+                  <span className="font-script text-[#c2a57b] text-[1em] drop-shadow-lg uppercase">with soul</span>
                 </motion.h1>
 
                 <motion.div
@@ -898,7 +898,7 @@ export default function Home() {
             >
               <p className="text-[16px] tracking-[0.35em] text-white/90 drop-shadow-lg mb-6">GET IN TOUCH</p>
               <h2 className="text-6xl md:text-7xl font-serif font-light mb-10">
-                <span className="text-[#c19e74] drop-shadow-lg">Ready to</span>{" "}
+                <span className="text-[#c2a57b] drop-shadow-lg">Ready to</span>{" "}
                 <span className="font-script text-white text-[1.15em] drop-shadow-lg">order?</span>
               </h2>
               <p className="text-white/70 drop-shadow-lg leading-[1.9] mb-14 text-lg">
@@ -916,7 +916,7 @@ export default function Home() {
                 </a>
                 <a 
                   href="mailto:hello@zhyto.london"
-                  className="text-[16px] tracking-[0.2em] text-white hover:text-[#c19e74] transition-colors border-b border-white/50 hover:border-[#c19e74] pb-1 drop-shadow-lg"
+                  className="text-[16px] tracking-[0.2em] text-white hover:text-[#c2a57b] transition-colors border-b border-white/50 hover:border-[#c2a57b] pb-1 drop-shadow-lg"
                 >
                   HELLO@ZHYTO.LONDON
                 </a>
