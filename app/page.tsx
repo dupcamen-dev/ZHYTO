@@ -420,7 +420,7 @@ export default function Home() {
                     priority
                   />
                 </div>
-                <div className="relative z-10 p-8 lg:p-12 flex flex-col pt-16 lg:pt-20">
+                <div className="relative z-10 p-8 lg:p-12 flex flex-col pt-20 lg:pt-28">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -450,27 +450,11 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.8 }}
-                   className="text-lg md:text-xl text-white/80 leading-[1.8] mb-6 max-w-lg drop-shadow-lg"
+                   className="text-lg md:text-xl text-white/80 leading-[1.8] mb-10 max-w-lg drop-shadow-lg"
                 >
                    We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
                 </motion.p>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 1.0 }}
-                  className="flex flex-wrap gap-3 mb-8"
-                >
-                  <span className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] text-white/70 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Leaf className="w-3 h-3 text-[#c2a57b]" /> 100% NATURAL
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] text-white/70 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Snowflake className="w-3 h-3 text-[#c2a57b]" /> FLASH FROZEN
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] text-white/70 bg-white/10 px-3 py-1.5 rounded-full">
-                    <Heart className="w-3 h-3 text-[#c2a57b]" /> FAMILY RECIPES
-                  </span>
-                </motion.div>
           </div>
           </div>
 
@@ -490,14 +474,12 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 1.2 }}
             className="text-center px-5 sm:px-0"
           >
-            <a href="#products">
-              <Button 
-                size="lg" 
-                className="bg-white text-primary hover:bg-white/90 px-12 py-7 tracking-[0.2em] text-[15px] rounded-none shadow-xl"
-              >
-                ORDER NOW
-                <ArrowRight className="w-5 h-5 ml-3" />
-              </Button>
+            <a
+              href="#products"
+              className="group inline-flex items-center gap-4 text-primary text-xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
+            >
+              <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
+              <ArrowRight className="w-5 h-5" />
             </a>
           </motion.div>
 
