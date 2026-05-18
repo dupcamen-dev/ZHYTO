@@ -232,7 +232,7 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
 
   const [showScrollTop, setShowScrollTop] = useState(false)
-  const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('tall')
+  const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('normal')
   const headerModeRef = useRef(headerMode)
   headerModeRef.current = headerMode
   const prevScrollY = useRef(0)
