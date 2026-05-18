@@ -13,7 +13,6 @@ import { useAuth } from '@/components/auth-context'
 import { supabase } from '@/lib/supabase'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
-import { Hero3D } from '@/components/hero-3d'
 import { ImageCompare } from '@/components/image-compare'
 import { useDeliverySettings } from '@/lib/use-delivery'
 import { toast } from 'sonner'
@@ -473,14 +472,6 @@ export default function Home() {
           </div>
           </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex flex-col items-center justify-center shrink-0 self-center -ml-16"
-            >
-              <Hero3D />
-            </motion.div>
           </div>
 
           <motion.div
