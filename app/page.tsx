@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, ChevronDown, User, LogOut, ArrowUp } from 'lucide-react'
@@ -195,6 +196,7 @@ const navLinks = [
 ]
 
 export default function Home() {
+  const router = useRouter()
   const { cart, addToCart, removeFromCart, totalItems } = useCart()
   const { user, loading, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -335,24 +337,24 @@ export default function Home() {
               {!loading && (
                 user ? (
                   <div className="flex items-center gap-3">
-                      <motion.a
-                        href="/account"
-                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
+                      <motion.button
+                        onClick={() => router.push('/account')}
+                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
                         title="My Account"
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <User className="w-4 h-4" />
-                      </motion.a>
-                      <motion.a
-                        href="/admin"
-                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-[13px] tracking-[0.1em] font-medium"
+                      </motion.button>
+                      <motion.button
+                        onClick={() => router.push('/admin')}
+                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-[13px] tracking-[0.1em] font-medium cursor-pointer"
                         title="Admin"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         A
-                    </motion.a>
+                      </motion.button>
                     <motion.button
                       onClick={signOut}
                       className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-destructive hover:text-destructive hover:bg-destructive/5 transition-all cursor-pointer"
