@@ -706,7 +706,7 @@ export default function Home() {
                   <div className="w-full h-full flex items-center justify-center p-6">
                     <div className="w-full h-full relative">
                       <Image
-                        src={img("/images/syrnyky-ingredients.webp")}
+                        src={img("/images/ingredients-new.webp")}
                         alt="Natural ingredients"
                         fill
                         className="object-contain"
