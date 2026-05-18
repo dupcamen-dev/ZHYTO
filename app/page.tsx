@@ -274,7 +274,7 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       {/* Navigation */}
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 overflow-hidden"
+        className="fixed top-0 left-0 right-0 z-50 overflow-visible"
         style={{ backgroundColor: '#c19e74' }}
         initial={{ y: -80 }}
         animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
@@ -996,9 +996,9 @@ export default function Home() {
               animate={{ clipPath: 'circle(140% at 50% 50%)' }}
               exit={{ clipPath: 'circle(0% at 50% 50%)' }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-50 flex flex-col items-center justify-center h-full gap-10"
+              className="relative z-50 flex flex-col items-center justify-start pt-28 gap-10 h-full overflow-y-auto pb-10"
             >
-              {navLinks.map((link, i) => (
+               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.name}
                   href={link.href}
@@ -1006,7 +1006,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ delay: 0.15 + i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => { setMobileMenuOpen(false); document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' }) }}
                   className="text-lg tracking-[0.25em] text-foreground hover:text-primary transition-colors"
                 >
                   {link.name}
