@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, Truck } from 'lucide-react'
+import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
@@ -419,7 +419,6 @@ export default function Home() {
                     className="object-cover"
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
                 </div>
                 <div className="relative z-10 p-8 lg:p-12 flex flex-col pt-16 lg:pt-20">
                 <motion.p
@@ -506,30 +505,6 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.4 }}
-            className="text-center pt-6 pb-8 lg:pb-12"
-          >
-            <div className="flex items-center justify-center gap-5 text-[13px] text-white/60">
-              <span className="inline-flex items-center gap-1.5">
-                <Truck className="w-3.5 h-3.5 text-[#c2a57b]" />
-                Free delivery London
-              </span>
-              <span className="w-px h-4 bg-white/20" />
-              <span className="inline-flex items-center gap-1.5">
-                <Leaf className="w-3.5 h-3.5 text-[#c2a57b]" />
-                100% natural
-              </span>
-              <span className="w-px h-4 bg-white/20" />
-              <span className="inline-flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5 text-[#c2a57b]" />
-                Family recipes
-              </span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1.6 }}
             className="text-center"
           >
             <motion.div
