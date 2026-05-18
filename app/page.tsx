@@ -467,6 +467,19 @@ export default function Home() {
                    We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
                 </motion.p>
 
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.0 }}
+                >
+                  <a
+                    href="#products"
+                    className="group inline-flex items-center gap-4 text-[#c2a57b] text-2xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
+                  >
+                    <span className="border-b border-[#c2a57b]/60 pb-1">ORDER NOW</span>
+                    <ArrowRight className="w-6 h-6" />
+                  </a>
+                </motion.div>
           </div>
           </div>
 
@@ -474,16 +487,9 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
-              className="hidden lg:flex flex-col items-center justify-center shrink-0 self-center gap-6 -ml-16"
+              className="hidden lg:flex flex-col items-center justify-center shrink-0 self-center -ml-16"
             >
               <Hero3D />
-              <a
-                href="#products"
-                className="group inline-flex items-center gap-4 text-primary text-xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
-              >
-                <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
-                <ArrowRight className="w-5 h-5" />
-              </a>
             </motion.div>
           </div>
 
