@@ -875,7 +875,7 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div
-            className="max-w-5xl mx-auto p-16 md:p-20 lg:p-24 text-center relative overflow-hidden"
+            className="max-w-5xl mx-auto p-16 md:p-20 lg:p-24 text-center relative overflow-hidden max-sm:max-w-full max-sm:p-20"
             style={{
               backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
               backgroundSize: '70%',
