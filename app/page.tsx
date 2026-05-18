@@ -449,19 +449,12 @@ export default function Home() {
         style={{ opacity: heroOpacity }}
         className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
       >
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-32 sm:pt-36 lg:pt-44">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[17px] sm:text-[20px] tracking-[0.5em] text-white mb-8">
-            AUTHENTIC. HANDMADE. TIMELESS.
-          </motion.p>
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-24 sm:pt-28 lg:pt-40">
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-serif font-light leading-[1.1] mb-10 relative tracking-[0.05em]"
           >
             <span className="text-white block tracking-[0.2em]">Dumplings</span>
@@ -482,14 +475,14 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             className="w-20 h-px bg-primary/60 mb-8 mx-auto"
           />
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl sm:text-2xl md:text-3xl text-[#f5ead6] leading-[1.8] mb-12 max-w-2xl mx-auto"
           >
             We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
@@ -498,7 +491,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
           >
             <a
               href="#products"
@@ -512,7 +505,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.4 }}
+            transition={{ duration: 0.8, delay: 1.0 }}
             className="mt-20"
           >
             <motion.div
