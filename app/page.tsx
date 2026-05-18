@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown } from 'lucide-react'
+import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, ArrowDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
@@ -229,6 +229,7 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
 
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const [showScrollBottom, setShowScrollBottom] = useState(true)
   const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('normal')
   const headerModeRef = useRef(headerMode)
   headerModeRef.current = headerMode
@@ -249,6 +250,7 @@ export default function Home() {
       const goingDown = y > prevScrollY.current
 
       setShowScrollTop(y > 300)
+      setShowScrollBottom(y < maxY - 100)
 
       if (atTop) {
         setHeaderMode(window.innerWidth >= 1024 ? 'tall' : 'normal')
@@ -1208,9 +1210,25 @@ export default function Home() {
             exit={{ opacity: 0, scale: 0.5 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             aria-label="Scroll to top"
-            className="fixed bottom-24 lg:bottom-8 right-6 lg:right-8 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors gold-glow"
+            className="fixed bottom-24 lg:bottom-8 right-6 lg:right-8 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
           >
             <ArrowUp className="w-5 h-5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Scroll to Bottom */}
+      <AnimatePresence>
+        {showScrollBottom && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })}
+            aria-label="Scroll to bottom"
+            className="fixed bottom-[148px] lg:bottom-20 right-6 lg:right-8 z-50 w-12 h-12 rounded-full bg-black text-cream flex items-center justify-center shadow-lg hover:bg-black/80 transition-colors"
+          >
+            <ArrowDown className="w-5 h-5" />
           </motion.button>
         )}
       </AnimatePresence>
