@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle } from 'lucide-react'
+import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, Truck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
@@ -410,7 +410,7 @@ export default function Home() {
         {/* Content */}
            <div className="relative z-10 w-full max-w-7xl mx-auto sm:px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
           <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
-            <div className="w-full lg:w-auto max-w-2xl xl:max-w-3xl relative overflow-hidden">
+            <div className="w-full lg:w-auto max-w-3xl xl:max-w-4xl relative overflow-hidden">
                 <div className="absolute inset-0 -z-10">
                   <Image
                     src={img("/images/hero-bg.jpg")}
@@ -419,6 +419,7 @@ export default function Home() {
                     className="object-cover"
                     priority
                   />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
                 </div>
                 <div className="relative z-10 p-8 lg:p-12 flex flex-col pt-16 lg:pt-20">
                 <motion.p
@@ -450,10 +451,27 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.8 }}
-                   className="text-lg md:text-xl text-white/80 leading-[1.8] mb-8 max-w-md drop-shadow-lg"
+                   className="text-lg md:text-xl text-white/80 leading-[1.8] mb-6 max-w-lg drop-shadow-lg"
                 >
                    We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
                 </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.0 }}
+                  className="flex flex-wrap gap-3 mb-8"
+                >
+                  <span className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] text-white/70 bg-white/10 px-3 py-1.5 rounded-full">
+                    <Leaf className="w-3 h-3 text-[#c2a57b]" /> 100% NATURAL
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] text-white/70 bg-white/10 px-3 py-1.5 rounded-full">
+                    <Snowflake className="w-3 h-3 text-[#c2a57b]" /> FLASH FROZEN
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] text-white/70 bg-white/10 px-3 py-1.5 rounded-full">
+                    <Heart className="w-3 h-3 text-[#c2a57b]" /> FAMILY RECIPES
+                  </span>
+                </motion.div>
           </div>
           </div>
 
@@ -466,19 +484,62 @@ export default function Home() {
               <Hero3D />
             </motion.div>
           </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="text-center pb-8 lg:pb-12 px-5 sm:px-0"
+            className="text-center px-5 sm:px-0"
           >
-            <a
-              href="#products"
-              className="group inline-flex items-center gap-4 text-primary text-xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
-            >
-              <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
-              <ArrowRight className="w-5 h-5" />
+            <a href="#products">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 px-12 py-7 tracking-[0.2em] text-[15px] rounded-none shadow-xl"
+              >
+                ORDER NOW
+                <ArrowRight className="w-5 h-5 ml-3" />
+              </Button>
             </a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.4 }}
+            className="text-center pt-6 pb-8 lg:pb-12"
+          >
+            <div className="flex items-center justify-center gap-5 text-[13px] text-white/60">
+              <span className="inline-flex items-center gap-1.5">
+                <Truck className="w-3.5 h-3.5 text-[#c2a57b]" />
+                Free delivery London
+              </span>
+              <span className="w-px h-4 bg-white/20" />
+              <span className="inline-flex items-center gap-1.5">
+                <Leaf className="w-3.5 h-3.5 text-[#c2a57b]" />
+                100% natural
+              </span>
+              <span className="w-px h-4 bg-white/20" />
+              <span className="inline-flex items-center gap-1.5">
+                <Heart className="w-3.5 h-3.5 text-[#c2a57b]" />
+                Family recipes
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.6 }}
+            className="text-center"
+          >
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="text-white/40"
+            >
+              <ChevronDown className="w-5 h-5 mx-auto" />
+              <span className="text-[10px] tracking-[0.3em] block mt-1">SCROLL</span>
+            </motion.div>
           </motion.div>
         </div>
       </motion.section>

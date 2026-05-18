@@ -166,7 +166,7 @@ export function Hero3D() {
   const [ready, setReady] = useState(false)
 
   return (
-    <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[550px] lg:h-[700px] xl:w-[620px] xl:h-[780px]">
+    <div className="relative w-full max-w-[200px] aspect-square sm:w-[350px] sm:h-[350px] lg:w-[400px] lg:h-[500px] xl:w-[480px] xl:h-[580px]">
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Loader className="w-6 h-6 text-primary animate-spin" />
