@@ -20,7 +20,7 @@ import { supabase } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
 import { toast } from 'sonner'
-import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Banknote, Chrome, Loader } from 'lucide-react'
+import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader } from 'lucide-react'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
 
 interface Product {
@@ -39,12 +39,11 @@ const hasStripe = typeof process !== 'undefined' &&
   !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY &&
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.startsWith('pk_')
 
-type PaymentMethodType = 'card' | 'wallet' | 'bank'
+type PaymentMethodType = 'card' | 'wallet'
 
 const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: string; desc: string }> = {
   card:   { icon: CreditCard,  label: 'Pay by Card',              desc: 'Debit or credit card' },
   wallet: { icon: Smartphone,  label: 'Apple Pay / Google Pay',   desc: 'Fast checkout with your device' },
-  bank:   { icon: Banknote,    label: 'Pay by Bank Transfer',     desc: 'Pay directly from your bank' },
 }
 
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
