@@ -449,7 +449,7 @@ export default function Home() {
         style={{ opacity: heroOpacity }}
         className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
       >
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-40 sm:pt-48 lg:pt-56">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
