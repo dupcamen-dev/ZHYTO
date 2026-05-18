@@ -60,6 +60,7 @@ const products = [
     price: 15,
     unit: "/ kg",
     image: img("/images/pelmeni-removebg-preview.png"),
+    background_image: '',
     badge: null,
     category: "pelmeni",
     stock: 10,
@@ -73,6 +74,7 @@ const products = [
     price: 15,
     unit: "/ kg",
     image: img("/images/pelmeni-removebg-preview.png"),
+    background_image: '',
     badge: null,
     category: "pelmeni",
     stock: 10,
@@ -85,7 +87,8 @@ const products = [
     description: "Classic Ukrainian varenyky with creamy mashed potato",
     price: 12,
     unit: "/ kg",
-    image: img("/images/varenyky-new.png"),
+    image: img("/images/hero-varenyky.jpg"),
+    background_image: '',
     badge: null,
     category: "varenyky",
     stock: 10,
@@ -99,6 +102,7 @@ const products = [
     price: 12,
     unit: "/ kg",
     image: img("/images/varenyky-new.png"),
+    background_image: '',
     badge: null,
     category: "varenyky",
     stock: 10,
@@ -112,6 +116,7 @@ const products = [
     price: 12,
     unit: "/ kg",
     image: img("/images/varenyky-new.png"),
+    background_image: '',
     badge: null,
     category: "varenyky",
     stock: 10,
@@ -125,6 +130,7 @@ const products = [
     price: 13,
     unit: "/ kg",
     image: img("/images/varenyky-new.png"),
+    background_image: '',
     badge: null,
     category: "varenyky",
     stock: 10,
@@ -138,6 +144,7 @@ const products = [
     price: 13,
     unit: "/ kg",
     image: img("/images/varenyky-new.png"),
+    background_image: '',
     badge: null,
     category: "varenyky",
     stock: 10,
@@ -151,6 +158,7 @@ const products = [
     price: 10,
     unit: "/ 600g",
     image: img("/images/syrnyky-new.png"),
+    background_image: '',
     badge: null,
     category: "syrnyky",
     stock: 10,
@@ -164,6 +172,7 @@ const products = [
     price: 11,
     unit: "/ 600g",
     image: img("/images/syrnyky-new.png"),
+    background_image: '',
     badge: null,
     category: "syrnyky",
     stock: 10,
@@ -177,6 +186,7 @@ const products = [
     price: 11,
     unit: "/ 600g",
     image: img("/images/syrnyky-new.png"),
+    background_image: '',
     badge: null,
     category: "syrnyky",
     stock: 10,
@@ -219,6 +229,7 @@ export default function Home() {
           price: Number(p.price),
           unit: p.unit,
           image: img(p.image),
+          background_image: p.background_image ? img(p.background_image) : '',
           badge: p.badge,
           category: p.category,
           stock: p.stock ?? 10,
@@ -557,7 +568,7 @@ export default function Home() {
                         <div className="relative flex-1 overflow-hidden w-full">
                           <ImageCompare
                             frontImage={product.image}
-                            backImage={product.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png")}
+                            backImage={product.background_image || (product.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png"))}
                             alt={product.name}
                           />
                           {product.badge && (
@@ -1096,7 +1107,7 @@ export default function Home() {
               <div className="relative h-48 w-full mb-6">
                 <ImageCompare
                   frontImage={selectedProduct.image}
-                  backImage={selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png")}
+                  backImage={selectedProduct.background_image || (selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.png") : img("/images/ingredients-new.png"))}
                   alt={selectedProduct.name}
                 />
               </div>

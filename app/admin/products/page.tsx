@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
-import { Plus, Pencil, X, Check, Package, AlertCircle, Upload } from 'lucide-react'
+import { Plus, Pencil, X, Check, Package, AlertCircle, Upload, FolderKanban } from 'lucide-react'
 import { img } from '@/lib/constants'
 
 interface Product {
@@ -13,6 +13,7 @@ interface Product {
   price: number
   unit: string
   image: string
+  background_image?: string
   badge: string | null
   category: string
   available: boolean
@@ -20,7 +21,7 @@ interface Product {
   sort_order: number
 }
 
-const categories = ['varenyky', 'syrnyky', 'pelmeni']
+const fallbackCategories = ['varenyky', 'syrnyky', 'pelmeni']
 
 const fallbackProducts: Product[] = [
   { id: 1, name: 'Varenyky with potato', description: 'Classic Ukrainian varenyky with creamy mashed potato', price: 12, unit: '/ kg', image: '/images/hero-varenyky.jpg', badge: 'Traditional', category: 'varenyky', available: true, stock: 10, sort_order: 1 },
@@ -28,15 +29,15 @@ const fallbackProducts: Product[] = [
   { id: 3, name: 'Varenyky with mushroom', description: 'Rich varenyky with wild forest mushroom filling', price: 12, unit: '/ kg', image: '/images/hero-varenyky.jpg', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 3 },
   { id: 4, name: 'Varenyky with cheese & cherries', description: 'Sweet varenyky filled with cottage cheese and cherries', price: 13, unit: '/ kg', image: '/images/hero-varenyky.jpg', badge: 'Seasonal', category: 'varenyky', available: true, stock: 10, sort_order: 4 },
   { id: 5, name: 'Varenyky with cheese & spinach', description: 'Savory varenyky with cottage cheese and fresh spinach', price: 13, unit: '/ kg', image: '/images/hero-varenyky.jpg', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 5 },
-  { id: 6, name: 'Syrnyky', description: 'Traditional Ukrainian cheese fritters, golden and fluffy', price: 10, unit: '/ 600g', image: '/images/syrnyky-new.png', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 6 },
-  { id: 7, name: 'Syrnyky with chocolate', description: 'Decadent syrnyky with rich chocolate chunks', price: 11, unit: '/ 600g', image: '/images/syrnyky-new.png', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 7 },
-  { id: 8, name: 'Syrnyky with blueberries', description: 'Fluffy syrnyky bursting with wild blueberries', price: 11, unit: '/ 600g', image: '/images/syrnyky-new.png', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 8 },
-  { id: 9, name: 'Pelmeni (beef & pork)', description: 'Hearty Ukrainian dumplings with seasoned beef and pork filling', price: 15, unit: '/ kg', image: '/images/pelmeni.webp', badge: 'Bestseller', category: 'pelmeni', available: true, stock: 10, sort_order: 9 },
-  { id: 10, name: 'Pelmeni (chicken & turkey)', description: 'Light and tender pelmeni with poultry filling', price: 15, unit: '/ kg', image: '/images/pelmeni.webp', badge: null, category: 'pelmeni', available: true, stock: 10, sort_order: 10 },
+  { id: 6, name: 'Syrnyky', description: 'Traditional Ukrainian cheese fritters, golden and fluffy', price: 10, unit: '/ 600g',   image: '/images/syrnyky-new.png', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 6 },
+  { id: 7, name: 'Syrnyky with chocolate', description: 'Decadent syrnyky with rich chocolate chunks', price: 11, unit: '/ 600g',   image: '/images/syrnyky-new.png', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 7 },
+  { id: 8, name: 'Syrnyky with blueberries', description: 'Fluffy syrnyky bursting with wild blueberries', price: 11, unit: '/ 600g',   image: '/images/syrnyky-new.png', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 8 },
+  { id: 9, name: 'Pelmeni (beef & pork)', description: 'Hearty Ukrainian dumplings with seasoned beef and pork filling', price: 15, unit: '/ kg',   image: '/images/pelmeni.webp', background_image: '', badge: 'Bestseller', category: 'pelmeni', available: true, stock: 10, sort_order: 9 },
+  { id: 10, name: 'Pelmeni (chicken & turkey)', description: 'Light and tender pelmeni with poultry filling', price: 15, unit: '/ kg',   image: '/images/pelmeni.webp', background_image: '', badge: null, category: 'pelmeni', available: true, stock: 10, sort_order: 10 },
 ]
 const emptyProduct = {
   name: '', description: '', price: 0, unit: '/ kg',
-  image: '/images/hero-varenyky.jpg', badge: null,
+  image: '/images/hero-varenyky.jpg', background_image: '', badge: null,
   category: 'varenyky', available: true, stock: 10, sort_order: 0,
 }
 
@@ -47,7 +48,11 @@ export default function AdminProducts() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
+  const [categories, setCategories] = useState<string[]>(fallbackCategories)
+  const [newCategory, setNewCategory] = useState('')
+  const [categoriesOpen, setCategoriesOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const bgFileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchProducts = () => {
     if (!supabase) { setProducts(fallbackProducts); setLoading(false); return }
@@ -57,7 +62,34 @@ export default function AdminProducts() {
     })
   }
 
-  useEffect(() => { fetchProducts() }, [])
+  const fetchCategories = () => {
+    if (!supabase) return
+    supabase.from('settings').select('value').eq('key', 'categories').single().then(({ data }) => {
+      if (data?.value) setCategories(data.value as string[])
+    })
+  }
+
+  useEffect(() => { fetchProducts(); fetchCategories() }, [])
+
+  const saveCategories = async (newList: string[]) => {
+    setCategories(newList)
+    if (!supabase) return
+    await supabase.from('settings').upsert(
+      { key: 'categories', value: newList },
+      { onConflict: 'key' }
+    )
+  }
+
+  const addCategory = () => {
+    const trimmed = newCategory.trim().toLowerCase().replace(/\s+/g, '-')
+    if (!trimmed || categories.includes(trimmed)) return
+    saveCategories([...categories, trimmed])
+    setNewCategory('')
+  }
+
+  const removeCategory = (cat: string) => {
+    saveCategories(categories.filter(c => c !== cat))
+  }
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -88,6 +120,33 @@ export default function AdminProducts() {
     }
   }
 
+  const handleBgFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !editing) return
+
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      setEditing(f => ({ ...f, background_image: ev.target?.result as string || f?.background_image }))
+    }
+    reader.readAsDataURL(file)
+
+    if (supabase) {
+      const ext = file.name.split('.').pop()
+      const fileName = `product-bg-${Date.now()}.${ext}`
+      const { data: uploadData } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, file, { upsert: true })
+      if (uploadData) {
+        const { data: urlData } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(uploadData.path)
+        if (urlData) {
+          setEditing(f => ({ ...f, background_image: urlData.publicUrl }))
+        }
+      }
+    }
+  }
+
   const save = async () => {
     if (!editing) return
     if (!editing.name?.trim()) { setError('Name is required'); return }
@@ -98,7 +157,7 @@ export default function AdminProducts() {
     const payload = {
       name: editing.name, description: editing.description, price: editing.price,
       unit: editing.unit, image: editing.image || '/images/hero-varenyky.jpg',
-      badge: editing.badge || null, category: editing.category,
+      background_image: editing.background_image || null, badge: editing.badge || null, category: editing.category,
       available: editing.available ?? true, stock: editing.stock ?? 10,
     }
 
@@ -178,6 +237,57 @@ export default function AdminProducts() {
       {successMsg && (
         <div className="text-sm text-emerald-400 bg-emerald-400/10 rounded-lg px-4 py-3">{successMsg}</div>
       )}
+
+      {/* Categories management */}
+      <div className="glass-card rounded-xl overflow-hidden">
+        <button
+          onClick={() => setCategoriesOpen(!categoriesOpen)}
+          className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-border/10 transition-colors cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <FolderKanban className="w-5 h-5 text-primary" />
+            <span className="font-serif text-lg text-foreground">Categories</span>
+          </div>
+          <span className={`text-muted-foreground transition-transform duration-200 ${categoriesOpen ? 'rotate-180' : ''}`}>
+            ▾
+          </span>
+        </button>
+        {categoriesOpen && (
+          <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-border/30 pt-4 space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {categories.map(cat => (
+                <span
+                  key={cat}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-lg"
+                >
+                  {cat}
+                  <button
+                    onClick={() => removeCategory(cat)}
+                    className="hover:text-destructive transition-colors cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input
+                value={newCategory}
+                onChange={e => setNewCategory(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addCategory()}
+                className="flex-1 bg-transparent border border-border/50 rounded-lg px-4 py-2 text-sm text-foreground focus:border-primary outline-none"
+                placeholder="New category name"
+              />
+              <button
+                onClick={addCategory}
+                className="px-4 py-2 bg-primary text-primary-foreground text-sm tracking-[0.15em] rounded-lg hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                ADD
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Product list */}
       <div className="space-y-3">
@@ -311,6 +421,39 @@ export default function AdminProducts() {
                   {editing.image && (
                     <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-border/30">
                       <Image src={img(editing.image)} alt="preview" fill className="object-cover" />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Background Image (for ImageCompare slider)</label>
+                <div className="flex gap-3 items-start">
+                  <div className="flex-1 space-y-2">
+                    <input
+                      value={editing.background_image || ''}
+                      onChange={e => setEditing(f => ({ ...f, background_image: e.target.value }))}
+                      className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none"
+                      placeholder="/images/syrnyky-ingredients.png"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => bgFileInputRef.current?.click()}
+                      className="flex items-center gap-2 px-3 py-2 border border-border/50 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors cursor-pointer"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Browse files
+                    </button>
+                    <input
+                      ref={bgFileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleBgFileSelect}
+                    />
+                  </div>
+                  {editing.background_image && (
+                    <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-border/30">
+                      <Image src={img(editing.background_image)} alt="preview" fill className="object-cover" />
                     </div>
                   )}
                 </div>
