@@ -730,7 +730,7 @@ export default function Home() {
               className="order-2 lg:order-1"
             >
               <div
-                className="relative overflow-hidden px-12 py-16"
+                className="relative overflow-hidden sm:px-12 py-16"
                 style={{
                   backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
                   backgroundSize: 'cover',
