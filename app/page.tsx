@@ -201,6 +201,12 @@ export default function Home() {
   const [dbProducts, setDbProducts] = useState<typeof products | null>(null)
   const { scrollYProgress } = useScroll()
   const { settings: delivery } = useDeliverySettings()
+  const aboutRef = useRef<HTMLElement>(null)
+  const { scrollYProgress: aboutScroll } = useScroll({
+    target: aboutRef,
+    offset: ["start end", "end start"]
+  })
+  const aboutImageY = useTransform(aboutScroll, [0, 1], ["-20%", "20%"])
 
   useEffect(() => {
     if (!supabase) return
@@ -611,9 +617,9 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-28 lg:py-36 relative bg-background">
+      <section id="about" ref={aboutRef} className="py-28 lg:py-36 relative bg-background">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -654,14 +660,19 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="relative order-2 lg:order-2"
             >
-              <div className="relative min-h-[400px] lg:min-h-[650px] overflow-hidden">
-                <Image
-                  src={img("/images/about-us.webp")}
-                  alt="Handmade varenyky process"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
+              <div className="relative min-h-[500px] lg:min-h-[800px] overflow-hidden">
+                <motion.div
+                  className="absolute inset-0"
+                  style={{ y: aboutImageY }}
+                >
+                  <Image
+                    src={img("/images/about-us.webp")}
+                    alt="Handmade varenyky process"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </motion.div>
               </div>
               <div className="absolute -bottom-6 -left-6 lg:-bottom-8 lg:-left-8 w-44 h-44 lg:w-56 lg:h-56 overflow-hidden">
                 <Image
