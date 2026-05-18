@@ -230,15 +230,19 @@ export default function Home() {
 
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showScrollBottom, setShowScrollBottom] = useState(true)
+  const [isOnProducts, setIsOnProducts] = useState(false)
   const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('normal')
   const headerModeRef = useRef(headerMode)
   headerModeRef.current = headerMode
   const prevScrollY = useRef(0)
   const productsTopRef = useRef(0)
+  const aboutTopRef = useRef(0)
 
   useEffect(() => {
     const el = document.getElementById('products')
     if (el) productsTopRef.current = el.offsetTop
+    const aboutEl = document.getElementById('about')
+    if (aboutEl) aboutTopRef.current = aboutEl.offsetTop
   }, [])
 
   useEffect(() => {
@@ -248,9 +252,15 @@ export default function Home() {
       const atTop = y < 50
       const atBottom = y > maxY - 100
       const goingDown = y > prevScrollY.current
+      const isMobile = window.innerWidth < 1024
 
       setShowScrollTop(y > 300)
       setShowScrollBottom(y < maxY - 100)
+      if (isMobile && aboutTopRef.current > 0) {
+        setIsOnProducts(y >= productsTopRef.current - 100 && y < aboutTopRef.current - 100)
+      } else {
+        setIsOnProducts(false)
+      }
 
       if (atTop) {
         setHeaderMode(window.innerWidth >= 1024 ? 'tall' : 'normal')
@@ -1203,7 +1213,7 @@ export default function Home() {
       />
       {/* Scroll to Top */}
       <AnimatePresence>
-        {showScrollTop && (
+        {showScrollTop && !mobileMenuOpen && !cartOpen && !checkoutOpen && !selectedProduct && !isOnProducts && (
           <motion.button
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -1219,7 +1229,7 @@ export default function Home() {
 
       {/* Scroll to Bottom */}
       <AnimatePresence>
-        {showScrollBottom && (
+        {showScrollBottom && !mobileMenuOpen && !cartOpen && !checkoutOpen && !selectedProduct && !isOnProducts && (
           <motion.button
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
