@@ -330,7 +330,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[100dvh] sm:max-h-[90vh] flex flex-col p-4 sm:p-6 max-sm:max-w-full max-sm:rounded-none max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:translate-x-0 gap-2">
+      <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[100dvh] sm:max-h-[90vh] flex flex-col p-4 sm:p-6 max-sm:max-w-full max-sm:rounded-none max-sm:left-0 max-sm:right-0 max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:translate-x-0 max-sm:overflow-x-hidden gap-2">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
             {showPayment ? 'Pay securely' : user ? 'Checkout' : 'Sign in'}
