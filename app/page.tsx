@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, ArrowDown } from 'lucide-react'
+import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, ArrowDown, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
@@ -181,6 +181,11 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [dbProducts, setDbProducts] = useState<typeof products | null>(null)
+  const [reviews, setReviews] = useState<{ id: number; user_name: string; rating: number; comment: string; created_at: string }[]>([])
+  const [reviewFormOpen, setReviewFormOpen] = useState(false)
+  const [reviewRating, setReviewRating] = useState(5)
+  const [reviewComment, setReviewComment] = useState('')
+  const [reviewSubmitting, setReviewSubmitting] = useState(false)
   const { scrollYProgress } = useScroll()
   const { settings: delivery } = useDeliverySettings()
   const aboutRef = useRef<HTMLElement>(null)
@@ -211,6 +216,42 @@ export default function Home() {
       }
     })
   }, [])
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).then(({ data }) => {
+      if (data) setReviews(data)
+    })
+  }, [])
+
+  const submitReview = async () => {
+    if (!user) {
+      toast.error('Please sign in to leave a review')
+      return
+    }
+    if (!reviewComment.trim()) {
+      toast.error('Please write a comment')
+      return
+    }
+    setReviewSubmitting(true)
+    const { error } = await supabase!.from('reviews').insert({
+      user_id: user.id,
+      user_name: user.user_metadata?.full_name || user.email || 'Anonymous',
+      rating: reviewRating,
+      comment: reviewComment.trim(),
+    })
+    setReviewSubmitting(false)
+    if (error) {
+      toast.error('Failed to submit review')
+    } else {
+      toast.success('Review submitted!')
+      setReviewComment('')
+      setReviewRating(5)
+      setReviewFormOpen(false)
+      const { data } = await supabase!.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false })
+      if (data) setReviews(data)
+    }
+  }
 
   const activeProducts = dbProducts || products
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
@@ -817,6 +858,120 @@ export default function Home() {
               </a>
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section id="reviews" className="py-28 lg:py-36 relative bg-background overflow-hidden">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <p className="text-[13px] tracking-[0.35em] text-primary mb-5">TESTIMONIALS</p>
+            <h2 className="text-4xl md:text-5xl font-serif font-light">
+              <span className="font-script text-primary text-[1.15em]">What our</span>{" "}
+              <span className="text-foreground">customers say</span>
+            </h2>
+          </motion.div>
+
+          {/* Reviews Grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {reviews.map((review, index) => (
+              <motion.div
+                key={review.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-card p-8 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground/30'}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-muted-foreground leading-relaxed mb-6 text-[15px]">{review.comment}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-primary text-sm font-medium">{review.user_name.charAt(0).toUpperCase()}</span>
+                  </div>
+                  <span className="text-foreground text-sm font-medium">{review.user_name}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Write Review */}
+          <div className="text-center">
+            {user ? (
+              reviewFormOpen ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="max-w-lg mx-auto bg-card p-8 shadow-lg"
+                >
+                  <h3 className="font-serif text-xl mb-6 text-foreground">Leave a Review</h3>
+                  <div className="flex justify-center gap-2 mb-6">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setReviewRating(star)}
+                        className="transition-transform hover:scale-110"
+                      >
+                        <Star
+                          className={`w-8 h-8 ${star <= reviewRating ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground/30'}`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <textarea
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    placeholder="Share your experience..."
+                    className="w-full h-32 p-4 border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground bg-background placeholder:text-muted-foreground/50 mb-6"
+                  />
+                  <div className="flex gap-3 justify-center">
+                    <Button
+                      onClick={submitReview}
+                      disabled={reviewSubmitting || !reviewComment.trim()}
+                      className="bg-primary text-white hover:bg-primary/90 px-8"
+                    >
+                      {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => { setReviewFormOpen(false); setReviewComment(''); setReviewRating(5); }}
+                      className="px-8"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </motion.div>
+              ) : (
+                <Button
+                  onClick={() => setReviewFormOpen(true)}
+                  variant="outline"
+                  className="px-10 py-6 text-[14px] tracking-[0.15em]"
+                >
+                  WRITE A REVIEW
+                </Button>
+              )
+            ) : (
+              <div className="text-muted-foreground">
+                <p className="mb-4">Sign in to share your experience</p>
+                <a href="#contact" className="text-primary hover:underline text-[14px] tracking-[0.15em]">
+                  SIGN IN
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

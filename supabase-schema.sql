@@ -136,3 +136,37 @@ CREATE POLICY "Admins can update settings"
 -- Default delivery settings
 INSERT INTO settings (key, value) VALUES ('delivery', '{"min_order": 10, "free_threshold": 50, "fee": 5}')
 ON CONFLICT (key) DO NOTHING;
+
+-- ============================================================
+-- REVIEWS (customer reviews/testimonials)
+-- ============================================================
+CREATE TABLE reviews (
+  id SERIAL PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) NOT NULL,
+  user_name TEXT NOT NULL,
+  rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT NOT NULL,
+  approved BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view approved reviews"
+  ON reviews FOR SELECT
+  USING (approved = true);
+
+CREATE POLICY "Authenticated users can insert reviews"
+  ON reviews FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own reviews"
+  ON reviews FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Admins can delete any review"
+  ON reviews FOR DELETE
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+CREATE INDEX idx_reviews_created_at ON reviews(created_at DESC);
+CREATE INDEX idx_reviews_approved ON reviews(approved);
