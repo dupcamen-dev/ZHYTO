@@ -449,12 +449,12 @@ export default function Home() {
         style={{ opacity: heroOpacity }}
         className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
       >
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-40 sm:pt-48 lg:pt-56">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-32 sm:pt-36 lg:pt-44">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[16px] sm:text-[18px] tracking-[0.4em] text-white mb-8">
+            className="text-[17px] sm:text-[20px] tracking-[0.5em] text-white mb-8">
             AUTHENTIC. HANDMADE. TIMELESS.
           </motion.p>
 
@@ -462,7 +462,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-light leading-[1.05] mb-8 relative"
+            className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-serif font-light leading-[1.1] mb-10 relative tracking-[0.05em]"
           >
             <span className="text-white block">Dumplings</span>
             <span className="font-script text-foreground text-[1em] uppercase relative inline-block">
