@@ -456,22 +456,8 @@ export default function Home() {
                   transition={{ duration: 0.8, delay: 0.8 }}
                    className="text-lg md:text-xl text-white/80 leading-[1.8] mb-8 max-w-md drop-shadow-lg"
                 >
-                  We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
+                   We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
                 </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 1 }}
-                >
-                  <a 
-                    href="#products" 
-                    className="group inline-flex items-center gap-4 text-white text-[16px] tracking-[0.25em] hover:gap-6 transition-all duration-300 drop-shadow-lg"
-                  >
-                    <span className="border-b border-white/60 pb-1 drop-shadow-lg">ORDER NOW</span>
-                    <ArrowRight className="w-4 h-4 opacity-80" />
-                  </a>
-            </motion.div>
           </div>
           </div>
 
@@ -484,6 +470,20 @@ export default function Home() {
               <Hero3D />
             </motion.div>
           </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            className="text-center pb-8 lg:pb-12"
+          >
+            <a
+              href="#products"
+              className="group inline-flex items-center gap-4 text-white text-[16px] tracking-[0.25em] hover:gap-6 transition-all duration-300 drop-shadow-lg"
+            >
+              <span className="border-b border-white/60 pb-1 drop-shadow-lg">ORDER NOW</span>
+              <ArrowRight className="w-4 h-4 opacity-80" />
+            </a>
+          </motion.div>
         </div>
       </motion.section>
 
@@ -855,10 +855,10 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div
-            className="max-w-5xl mx-auto p-16 md:p-20 lg:p-24 text-center relative overflow-hidden max-sm:max-w-full max-sm:p-20"
+            className="max-w-5xl mx-auto p-8 sm:p-16 md:p-20 lg:p-24 text-center relative overflow-hidden max-sm:max-w-full"
             style={{
               backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
-              backgroundSize: '70%',
+              backgroundSize: '100%',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
             }}
@@ -871,11 +871,11 @@ export default function Home() {
               transition={{ duration: 0.8 }}
             >
               <p className="text-[16px] tracking-[0.35em] text-white/90 drop-shadow-lg mb-6">GET IN TOUCH</p>
-              <h2 className="text-6xl md:text-7xl font-serif font-light mb-10">
+              <h2 className="text-5xl sm:text-6xl md:text-7xl font-serif font-light mb-6 sm:mb-10">
                 <span className="text-[#c2a57b] drop-shadow-lg">Ready to</span>{" "}
                 <span className="font-script text-white text-[1.15em] drop-shadow-lg">order?</span>
               </h2>
-              <p className="text-white/70 drop-shadow-lg leading-[1.9] mb-14 text-lg">
+              <p className="text-white/70 drop-shadow-lg leading-[1.9] mb-8 sm:mb-14 text-base sm:text-lg">
                 Contact us for orders, catering inquiries, or just to say hello.
               </p>
               
