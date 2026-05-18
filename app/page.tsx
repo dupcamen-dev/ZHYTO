@@ -742,30 +742,30 @@ export default function Home() {
               className="order-2 lg:order-1"
             >
               <div
-                className="relative overflow-hidden p-10 border border-white/20"
+                className="relative overflow-hidden p-12"
                 style={{
                   backgroundImage: `url(${img("/images/about-card.png")})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               >
-                <h3 className="font-serif text-2xl mb-8 text-foreground">Delivery Information</h3>
-                <div className="space-y-5 text-[15px]">
-                  <div className="flex justify-between border-b border-border/30 pb-5">
-                    <span className="text-muted-foreground">Same Day Delivery</span>
-                    <span className="text-primary">London Zones 1-3</span>
+                <h3 className="font-serif text-3xl mb-10 text-center text-cream">Delivery Information</h3>
+                <div className="space-y-6 text-center">
+                  <div className="pb-4">
+                    <span className="text-lg text-cream">Same Day Delivery</span>
+                    <span className="text-lg text-cream block">London Zones 1-3</span>
                   </div>
-                  <div className="flex justify-between border-b border-border/30 pb-5">
-                    <span className="text-muted-foreground">Next Day Delivery</span>
-                    <span className="text-primary">All London</span>
+                  <div className="pb-4">
+                    <span className="text-lg text-cream">Next Day Delivery</span>
+                    <span className="text-lg text-cream block">All London</span>
                   </div>
-                  <div className="flex justify-between border-b border-border/30 pb-5">
-                    <span className="text-muted-foreground">Minimum Order</span>
-                    <span className="text-primary">£{delivery.min_order}</span>
+                  <div className="pb-4">
+                    <span className="text-lg text-cream">Minimum Order</span>
+                    <span className="text-lg text-cream block">£{delivery.min_order}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Free Delivery</span>
-                    <span className="text-primary">Orders over £{delivery.free_threshold}</span>
+                  <div>
+                    <span className="text-lg text-cream">Free Delivery</span>
+                    <span className="text-lg text-cream block">Orders over £{delivery.free_threshold}</span>
                   </div>
                 </div>
               </div>
@@ -865,7 +865,7 @@ export default function Home() {
           <div
             className="max-w-2xl mx-auto p-12 md:p-16 text-center relative overflow-hidden border border-white/20"
             style={{
-              backgroundImage: `url(${img("/images/hero-varenyky.jpg")})`,
+              backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
