@@ -467,7 +467,7 @@ export default function Home() {
             <span className="text-white block tracking-[0.08em]">Dumplings</span>
             <span className="font-script text-foreground text-[0.8em] uppercase relative inline-block tracking-[0.15em]">
               with soul
-              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[10%] w-[400%] h-[400%] -z-10">
+              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[40%] w-[400%] h-[400%] -z-10">
                 <Image
                   src={img("/images/hero-soul-bg.png")}
                   alt=""
