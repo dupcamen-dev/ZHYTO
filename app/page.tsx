@@ -741,15 +741,14 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div className="relative overflow-hidden p-10 border border-white/20">
-                <div className="absolute inset-0 -z-10">
-                  <Image
-                    src={img("/images/about-card.png")}
-                    alt=""
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+              <div
+                className="relative overflow-hidden p-10 border border-white/20"
+                style={{
+                  backgroundImage: `url(${img("/images/about-card.png")})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
                 <h3 className="font-serif text-2xl mb-8 text-foreground">Delivery Information</h3>
                 <div className="space-y-5 text-[15px]">
                   <div className="flex justify-between border-b border-border/30 pb-5">
@@ -863,17 +862,17 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="max-w-2xl mx-auto p-12 md:p-16 text-center relative overflow-hidden border border-white/20">
-            <div className="absolute inset-0 -z-10">
-              <Image
-                src={img("/images/hero-varenyky.jpg")}
-                alt=""
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30" />
-            </div>
+          <div
+            className="max-w-2xl mx-auto p-12 md:p-16 text-center relative overflow-hidden border border-white/20"
+            style={{
+              backgroundImage: `url(${img("/images/hero-varenyky.jpg")})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div className="absolute inset-0 bg-black/30 pointer-events-none" />
             <motion.div
+              className="relative z-10"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
