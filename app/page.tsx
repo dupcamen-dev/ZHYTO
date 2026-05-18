@@ -448,7 +448,7 @@ export default function Home() {
                   <motion.button
                     onClick={() => setSignInModalOpen(true)}
                     className="hidden sm:inline-flex items-center gap-2 text-[13px] tracking-[0.12em] text-foreground hover:text-primary transition-colors border-2 border-primary/20 rounded-full px-5 py-2 hover:border-primary/50 cursor-pointer bg-primary/5"
-                    whileHover={{ scale: 1.05, borderColor: '#0749f780' }}
+                    whileHover={{ scale: 1.05, borderColor: '#016fcf80' }}
                     whileTap={{ scale: 0.98 }}
                   >
                     <User className="w-4 h-4" />
