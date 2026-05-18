@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { img } from '@/lib/constants'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, ChevronDown, User, LogOut, ArrowUp } from 'lucide-react'
+import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
@@ -798,9 +798,14 @@ export default function Home() {
               <span className="font-script text-primary text-[1.15em]">Got</span>{" "}
               <span className="text-black">questions?</span>
             </h2>
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <span className="w-12 h-px bg-primary/30" />
+              <HelpCircle className="w-5 h-5 text-primary/60" />
+              <span className="w-12 h-px bg-primary/30" />
+            </div>
           </motion.div>
 
-          <div className="max-w-3xl mx-auto space-y-3">
+          <div className="max-w-3xl mx-auto space-y-4">
             {[
               { q: "How to cook?", a: "Cook pelmeni and varenyky from frozen in boiling salted water for 5–7 minutes. For syrnyky, fry in butter over medium heat for 3–4 minutes per side until golden." },
               { q: "How to store?", a: "Keep frozen. Our products stay fresh for up to 3 months in the freezer. Once thawed, do not refreeze. Always cook directly from frozen." },
@@ -816,21 +821,29 @@ export default function Home() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full glass-card rounded-none px-6 py-5 text-left flex items-center justify-between gap-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer bg-white"
+                  className={`w-full glass-card rounded-none px-6 py-5 text-left flex items-center justify-between gap-4 transition-all cursor-pointer ${
+                    openFaq === index
+                      ? 'border-l-4 border-primary bg-white shadow-md'
+                      : 'border-l-4 border-transparent bg-white hover:bg-primary/[0.02] hover:shadow-md hover:border-primary/20'
+                  }`}
                 >
                   <span className="font-serif text-[19px] text-black">{item.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-primary shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
+                  {openFaq === index ? (
+                    <Minus className="w-4 h-4 text-primary shrink-0" />
+                  ) : (
+                    <Plus className="w-4 h-4 text-primary shrink-0" />
+                  )}
                 </button>
                 <AnimatePresence>
                   {openFaq === index && (
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
+                      initial={{ height: 0, opacity: 0, y: -8 }}
+                      animate={{ height: 'auto', opacity: 1, y: 0 }}
+                      exit={{ height: 0, opacity: 0, y: -8 }}
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 py-4 text-black text-xl leading-relaxed bg-white">
+                      <div className="px-6 py-4 text-black text-[17px] leading-relaxed bg-primary/5 border-l-4 border-primary">
                         {item.a}
                       </div>
                     </motion.div>
@@ -839,6 +852,24 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-center mt-12"
+          >
+            <p className="text-muted-foreground text-base">
+              Still have questions?{" "}
+              <a
+                href="#contact"
+                className="text-primary hover:text-primary/80 transition-colors border-b border-primary/30 hover:border-primary/60 pb-0.5"
+              >
+                Get in touch
+              </a>
+            </p>
+          </motion.div>
         </div>
       </section>
 
