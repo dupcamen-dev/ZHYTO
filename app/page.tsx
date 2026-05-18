@@ -474,10 +474,10 @@ export default function Home() {
           >
             <a
               href="#products"
-              className="group inline-flex items-center gap-4 text-white text-[16px] tracking-[0.25em] hover:gap-6 transition-all duration-300 drop-shadow-lg"
+              className="group inline-flex items-center gap-4 text-primary text-xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
             >
-              <span className="border-b border-white/60 pb-1 drop-shadow-lg">ORDER NOW</span>
-              <ArrowRight className="w-4 h-4 opacity-80" />
+              <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
+              <ArrowRight className="w-5 h-5" />
             </a>
           </motion.div>
         </div>
