@@ -21,6 +21,12 @@ const zhyto = localFont({
   display: 'swap',
 })
 
+const konstrukt = localFont({
+  src: './fonts/KONSTRUKT-Regular.otf',
+  variable: '--font-konstrukt',
+  display: 'swap',
+})
+
 const geist = Geist({ 
   subsets: ['latin'],
   variable: '--font-geist',
@@ -50,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} bg-background`} style={{ colorScheme: 'only light' }}>
+    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} ${konstrukt.variable} bg-background`} style={{ colorScheme: 'only light' }}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <CartProvider>
