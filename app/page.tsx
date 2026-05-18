@@ -886,7 +886,7 @@ export default function Home() {
             className="max-w-5xl mx-auto p-16 md:p-20 lg:p-24 text-center relative overflow-hidden"
             style={{
               backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
-              backgroundSize: '55%',
+              backgroundSize: '70%',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
             }}
