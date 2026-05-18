@@ -314,6 +314,7 @@ export default function Home() {
                 <motion.a
                   key={link.name}
                   href={link.href}
+                  onClick={(e) => { e.preventDefault(); document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' }) }}
                   className="relative text-[13px] tracking-[0.15em] text-foreground/80 hover:text-primary transition-colors duration-300 font-medium"
                   whileHover={{ y: -1 }}
                 >
