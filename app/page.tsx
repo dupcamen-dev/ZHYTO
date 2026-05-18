@@ -269,7 +269,7 @@ export default function Home() {
             {/* Logo */}
             <motion.a
               href="#"
-              className={`flex items-center transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? '-ml-10 sm:-ml-14' : '-ml-7 sm:-ml-10'}`}
+              className={`flex items-center transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? '-ml-10 lg:-ml-14' : '-ml-7 lg:-ml-10'} absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0`}
               whileHover={{ scale: 1.06, rotate: -0.5 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 200, damping: 12 }}
@@ -279,7 +279,11 @@ export default function Home() {
                 alt="zhyto.london"
                 width={360}
                 height={90}
-                className="h-[72px] sm:h-[90px] w-auto transition-all duration-[400ms] ease-in-out"
+                className="h-[76px] sm:h-[100px] w-auto transition-all duration-[400ms] ease-in-out"
+                style={{
+                  maskImage: 'radial-gradient(ellipse 70% 50% at center, black 60%, transparent 100%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 70% 50% at center, black 60%, transparent 100%)',
+                }}
                 priority
               />
             </motion.a>
@@ -921,15 +925,15 @@ export default function Home() {
       <footer className="py-28 bg-black">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="text-4xl font-serif tracking-[0.15em] text-cream">
+            <div className="text-2xl md:text-4xl font-serif tracking-[0.15em] text-cream">
               zhyto.london
             </div>
             
             <div className="flex flex-col items-center md:items-center gap-2">
-              <p className="text-lg text-cream/80 tracking-[0.15em]">
+              <p className="text-sm md:text-lg text-cream/80 tracking-[0.15em]">
                 © 2026 zhyto.london. ALL RIGHTS RESERVED.
               </p>
-              <p className="text-base text-cream/60 tracking-[0.1em]">
+              <p className="text-xs md:text-base text-cream/60 tracking-[0.1em]">
                 Designed &amp; Built by{' '}
                 <a
                   href="https://millionpixels.dev"
@@ -942,11 +946,11 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="flex items-center gap-10">
-              <Link href="/privacy" className="text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
+            <div className="flex items-center gap-6 md:gap-10">
+              <Link href="/privacy" className="text-sm md:text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
                 PRIVACY
               </Link>
-              <Link href="/terms" className="text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
+              <Link href="/terms" className="text-sm md:text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
                 TERMS
               </Link>
             </div>
