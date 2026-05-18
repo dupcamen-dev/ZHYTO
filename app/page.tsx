@@ -746,7 +746,7 @@ export default function Home() {
               className="order-2 lg:order-1"
             >
               <div
-                className="relative overflow-hidden p-12"
+                className="relative overflow-hidden px-12 py-24"
                 style={{
                   backgroundImage: `url(${img("/images/about-card.png")})`,
                   backgroundSize: 'cover',
