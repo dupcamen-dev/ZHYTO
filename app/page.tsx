@@ -291,7 +291,7 @@ export default function Home() {
             {/* Logo */}
             <motion.a
               href="#"
-              className={`flex items-center transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? '-ml-10 lg:-ml-14' : '-ml-7 lg:-ml-10'} absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0`}
+              className={`flex items-center transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? 'lg:-ml-14' : 'lg:-ml-10'} absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0`}
               whileHover={{ scale: 1.06, rotate: -0.5 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 200, damping: 12 }}
@@ -301,7 +301,7 @@ export default function Home() {
                 alt="zhyto.london"
                 width={360}
                 height={90}
-                className="h-[76px] sm:h-[100px] w-auto transition-all duration-[400ms] ease-in-out"
+                className="h-14 sm:h-[76px] lg:h-[100px] w-auto transition-all duration-[400ms] ease-in-out max-w-[180px] sm:max-w-none"
                 style={{
                   maskImage: 'radial-gradient(ellipse 70% 50% at center, black 60%, transparent 100%)',
                   WebkitMaskImage: 'radial-gradient(ellipse 70% 50% at center, black 60%, transparent 100%)',
@@ -888,7 +888,7 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div
-            className="max-w-2xl mx-auto p-12 md:p-16 text-center relative overflow-hidden border border-white/20"
+            className="max-w-5xl mx-auto p-16 md:p-20 lg:p-24 text-center relative overflow-hidden"
             style={{
               backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
               backgroundSize: 'cover',
@@ -902,38 +902,38 @@ export default function Home() {
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
             >
-              <p className="text-[14px] tracking-[0.35em] text-white/90 drop-shadow-lg mb-5">GET IN TOUCH</p>
-              <h2 className="text-5xl md:text-6xl font-serif font-light mb-8">
+              <p className="text-[16px] tracking-[0.35em] text-white/90 drop-shadow-lg mb-6">GET IN TOUCH</p>
+              <h2 className="text-6xl md:text-7xl font-serif font-light mb-10">
                 <span className="text-[#c19e74] drop-shadow-lg">Ready to</span>{" "}
                 <span className="font-script text-white text-[1.15em] drop-shadow-lg">order?</span>
               </h2>
-              <p className="text-white/70 drop-shadow-lg leading-[1.9] mb-12 text-[16px]">
+              <p className="text-white/70 drop-shadow-lg leading-[1.9] mb-14 text-lg">
                 Contact us for orders, catering inquiries, or just to say hello.
               </p>
               
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-14">
                 <a href="#products">
                   <Button 
                     size="lg" 
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 px-10 py-6 tracking-[0.2em] text-[14px] rounded-none gold-glow"
+                    className="bg-white text-primary hover:bg-white/90 px-12 py-7 tracking-[0.2em] text-[15px] rounded-none shadow-xl"
                   >
                     ORDER NOW
                   </Button>
                 </a>
                 <a 
                   href="mailto:hello@zhyto.london"
-                  className="text-[15px] tracking-[0.2em] text-[#c19e74] hover:text-white transition-colors border-b border-[#c19e74]/50 hover:border-white pb-1 drop-shadow-lg"
+                  className="text-[16px] tracking-[0.2em] text-white hover:text-[#c19e74] transition-colors border-b border-white/50 hover:border-[#c19e74] pb-1 drop-shadow-lg"
                 >
                   HELLO@ZHYTO.LONDON
                 </a>
               </div>
               
-              <div className="flex items-center justify-center gap-8 pt-6 border-t border-white/20">
-                <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors text-[14px] tracking-[0.2em] drop-shadow-lg">
+              <div className="flex items-center justify-center gap-10 pt-8 border-t border-white/20">
+                <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors text-[15px] tracking-[0.2em] drop-shadow-lg">
                   INSTAGRAM
                 </a>
                 <span className="text-white/30">|</span>
-                <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors text-[14px] tracking-[0.2em] drop-shadow-lg">
+                <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors text-[15px] tracking-[0.2em] drop-shadow-lg">
                   WHATSAPP
                 </a>
               </div>
