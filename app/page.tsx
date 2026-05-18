@@ -447,87 +447,54 @@ export default function Home() {
       {/* Hero Section */}
       <motion.section 
         style={{ opacity: heroOpacity }}
-        className="relative min-h-[120dvh] flex flex-col overflow-hidden"
+        className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
       >
-        {/* Content */}
-           <div className="relative z-10 w-full max-w-7xl mx-auto sm:px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
-          <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12 overflow-visible">
-            <div className="w-full lg:w-auto max-w-3xl xl:max-w-4xl relative">
-                <div className="absolute inset-0 -z-10 overflow-hidden">
-                  <Image
-                    src={img("/images/hero-bg.webp")}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-                <div className="relative z-10 p-8 lg:p-12 flex flex-col pt-20 lg:pt-28">
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                   className="text-[14px] tracking-[0.35em] text-white mb-5 drop-shadow-lg">
-                 AUTHENTIC. HANDMADE. TIMELESS.
-                </motion.p>
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-[16px] sm:text-[18px] tracking-[0.4em] text-primary mb-8">
+            AUTHENTIC. HANDMADE. TIMELESS.
+          </motion.p>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light leading-[1.05] mb-6"
-                >
-                  <span className="text-white block drop-shadow-lg">Dumplings</span>
-                  <span className="font-script text-[#c2a57b] text-[1em] drop-shadow-lg uppercase">with soul</span>
-                </motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-light leading-[1.05] mb-8"
+          >
+            <span className="text-foreground block">Dumplings</span>
+            <span className="font-script text-[#c2a57b] text-[1em] uppercase">with soul</span>
+          </motion.h1>
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                   className="w-14 h-px bg-white/60 mb-6"
-                />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="w-20 h-px bg-primary/60 mb-8 mx-auto"
+          />
 
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                   className="text-lg md:text-xl text-white/80 leading-[1.8] mb-10 max-w-lg drop-shadow-lg"
-                >
-                   We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 1.0 }}
-                  className="hidden lg:block"
-                >
-                  <a
-                    href="#products"
-                    className="group inline-flex items-center gap-4 text-[#c2a57b] text-2xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
-                  >
-                    <span className="border-b border-[#c2a57b]/60 pb-1">ORDER NOW</span>
-                    <ArrowRight className="w-6 h-6" />
-                  </a>
-                </motion.div>
-          </div>
-          </div>
-
-          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="text-xl sm:text-2xl md:text-3xl text-muted-foreground leading-[1.8] mb-12 max-w-2xl mx-auto"
+          >
+            We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
+          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="text-center px-5 sm:px-0 lg:hidden"
+            transition={{ duration: 0.8, delay: 1.0 }}
           >
             <a
               href="#products"
-              className="group inline-flex items-center gap-4 text-primary text-xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
+              className="group inline-flex items-center gap-4 text-[#c2a57b] text-2xl sm:text-3xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
             >
-              <span className="border-b border-primary/60 pb-1">ORDER NOW</span>
-              <ArrowRight className="w-5 h-5" />
+              <span className="border-b border-[#c2a57b]/60 pb-1">ORDER NOW</span>
+              <ArrowRight className="w-6 h-6 sm:w-8 sm:h-8" />
             </a>
           </motion.div>
 
@@ -535,12 +502,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.4 }}
-            className="text-center hidden lg:block"
+            className="mt-20"
           >
             <motion.div
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="text-white/40"
+              className="text-primary/40"
             >
               <ChevronDown className="w-5 h-5 mx-auto" />
               <span className="text-[10px] tracking-[0.3em] block mt-1">SCROLL</span>
