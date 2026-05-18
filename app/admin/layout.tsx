@@ -100,7 +100,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Mobile sidebar drawer */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 border-r border-border/30 flex flex-col bg-card/50
+        fixed inset-y-0 left-0 z-50 w-72 border-r border-border/30 flex flex-col bg-card
         transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:hidden
@@ -109,7 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-72 border-r border-border/30 flex-col bg-card/50 shrink-0">
+      <aside className="hidden lg:flex w-72 border-r border-border/30 flex-col bg-card shrink-0">
         {sidebar}
       </aside>
 
