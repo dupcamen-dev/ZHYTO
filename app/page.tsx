@@ -502,10 +502,10 @@ export default function Home() {
           >
             <a
               href="#products"
-              className="group inline-flex items-center gap-4 text-[#c2a57b] text-2xl sm:text-3xl tracking-[0.35em] hover:gap-6 transition-all duration-300"
+              className="group inline-flex items-center gap-5 bg-[#c2a57b] text-white text-2xl sm:text-3xl lg:text-4xl tracking-[0.35em] hover:bg-[#b08f64] transition-all duration-300 px-10 py-5 sm:px-14 sm:py-6"
             >
-              <span className="border-b border-[#c2a57b]/60 pb-1">ORDER NOW</span>
-              <ArrowRight className="w-6 h-6 sm:w-8 sm:h-8" />
+              <span className="pb-1">ORDER NOW</span>
+              <ArrowRight className="w-7 h-7 sm:w-9 sm:h-9" />
             </a>
           </motion.div>
 
