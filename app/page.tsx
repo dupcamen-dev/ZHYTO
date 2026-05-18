@@ -35,22 +35,6 @@ function WheatIcon({ className }: { className?: string }) {
   )
 }
 
-// Pastel brushstroke divider
-function PastelDivider({ className }: { className?: string }) {
-  return (
-    <div className={`flex justify-center ${className || ''}`}>
-      <svg width="180" height="32" viewBox="0 0 180 32" fill="none" className="opacity-40">
-        <path d="M10 16 Q30 4 60 14 Q90 26 120 12 Q150 2 170 16"
-          stroke="#0749f7" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.3" />
-        <path d="M15 20 Q35 8 65 18 Q95 30 125 16 Q155 6 175 20"
-          stroke="#c2a57b" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.25" />
-        <path d="M5 12 Q25 0 55 10 Q85 22 115 8 Q145 -2 165 12"
-          stroke="#c2a57b" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.15" />
-      </svg>
-    </div>
-  )
-}
-
 // Product data
 const products = [
   {
@@ -427,15 +411,6 @@ export default function Home() {
         style={{ opacity: heroOpacity }}
         className="relative min-h-[120dvh] flex flex-col overflow-hidden"
       >
-        {/* Pastel brushstroke decoration behind heading */}
-        <div className="absolute left-6 lg:left-12 top-1/3 -translate-y-1/2 pointer-events-none opacity-25 hidden lg:block">
-          <svg width="500" height="300" viewBox="0 0 500 300" fill="none">
-            <ellipse cx="200" cy="150" rx="280" ry="120" fill="#0749f7" opacity="0.06" />
-            <path d="M50 160 Q150 80 250 150 Q350 220 450 140" stroke="#c2a57b" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.3" />
-            <path d="M30 140 Q130 60 230 130 Q330 200 430 120" stroke="#0749f7" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.15" />
-          </svg>
-        </div>
-
         {/* Content */}
            <div className="relative z-10 w-full max-w-7xl mx-auto px-5 lg:px-10 pt-44 sm:pt-56 pb-32 flex-1 flex flex-col">
           <div className="flex-1 flex flex-col lg:flex-row items-stretch lg:items-stretch justify-start gap-8 lg:gap-12">
@@ -510,14 +485,10 @@ export default function Home() {
             </motion.div>
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center" style={{ transform: 'translateY(50%)' }}>
-          <PastelDivider />
-        </div>
       </motion.section>
 
       {/* Products Section */}
-      <section id="products" className="py-28 lg:py-36 relative z-20 section-orange -mt-32 lg:-mt-40">
+      <section id="products" className="py-28 lg:py-36 relative z-20 section-orange">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -668,8 +639,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <PastelDivider className="py-6 -mb-10" />
 
       {/* Ingredients Section */}
       <section id="ingredients" className="py-28 lg:py-36 relative section-orange overflow-hidden">
