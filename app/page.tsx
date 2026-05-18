@@ -604,12 +604,13 @@ export default function Home() {
       {/* About Section */}
       <section id="about" className="py-28 lg:py-36 relative bg-background">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
+              className="order-2 lg:order-1"
             >
               <p className="text-[13px] tracking-[0.35em] text-primary mb-5">OUR STORY</p>
               <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
@@ -642,29 +643,27 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
-              className="relative"
+              className="relative order-1 lg:order-2"
             >
-              <div className="relative h-[520px] overflow-hidden">
+              <div className="relative min-h-[400px] lg:min-h-[650px] overflow-hidden">
                 <Image
                   src={img("/images/about-us.webp")}
                   alt="Handmade varenyky process"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  loading="lazy"
-            className="object-contain"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
               </div>
-              <div className="absolute -bottom-8 -left-8 w-48 h-48 sm:w-60 sm:h-60 overflow-hidden">
+              <div className="absolute -bottom-6 -left-6 lg:-bottom-8 lg:-left-8 w-44 h-44 lg:w-56 lg:h-56 overflow-hidden shadow-xl">
                 <Image
                   src={img("/images/about-card.png")}
                   alt=""
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                  <span className="text-5xl sm:text-[3.5rem] font-bold leading-none mb-2 drop-shadow-lg">15+</span>
-                  <span className="text-xs sm:text-sm tracking-[0.3em] drop-shadow-lg">YEARS OF TRADITION</span>
+                <div className="absolute inset-0 bg-black/10 flex flex-col items-center justify-center text-white">
+                  <span className="text-4xl lg:text-[3.5rem] font-bold leading-none mb-1 drop-shadow-lg">15+</span>
+                  <span className="text-[10px] lg:text-sm tracking-[0.3em] drop-shadow-lg">YEARS OF TRADITION</span>
                 </div>
               </div>
             </motion.div>
