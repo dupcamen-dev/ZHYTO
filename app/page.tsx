@@ -741,17 +741,17 @@ export default function Home() {
                   backgroundPosition: 'center',
                 }}
               >
-                <h3 className="font-serif text-3xl mb-10 text-center text-cream">Delivery Information</h3>
-                <div className="space-y-6 text-center">
-                  <div className="pb-4">
+                <h3 className="font-serif text-3xl mb-6 text-center text-cream">Delivery Information</h3>
+                <div className="space-y-4 text-center">
+                  <div>
                     <span className="text-lg text-cream">Same Day Delivery</span>
                     <span className="text-lg text-cream block">London Zones 1-3</span>
                   </div>
-                  <div className="pb-4">
+                  <div>
                     <span className="text-lg text-cream">Next Day Delivery</span>
                     <span className="text-lg text-cream block">All London</span>
                   </div>
-                  <div className="pb-4">
+                  <div>
                     <span className="text-lg text-cream">Minimum Order</span>
                     <span className="text-lg text-cream block">£{delivery.min_order}</span>
                   </div>
