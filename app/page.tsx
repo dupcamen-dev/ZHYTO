@@ -490,7 +490,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-xl sm:text-2xl md:text-3xl text-muted-foreground leading-[1.8] mb-12 max-w-2xl mx-auto"
+            className="text-xl sm:text-2xl md:text-3xl text-[#f5ead6] leading-[1.8] mb-12 max-w-2xl mx-auto"
           >
             We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
           </motion.p>
