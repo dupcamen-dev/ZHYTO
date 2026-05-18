@@ -476,7 +476,7 @@ export default function Home() {
         style={{ opacity: heroOpacity }}
         className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
       >
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-24 sm:pt-28 lg:pt-40">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-20 sm:pt-24 lg:pt-36">
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
