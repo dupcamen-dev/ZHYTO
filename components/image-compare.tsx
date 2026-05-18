@@ -59,7 +59,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full overflow-hidden select-none cursor-ew-resize touch-none"
+      className="relative w-full h-full overflow-hidden select-none cursor-ew-resize touch-none overscroll-none"
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
     >

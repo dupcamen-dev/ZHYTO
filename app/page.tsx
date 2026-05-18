@@ -427,7 +427,7 @@ export default function Home() {
                   className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light leading-[1.05] mb-6"
                 >
                   <span className="text-white block drop-shadow-lg">Dumplings</span>
-                  <span className="font-script text-white text-[1em] drop-shadow-lg">with soul</span>
+                  <span className="font-script text-[#c19e74] text-[1em] drop-shadow-lg uppercase">with soul</span>
                 </motion.h1>
 
                 <motion.div
@@ -491,12 +491,12 @@ export default function Home() {
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
-            <div className="bg-primary px-6 py-3 inline-block">
-              <h2 className="text-5xl md:text-6xl font-serif font-light text-transparent" style={{ background: '#0749f7', WebkitBackgroundClip: 'text', backgroundClip: 'text' }}>
-                <span className="font-script text-[1.15em]">Crafted</span>{" "}
-                <span>with tradition</span>
-              </h2>
-            </div>
+              <div className="bg-primary px-6 py-3 inline-block">
+                <h2 className="text-5xl md:text-6xl font-serif font-light text-[#c19e74]">
+                  <span className="font-script text-[1.15em]">Crafted</span>{" "}
+                  <span>with tradition</span>
+                </h2>
+              </div>
           </motion.div>
 
           {/* Product categories */}
@@ -866,11 +866,12 @@ export default function Home() {
           <div className="max-w-2xl mx-auto p-12 md:p-16 text-center relative overflow-hidden border border-white/20">
             <div className="absolute inset-0 -z-10">
               <Image
-                src={img("/images/about-card.png")}
+                src={img("/images/hero-varenyky.jpg")}
                 alt=""
                 fill
                 className="object-cover"
               />
+              <div className="absolute inset-0 bg-black/30" />
             </div>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
