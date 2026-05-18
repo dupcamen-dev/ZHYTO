@@ -280,7 +280,7 @@ export default function Home() {
         <div className={`max-w-7xl mx-auto transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? 'px-8 lg:px-14' : 'px-5 lg:px-10'}`} style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <motion.div
             className="flex items-center justify-between"
-            animate={{ height: headerMode === 'tall' ? '12rem' : '7rem' }}
+            animate={{ height: headerMode === 'tall' ? '12rem' : '9rem' }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
             {/* Logo */}
@@ -294,9 +294,9 @@ export default function Home() {
               <Image
                 src={img("/images/logo-header.png")}
                 alt="zhyto.london"
-                width={360}
-                height={90}
-                className="h-14 sm:h-[76px] lg:h-[100px] w-auto transition-all duration-[400ms] ease-in-out max-w-[180px] sm:max-w-none"
+                width={520}
+                height={130}
+                className="h-16 sm:h-[90px] lg:h-[130px] w-auto transition-all duration-[400ms] ease-in-out max-w-[220px] sm:max-w-none"
                 style={{
                   maskImage: 'radial-gradient(ellipse 90% 50% at center, black 60%, transparent 100%)',
                   WebkitMaskImage: 'radial-gradient(ellipse 90% 50% at center, black 60%, transparent 100%)',
