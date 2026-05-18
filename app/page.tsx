@@ -853,9 +853,9 @@ export default function Home() {
         <div className="absolute bottom-10 right-10 w-48 h-48 rounded-full border border-primary/10 -z-10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-primary/5 -z-10" />
 
-        <div className="max-w-7xl mx-auto px-5 lg:px-10">
+        <div className="max-w-7xl mx-auto sm:px-5 lg:px-10">
           <div
-            className="max-w-5xl mx-auto p-8 sm:p-16 md:p-20 lg:p-24 text-center relative overflow-hidden max-sm:max-w-full"
+            className="max-w-5xl mx-auto py-8 px-0 sm:p-16 md:p-20 lg:p-24 text-center relative overflow-hidden max-sm:max-w-full"
             style={{
               backgroundImage: `url(${img("/images/hero-bg.jpg")})`,
               backgroundSize: '100%',

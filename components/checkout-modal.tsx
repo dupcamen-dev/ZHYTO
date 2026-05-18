@@ -252,20 +252,20 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           )}
 
           {cartItems.length > 0 && (
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Button
                 type="button"
                 variant="outline"
                 size="lg"
                 onClick={() => onOpenChange(false)}
-                className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+                className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent whitespace-normal"
               >
                 CANCEL
               </Button>
               <Button
                 type="button"
                 disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
-                className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50 whitespace-normal text-balance"
               >
                 {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
               </Button>
@@ -344,8 +344,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 min-h-0 pr-4">
-          <div className="pb-4">
+        <ScrollArea className="flex-1 min-h-0 sm:pr-4">
+          <div className="pb-4 max-sm:overflow-x-hidden">
           {!showPayment ? (
             <div className="space-y-5">
               {/* Empty cart — pure login modal */}
@@ -447,21 +447,21 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </div>
                   )}
 
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <Button
                       type="button"
                       variant="outline"
                       size="lg"
                       onClick={() => onOpenChange(false)}
                       disabled={submitting}
-                      className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent"
+                      className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent whitespace-normal"
                     >
                       CANCEL
                     </Button>
                     <Button
                       type="button"
                       disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
-                      className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+                      className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50 whitespace-normal text-balance"
                     >
                       {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
                     </Button>
