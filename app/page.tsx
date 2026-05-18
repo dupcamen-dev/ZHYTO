@@ -737,8 +737,8 @@ export default function Home() {
                   backgroundPosition: 'center',
                 }}
               >
-                <h3 className="font-serif text-3xl mb-6 text-center text-cream">Delivery Information</h3>
-                <div className="space-y-4 text-center">
+                <h3 className="font-serif text-3xl mb-6 lg:text-left text-center text-cream">Delivery Information</h3>
+                <div className="space-y-4 lg:text-left text-center">
                   <div>
                     <span className="text-lg text-cream">Same Day Delivery</span>
                     <span className="text-lg text-cream block">London Zones 1-3</span>
