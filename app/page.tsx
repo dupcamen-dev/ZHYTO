@@ -930,16 +930,16 @@ export default function Home() {
             </div>
             
             <div className="flex flex-col items-center md:items-center gap-2">
-              <p className="text-sm md:text-lg text-cream/80 tracking-[0.15em]">
+              <p className="text-sm md:text-lg text-cream tracking-[0.15em]">
                 © 2026 zhyto.london. ALL RIGHTS RESERVED.
               </p>
-              <p className="text-xs md:text-base text-cream/60 tracking-[0.1em]">
+              <p className="text-xs md:text-base text-cream tracking-[0.1em]">
                 Designed &amp; Built by{' '}
                 <a
                   href="https://millionpixels.dev"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-cream/60 hover:text-cream transition-colors"
+                  className="text-cream hover:text-white transition-colors"
                 >
                   Million Pixels
                 </a>
@@ -947,10 +947,10 @@ export default function Home() {
             </div>
             
             <div className="flex items-center gap-6 md:gap-10">
-              <Link href="/privacy" className="text-sm md:text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
+              <Link href="/privacy" className="text-sm md:text-base text-cream hover:text-white transition-colors tracking-[0.15em]">
                 PRIVACY
               </Link>
-              <Link href="/terms" className="text-sm md:text-base text-cream/80 hover:text-cream transition-colors tracking-[0.15em]">
+              <Link href="/terms" className="text-sm md:text-base text-cream hover:text-white transition-colors tracking-[0.15em]">
                 TERMS
               </Link>
             </div>
