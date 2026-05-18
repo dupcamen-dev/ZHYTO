@@ -296,11 +296,7 @@ export default function Home() {
                 alt="zhyto.london"
                 width={520}
                 height={130}
-                className="h-16 sm:h-[90px] lg:h-[130px] w-auto transition-all duration-[400ms] ease-in-out max-w-[220px] sm:max-w-none"
-                style={{
-                  maskImage: 'radial-gradient(ellipse 90% 50% at center, black 60%, transparent 100%)',
-                  WebkitMaskImage: 'radial-gradient(ellipse 90% 50% at center, black 60%, transparent 100%)',
-                }}
+                className="h-16 sm:h-[90px] lg:h-[130px] w-auto max-w-[220px] sm:max-w-none"
                 priority
               />
             </motion.a>
