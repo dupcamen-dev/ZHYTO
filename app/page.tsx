@@ -14,6 +14,7 @@ import { supabase } from '@/lib/supabase'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
 import { ImageCompare } from '@/components/image-compare'
+import { ImageCarousel } from '@/components/image-carousel'
 import { useDeliverySettings } from '@/lib/use-delivery'
 import { toast } from 'sonner'
 
@@ -680,10 +681,11 @@ export default function Home() {
                   style={{ y: aboutImageY }}
                 >
                   <div className="relative w-full h-full">
-                    <ImageCompare
-                      frontImage={img("/images/about-us-2.webp")}
-                      backImage={img("/images/about-us.webp")}
-                      alt="Handmade varenyky process"
+                    <ImageCarousel
+                      images={[
+                        { src: img("/images/about-us.webp"), alt: "Handmade varenyky process" },
+                        { src: img("/images/about-us-2.webp"), alt: "Handmade varenyky process" },
+                      ]}
                     />
                   </div>
                 </motion.div>
