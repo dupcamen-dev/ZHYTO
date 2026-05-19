@@ -679,13 +679,13 @@ export default function Home() {
                   className="absolute inset-0"
                   style={{ y: aboutImageY }}
                 >
-                  <Image
-                    src={img("/images/about-us.webp")}
-                    alt="Handmade varenyky process"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
-                  />
+                  <div className="relative w-full h-full">
+                    <ImageCompare
+                      frontImage={img("/images/about-us-2.webp")}
+                      backImage={img("/images/about-us.webp")}
+                      alt="Handmade varenyky process"
+                    />
+                  </div>
                 </motion.div>
               </div>
               <div className="absolute -bottom-6 -left-6 lg:-bottom-8 lg:-left-8 w-44 h-44 lg:w-56 lg:h-56 overflow-hidden">
