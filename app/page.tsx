@@ -451,7 +451,7 @@ export default function Home() {
                   <motion.button
                     onClick={() => setSignInModalOpen(true)}
                     className="hidden sm:inline-flex items-center gap-2 text-[13px] tracking-[0.12em] text-foreground hover:text-primary transition-colors border-2 border-primary/20 rounded-full px-5 py-2 hover:border-primary/50 cursor-pointer bg-primary/5"
-                    whileHover={{ scale: 1.05, borderColor: '#0069cb80' }}
+                    whileHover={{ scale: 1.05, borderColor: '#0058d280' }}
                     whileTap={{ scale: 0.98 }}
                   >
                     <User className="w-4 h-4" />
@@ -758,7 +758,6 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-2 px-5 lg:px-0"
             >
-              <p className="text-[13px] tracking-[0.35em] text-primary mb-5">DELIVERY</p>
               <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
                 <span className="font-script text-primary text-[1.15em]">Fresh</span>{" "}
                 <span className="text-foreground">to your door</span>
