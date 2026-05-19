@@ -8,6 +8,7 @@ import { LanguageProvider } from '@/components/language-context'
 import { CookieConsent } from '@/components/cookie-consent'
 import { Toaster } from '@/components/ui/sonner'
 import { NoiseOverlay } from '@/components/noise-overlay'
+import { BASE_PATH } from '@/lib/constants'
 import './globals.css'
 
 const playfair = Playfair_Display({ 
@@ -45,10 +46,10 @@ export const metadata: Metadata = {
   keywords: ['varenyky', 'syrnyky', 'ukrainian food', 'london', 'dumplings', 'marketplace'],
   icons: {
     icon: [
-      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
-      { url: '/favicon.svg', type: 'image/svg+xml', sizes: 'any' },
+      { url: `${BASE_PATH}/favicon.png`, type: 'image/png', sizes: '32x32' },
+      { url: `${BASE_PATH}/favicon.svg`, type: 'image/svg+xml', sizes: 'any' },
     ],
-    shortcut: '/favicon.png',
+    shortcut: `${BASE_PATH}/favicon.png`,
   },
 }
 
