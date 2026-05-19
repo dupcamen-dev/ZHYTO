@@ -726,27 +726,27 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div className="sm:px-12 py-16">
-                <h3 className="font-script text-4xl mb-0 lg:text-left text-center text-black uppercase">
+              <div className="sm:px-12 py-16 relative">
+                <h3 className="font-script text-4xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase">
                   Delivery Information
-                </h3>
-                <div className="relative max-w-[600px] mx-auto lg:mx-0" style={{ aspectRatio: '661/252' }}>
-                  <img
-                    src={img("/images/delivery-art.webp")}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-contain"
-                    draggable={false}
-                  />
-                  <div className="absolute inset-0 grid grid-cols-2 gap-x-6 text-sm items-center px-8 lg:px-12">
-                    <span className="text-foreground font-medium">Same Day Delivery</span>
-                    <span className="text-foreground text-right">London Zones 1-3</span>
-                    <span className="text-foreground font-medium">Next Day Delivery</span>
-                    <span className="text-foreground text-right">All London</span>
-                    <span className="text-foreground font-medium">Minimum Order</span>
-                    <span className="text-foreground text-right">£{delivery.min_order}</span>
-                    <span className="text-foreground font-medium">Free Delivery</span>
-                    <span className="text-foreground text-right">Orders over £{delivery.free_threshold}</span>
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] w-[500px] aspect-[661/252] -z-10">
+                    <img
+                      src={img("/images/delivery-art.webp")}
+                      alt=""
+                      className="w-full h-full object-contain"
+                      draggable={false}
+                    />
                   </div>
+                </h3>
+                <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-24 lg:mt-32 max-w-[500px] mx-auto lg:mx-0">
+                  <span className="text-foreground font-medium">Same Day Delivery</span>
+                  <span className="text-foreground text-right">London Zones 1-3</span>
+                  <span className="text-foreground font-medium">Next Day Delivery</span>
+                  <span className="text-foreground text-right">All London</span>
+                  <span className="text-foreground font-medium">Minimum Order</span>
+                  <span className="text-foreground text-right">£{delivery.min_order}</span>
+                  <span className="text-foreground font-medium">Free Delivery</span>
+                  <span className="text-foreground text-right">Orders over £{delivery.free_threshold}</span>
                 </div>
               </div>
             </motion.div>
