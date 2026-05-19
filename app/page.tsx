@@ -189,7 +189,7 @@ export default function Home() {
   const [reviewSubmitting, setReviewSubmitting] = useState(false)
   const [signInModalOpen, setSignInModalOpen] = useState(false)
   const [aboutImageIndex, setAboutImageIndex] = useState(0)
-  const aboutNames = ["Maria", "Olena", "Nataliia", "Anna", "Kateryna", "Iryna"]
+  const aboutNames = ["Ілля", "Віктор", "Nataliia", "Anna", "Kateryna", "Iryna"]
   const { scrollYProgress } = useScroll()
   const { settings: delivery } = useDeliverySettings()
   const aboutRef = useRef<HTMLElement>(null)
