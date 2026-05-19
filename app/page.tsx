@@ -202,6 +202,8 @@ export default function Home() {
   const { scrollYProgress } = useScroll()
   const { settings: delivery } = useDeliverySettings()
   const aboutRef = useRef<HTMLElement>(null)
+  const reviewsRef = useRef<HTMLElement>(null)
+  const [varenykyIn, setVarenykyIn] = useState(false)
   const { scrollYProgress: aboutScroll } = useScroll({
     target: aboutRef,
     offset: ["start end", "end start"]
@@ -286,6 +288,17 @@ export default function Home() {
     if (el) productsTopRef.current = el.offsetTop
     const aboutEl = document.getElementById('about')
     if (aboutEl) aboutTopRef.current = aboutEl.offsetTop
+  }, [])
+
+  useEffect(() => {
+    const el = reviewsRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVarenykyIn(true); obs.disconnect() } },
+      { threshold: 0.15 }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
   }, [])
 
   useEffect(() => {
@@ -937,27 +950,32 @@ export default function Home() {
       </section>
 
       {/* Reviews Section */}
-      <section id="reviews" className="py-28 lg:py-36 relative bg-black overflow-hidden">
+      <section id="reviews" ref={reviewsRef} className="py-28 lg:py-36 relative bg-black overflow-hidden">
         
         {/* Floating varenyky */}
-        <img
-          src={img("/images/varenyk-bg.png")}
-          alt=""
-          className="absolute z-0 pointer-events-none"
-          style={{ width: '180px', top: '3%', left: '-70px', opacity: 0.85, transform: 'translateX(0) rotate(-12deg)' }}
-        />
-        <img
-          src={img("/images/varenyk-bg.png")}
-          alt=""
-          className="absolute z-0 pointer-events-none"
-          style={{ width: '250px', bottom: '5%', right: '-90px', opacity: 0.75, transform: 'translateX(0) rotate(12deg)' }}
-        />
-        <img
-          src={img("/images/varenyk-bg.png")}
-          alt=""
-          className="absolute z-0 pointer-events-none"
-          style={{ width: '150px', top: '45%', left: '-50px', opacity: 0.65, transform: 'translateX(0) rotate(8deg)' }}
-        />
+        {[
+          { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0 },
+          { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25 },
+          { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5 },
+          { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15 },
+          { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4 },
+          { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65 },
+        ].map((v, i) => (
+          <img
+            key={i}
+            src={img("/images/varenyk-bg.png")}
+            alt=""
+            className="absolute z-0 pointer-events-none transition-all duration-[1200ms] ease-out"
+            style={{
+              width: `${v.width}px`,
+              top: v.top,
+              [v.side === 'left' ? 'left' : 'right']: varenykyIn ? '-80px' : '-280px',
+              opacity: varenykyIn ? 1 : 0,
+              transform: varenykyIn ? `rotate(${v.rotate}deg)` : `rotate(${v.rotate + 25}deg)`,
+              transitionDelay: `${v.delay}s`,
+            }}
+          />
+        ))}
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
           <motion.div
