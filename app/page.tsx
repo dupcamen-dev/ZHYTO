@@ -727,7 +727,7 @@ export default function Home() {
               className="order-2 lg:order-1"
             >
               <div className="sm:px-12 py-16">
-                <h3 className="font-script text-4xl mb-6 lg:text-left text-center text-black uppercase">
+                <h3 className="font-script text-4xl mb-0 lg:text-left text-center text-black uppercase">
                   Delivery Information
                 </h3>
                 <div className="relative max-w-[600px] mx-auto lg:mx-0" style={{ aspectRatio: '661/252' }}>
