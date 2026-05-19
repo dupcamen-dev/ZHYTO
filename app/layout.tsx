@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
-import { Playfair_Display, Pacifico, Geist } from 'next/font/google'
+import { Playfair_Display, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
@@ -33,10 +33,9 @@ const geist = Geist({
   variable: '--font-geist',
 })
 
-const pacifico = Pacifico({
-  subsets: ['cyrillic', 'latin'],
-  weight: ['400'],
-  variable: '--font-pacifico',
+const epoch = localFont({
+  src: './fonts/Epoch_YP_Demo.otf',
+  variable: '--font-epoch',
   display: 'swap',
 })
 
@@ -64,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} ${konstrukt.variable} ${pacifico.variable} bg-background`} style={{ colorScheme: 'only light' }}>
+    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} ${konstrukt.variable} ${epoch.variable} bg-background`} style={{ colorScheme: 'only light' }}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <LanguageProvider>
