@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, ChevronLeft } from 'lucide-react'
 
 interface ImageCarouselProps {
   images: { src: string; alt: string }[]
@@ -123,6 +123,23 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
             </motion.div>
           )}
         </AnimatePresence>
+      )}
+
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={() => goTo(current - 1)}
+            className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center transition-colors cursor-pointer ${current === 0 ? 'opacity-0 pointer-events-none' : ''}`}
+          >
+            <ChevronLeft className="w-5 h-5 text-white" />
+          </button>
+          <button
+            onClick={() => goTo(current + 1)}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center transition-colors cursor-pointer ${current === images.length - 1 ? 'opacity-0 pointer-events-none' : ''}`}
+          >
+            <ChevronRight className="w-5 h-5 text-white" />
+          </button>
+        </>
       )}
 
       {images.length > 1 && (
