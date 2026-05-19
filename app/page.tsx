@@ -890,17 +890,16 @@ export default function Home() {
               transition={{ duration: 0.8 }}
             >
               <p className="text-[16px] tracking-[0.35em] text-primary mb-6">{t.contact.getInTouch}</p>
-              <h2 className="text-5xl sm:text-6xl md:text-7xl font-serif font-light mb-2 sm:mb-4">
+              <h2 className="text-5xl sm:text-6xl md:text-7xl font-serif font-light mb-6 sm:mb-10">
                 <span className="text-primary">{t.contact.readyTo}</span>{" "}
-                <span className="font-script text-foreground text-[1.15em]">{t.contact.order}</span>
+                <span 
+                  className="font-script text-[1.15em] inline-block bg-contain bg-center bg-no-repeat px-8 py-4"
+                  style={{
+                    backgroundImage: `url(${img("/images/contact-photo.png")})`,
+                    color: '#1a1613',
+                  }}
+                >{t.contact.order}</span>
               </h2>
-              <div className="flex justify-center mb-6 sm:mb-10">
-                <img 
-                  src={img("/images/contact-photo.png")} 
-                  alt=""
-                  className="w-40 sm:w-48 h-auto"
-                />
-              </div>
               <p className="text-muted-foreground leading-[1.9] mb-8 sm:mb-14 text-base sm:text-lg">
                 {t.contact.contactDesc}
               </p>
