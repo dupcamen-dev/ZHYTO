@@ -721,15 +721,8 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div
-                className="relative overflow-hidden sm:px-12 py-16"
-                style={{
-                  backgroundImage: `url(${img("/images/hero-bg.webp")})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
-                <h3 className="font-serif text-3xl mb-6 lg:text-left text-center text-cream">Delivery Information</h3>
+              <div className="sm:px-12 py-16 bg-black/80">
+                <h3 className="font-script text-3xl mb-6 lg:text-left text-center text-cream">Delivery Information</h3>
                 <div className="space-y-4 lg:text-left text-center">
                   <div>
                     <span className="text-lg text-cream">Same Day Delivery</span>
