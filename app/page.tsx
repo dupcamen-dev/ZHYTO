@@ -954,12 +954,12 @@ export default function Home() {
         
         {/* Floating varenyky */}
         {[
-          { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0 },
-          { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25 },
-          { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5 },
-          { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15 },
-          { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4 },
-          { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65 },
+          { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -80 },
+          { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: -70 },
+          { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: -50 },
+          { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -80 },
+          { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: -70 },
+          { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: -50 },
         ].map((v, i) => (
           <img
             key={i}
@@ -969,9 +969,9 @@ export default function Home() {
             style={{
               width: `${v.width}px`,
               top: v.top,
-              [v.side === 'left' ? 'left' : 'right']: varenykyIn ? '-80px' : '-280px',
+              [v.side === 'left' ? 'left' : 'right']: varenykyIn ? `${v.final}px` : '-280px',
               opacity: varenykyIn ? 1 : 0,
-              transform: varenykyIn ? `rotate(${v.rotate}deg)` : `rotate(${v.rotate + 25}deg)`,
+              transform: varenykyIn ? `rotate(${v.rotate}deg)` : `rotate(${v.rotate + 20}deg)`,
               transitionDelay: `${v.delay}s`,
             }}
           />

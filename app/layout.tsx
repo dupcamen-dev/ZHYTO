@@ -45,9 +45,10 @@ export const metadata: Metadata = {
   keywords: ['varenyky', 'syrnyky', 'ukrainian food', 'london', 'dumplings', 'marketplace'],
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/images/varenyk-bg.png', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml', sizes: 'any' },
+      { url: '/images/varenyk-bg.png', type: 'image/png', sizes: '512x512' },
     ],
+    shortcut: '/favicon.svg',
   },
 }
 
