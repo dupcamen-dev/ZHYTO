@@ -205,6 +205,17 @@
   }
 }
 
+/* Order background image positioning */
+.order-bg {
+  background-position: center -25px;
+}
+
+@media (min-width: 64rem) {
+  .order-bg {
+    background-position: center -60px;
+  }
+}
+
 /* Ukrainian script font override */
 [data-lang="uk"] {
   --font-script: var(--font-epoch), cursive !important;
