@@ -16,6 +16,7 @@ import { CheckoutModal } from '@/components/checkout-modal'
 import { ImageCompare } from '@/components/image-compare'
 import { ImageCarousel } from '@/components/image-carousel'
 import { useDeliverySettings } from '@/lib/use-delivery'
+import { useLanguage } from '@/components/language-context'
 import { toast } from 'sonner'
 
 // Product data
@@ -162,18 +163,18 @@ const products = [
   },
 ]
 
-// Navigation links
-const navLinks = [
-  { name: "OUR MENU", href: "#products" },
-  { name: "ABOUT US", href: "#about" },
-  { name: "DELIVERY", href: "#delivery" },
-  { name: "REVIEWS", href: "#reviews" },
-  { name: "FAQ", href: "#faq" },
-  { name: "CONTACT", href: "#contact" },
-]
-
 export default function Home() {
   const router = useRouter()
+  const { t, lang, toggleLang } = useLanguage()
+
+  const navLinks = [
+    { name: t.nav.ourMenu, href: "#products" },
+    { name: t.nav.aboutUs, href: "#about" },
+    { name: t.nav.delivery, href: "#delivery" },
+    { name: t.nav.reviews, href: "#reviews" },
+    { name: t.nav.faq, href: "#faq" },
+    { name: t.nav.contact, href: "#contact" },
+  ]
   const { cart, addToCart, removeFromCart, totalItems } = useCart()
   const { user, loading, signOut, signInWithGoogle, signInWithApple } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -230,11 +231,11 @@ export default function Home() {
 
   const submitReview = async () => {
     if (!user) {
-      toast.error('Please sign in to leave a review')
+      toast.error(t.reviews.pleaseSignIn)
       return
     }
     if (!reviewComment.trim()) {
-      toast.error('Please write a comment')
+      toast.error(t.reviews.pleaseWriteComment)
       return
     }
     setReviewSubmitting(true)
@@ -246,9 +247,9 @@ export default function Home() {
     })
     setReviewSubmitting(false)
     if (error) {
-      toast.error('Failed to submit review')
+      toast.error(t.reviews.failedSubmit)
     } else {
-      toast.success('Review submitted!')
+      toast.success(t.reviews.reviewSubmitted)
       setReviewComment('')
       setReviewRating(5)
       setReviewFormOpen(false)
@@ -333,7 +334,7 @@ export default function Home() {
             <div className="lg:hidden flex items-center">
               <motion.button
                 onClick={() => setCartOpen(true)}
-                aria-label="Open cart"
+                aria-label={t.header.openCart}
                 className="relative w-11 h-11 rounded-full border-2 border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
                 whileHover={{ scale: 1.1, rotate: -5 }}
                 whileTap={{ scale: 0.95 }}
@@ -397,7 +398,7 @@ export default function Home() {
               {/* Cart - Desktop */}
               <motion.button
                 onClick={() => setCartOpen(true)}
-                aria-label="Open cart"
+                aria-label={t.header.openCart}
                 className="hidden lg:flex relative w-11 h-11 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
                 whileHover={{ scale: 1.1, rotate: -5 }}
                 whileTap={{ scale: 0.95 }}
@@ -423,7 +424,7 @@ export default function Home() {
                       <motion.button
                         onClick={() => router.push('/account')}
                         className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
-                        title="My Account"
+                        title={t.header.myAccount}
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -432,7 +433,7 @@ export default function Home() {
                       <motion.button
                         onClick={() => router.push('/admin')}
                         className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-[13px] tracking-[0.1em] font-medium cursor-pointer"
-                        title="Admin"
+                        title={t.header.admin}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -441,7 +442,7 @@ export default function Home() {
                     <motion.button
                       onClick={signOut}
                       className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-destructive hover:text-destructive hover:bg-destructive/5 transition-all cursor-pointer"
-                      title="Sign out"
+                      title={t.header.signOut}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -456,14 +457,22 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <User className="w-4 h-4" />
-                    SIGN IN
+                    {t.header.signIn}
                   </motion.button>
                 )
               )}
+              {/* Language Toggle */}
+              <button
+                onClick={toggleLang}
+                className="w-10 h-10 rounded-full border-2 border-foreground/20 flex items-center justify-center text-[13px] tracking-[0.12em] font-medium text-foreground hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
+                aria-label={lang === 'en' ? 'Switch to Ukrainian' : 'Переключити на англійську'}
+              >
+                {t.header.lang}
+              </button>
               {/* Mobile Menu Toggle */}
               <motion.button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-label={mobileMenuOpen ? t.header.closeMenu : t.header.openMenu}
                 className="lg:hidden w-11 h-11 rounded-full border-2 border-foreground/20 flex items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ rotate: 90, scale: 0.95 }}
@@ -488,9 +497,9 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-serif font-light leading-[1.1] mb-10 relative tracking-[0.05em]"
           >
-            <span className="text-white block tracking-[0.2em] font-konstrukt">Dumplings</span>
+            <span className="text-white block tracking-[0.2em] font-konstrukt">{t.hero.dumplings}</span>
             <span className="font-script text-foreground text-[0.6em] uppercase relative inline-block tracking-[0.15em]">
-              with soul
+              {t.hero.withSoul}
               <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[46%] w-[500%] h-[500%] -z-10">
                 <Image
                   src={img("/images/hero-soul-bg.png")}
@@ -516,7 +525,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl sm:text-2xl md:text-3xl text-[#f5ead6] leading-[1.8] mb-12 max-w-2xl mx-auto"
           >
-            We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.
+            {t.hero.description}
           </motion.p>
 
           <motion.div
@@ -528,7 +537,7 @@ export default function Home() {
               href="#products"
               className="group inline-flex items-center gap-5 bg-[#c2a57b] text-white text-2xl sm:text-3xl lg:text-4xl tracking-[0.35em] hover:bg-[#b08f64] transition-all duration-300 px-10 py-5 sm:px-14 sm:py-6"
             >
-              <span className="pb-1">ORDER NOW</span>
+              <span className="pb-1">{t.hero.orderNow}</span>
               <ArrowRight className="w-7 h-7 sm:w-9 sm:h-9" />
             </a>
           </motion.div>
@@ -545,7 +554,7 @@ export default function Home() {
               className="text-white/60"
             >
               <ChevronDown className="w-5 h-5 mx-auto" />
-              <span className="text-[10px] tracking-[0.3em] block mt-1">SCROLL</span>
+              <span className="text-[10px] tracking-[0.3em] block mt-1">{t.hero.scroll}</span>
             </motion.div>
           </motion.div>
         </div>
@@ -565,18 +574,18 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">OUR MENU</p>
+            <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">{t.products.ourMenu}</p>
             <h2 className="text-5xl md:text-6xl font-serif font-light">
-              <span className="font-script text-[1.15em] text-primary uppercase">Crafted</span>{" "}
-              <span className="text-black">with tradition</span>
+              <span className="font-script text-[1.15em] text-primary uppercase">{t.products.crafted}</span>{" "}
+              <span className="text-black">{t.products.withTradition}</span>
             </h2>
           </motion.div>
 
           {/* Product categories */}
           {[
-            { key: 'varenyky', label: 'Varenyky', desc: 'Classic Ukrainian dumplings' },
-            { key: 'syrnyky', label: 'Syrnyky', desc: 'Golden cheese fritters' },
-            { key: 'pelmeni', label: 'Pelmeni', desc: 'Traditional meat-filled dumplings' },
+            { key: 'varenyky', label: t.products.categories.varenyky, desc: t.products.categories.varenykyDesc },
+            { key: 'syrnyky', label: t.products.categories.syrnyky, desc: t.products.categories.syrnykyDesc },
+            { key: 'pelmeni', label: t.products.categories.pelmeni, desc: t.products.categories.pelmeniDesc },
           ].map((category, catIndex) => {
             const catProducts = activeProducts.filter(p => p.category === category.key)
             if (catProducts.length === 0) return null
@@ -618,7 +627,7 @@ export default function Home() {
                           {product.stock === 0 && (
                             <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
                               <span className="px-4 py-2 bg-white/90 text-gray-900 text-[14px] tracking-[0.2em]">
-                                COMING BACK SOON
+                                {t.products.comingBackSoon}
                               </span>
                             </div>
                           )}
@@ -649,28 +658,28 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-1"
             >
-              <p className="text-[13px] tracking-[0.35em] text-primary mb-5">OUR STORY</p>
+              <p className="text-[13px] tracking-[0.35em] text-primary mb-5">{t.about.ourStory}</p>
               <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
-                <span className="text-foreground">A taste of</span>
+                <span className="text-foreground">{t.about.tasteOf}</span>
                 <br />
-                <span className="font-script text-primary text-[1.15em]">home</span>
+                <span className="font-script text-primary text-[1.15em]">{t.about.home}</span>
               </h2>
               
               <div className="w-10 h-px bg-primary/60 mb-10" />
               
               <p className="text-muted-foreground leading-[1.9] mb-6 text-xl">
-                Every dumpling we create carries generations of tradition. Using recipes passed down through my family, I bring authentic Ukrainian flavours to London, one handcrafted piece at a time.
+                {t.about.para1}
               </p>
               
               <p className="text-muted-foreground leading-[1.9] mb-10 text-xl">
-                Each batch is made with locally sourced ingredients and the same love my grandmother put into every meal. No shortcuts, no compromises — just pure, honest food.
+                {t.about.para2}
               </p>
               
               <a 
                 href="#contact" 
                 className="inline-flex items-center gap-4 text-primary text-[15px] tracking-[0.25em] hover:gap-6 transition-all duration-300"
               >
-                <span className="border-b border-primary/60 pb-1">GET IN TOUCH</span>
+                <span className="border-b border-primary/60 pb-1">{t.about.getInTouch}</span>
                 <ArrowRight className="w-4 h-4 opacity-80" />
               </a>
             </motion.div>
@@ -728,7 +737,7 @@ export default function Home() {
             >
               <div className="sm:px-12 py-16 relative">
                 <h3 className="font-script text-5xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
-                  Delivery Info
+                  {t.delivery.heading}
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] w-[500px] aspect-[661/252] -z-10">
                     <img
                       src={img("/images/delivery-art.webp")}
@@ -739,14 +748,14 @@ export default function Home() {
                   </div>
                 </h3>
                 <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-24 lg:mt-32 max-w-[500px] mx-auto lg:mx-0 lg:ml-8">
-                  <span className="text-foreground font-medium">Same Day Delivery</span>
-                  <span className="text-foreground text-right">London Zones 1-3</span>
-                  <span className="text-foreground font-medium">Next Day Delivery</span>
-                  <span className="text-foreground text-right">All London</span>
-                  <span className="text-foreground font-medium">Minimum Order</span>
+                  <span className="text-foreground font-medium">{t.delivery.sameDay}</span>
+                  <span className="text-foreground text-right">{t.delivery.zones1to3}</span>
+                  <span className="text-foreground font-medium">{t.delivery.nextDay}</span>
+                  <span className="text-foreground text-right">{t.delivery.allLondon}</span>
+                  <span className="text-foreground font-medium">{t.delivery.minOrder}</span>
                   <span className="text-foreground text-right">£{delivery.min_order}</span>
-                  <span className="text-foreground font-medium">Free Delivery</span>
-                  <span className="text-foreground text-right">Orders over £{delivery.free_threshold}</span>
+                  <span className="text-foreground font-medium">{t.delivery.freeDelivery}</span>
+                  <span className="text-foreground text-right">{t.delivery.ordersOver} £{delivery.free_threshold}</span>
                 </div>
               </div>
             </motion.div>
@@ -759,15 +768,15 @@ export default function Home() {
               className="order-1 lg:order-2 px-5 lg:px-0"
             >
               <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
-                <span className="font-script text-primary text-[1.15em]">Fresh</span>{" "}
-                <span className="text-foreground">to your door</span>
+                <span className="font-script text-primary text-[1.15em]">{t.delivery.fresh}</span>{" "}
+                <span className="text-foreground">{t.delivery.toYourDoor}</span>
               </h2>
               <div className="w-10 h-px bg-primary/60 mb-10" />
               <p className="text-muted-foreground leading-[1.9] mb-6 text-xl">
-                Our dumplings are flash-frozen to preserve freshness and delivered in insulated packaging. Simply cook from frozen in 5-7 minutes.
+                {t.delivery.para1}
               </p>
               <p className="text-muted-foreground leading-[1.9] text-xl">
-                We deliver across London, bringing the taste of authentic Ukrainian cuisine directly to your kitchen.
+                {t.delivery.para2}
               </p>
             </motion.div>
           </div>
@@ -784,10 +793,10 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <p className="text-[14px] tracking-[0.35em] text-primary mb-5">FAQ</p>
+            <p className="text-[14px] tracking-[0.35em] text-primary mb-5">{t.faq.heading}</p>
             <h2 className="text-5xl md:text-6xl font-serif font-light">
-              <span className="font-script text-primary text-[1.15em]">Got</span>{" "}
-              <span className="text-black">questions?</span>
+              <span className="font-script text-primary text-[1.15em]">{t.faq.got}</span>{" "}
+              <span className="text-black">{t.faq.questions}</span>
             </h2>
             <div className="flex items-center justify-center gap-3 mt-8">
               <span className="w-12 h-px bg-primary/30" />
@@ -797,12 +806,7 @@ export default function Home() {
           </motion.div>
 
           <div className="max-w-3xl mx-auto space-y-4">
-            {[
-              { q: "How to cook?", a: "Cook pelmeni and varenyky from frozen in boiling salted water for 5–7 minutes. For syrnyky, fry in butter over medium heat for 3–4 minutes per side until golden." },
-              { q: "How to store?", a: "Keep frozen. Our products stay fresh for up to 3 months in the freezer. Once thawed, do not refreeze. Always cook directly from frozen." },
-              { q: "Delivery zones?", a: "We deliver across all London zones. Same-day delivery available for Zones 1–3. Next-day delivery for all London and select surrounding areas." },
-              { q: "How do I order?", a: "Browse our menu, add items to your cart, checkout with your delivery details, and we'll confirm your order via email or phone." },
-            ].map((item, index) => (
+            {t.faq.items.map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -852,12 +856,12 @@ export default function Home() {
             className="text-center mt-12"
           >
             <p className="text-muted-foreground text-base">
-              Still have questions?{" "}
+              {t.faq.stillQuestions}{" "}
               <a
                 href="#contact"
                 className="text-primary hover:text-primary/80 transition-colors border-b border-primary/30 hover:border-primary/60 pb-0.5"
               >
-                Get in touch
+                {t.faq.getInTouch}
               </a>
             </p>
           </motion.div>
@@ -874,10 +878,10 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <p className="text-[13px] tracking-[0.35em] text-primary mb-5">TESTIMONIALS</p>
+            <p className="text-[13px] tracking-[0.35em] text-primary mb-5">{t.reviews.testimonials}</p>
             <h2 className="text-4xl md:text-5xl font-serif font-light">
-              <span className="font-script text-primary text-[1.15em]">What our</span>{" "}
-              <span className="text-foreground">customers say</span>
+              <span className="font-script text-primary text-[1.15em]">{t.reviews.whatOur}</span>{" "}
+              <span className="text-foreground">{t.reviews.customersSay}</span>
             </h2>
           </motion.div>
 
@@ -920,7 +924,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   className="max-w-lg mx-auto bg-card p-8 shadow-lg"
                 >
-                  <h3 className="font-serif text-xl mb-6 text-foreground">Leave a Review</h3>
+                  <h3 className="font-serif text-xl mb-6 text-foreground">{t.reviews.leaveReview}</h3>
                   <div className="flex justify-center gap-2 mb-6">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -937,7 +941,7 @@ export default function Home() {
                   <textarea
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
-                    placeholder="Share your experience..."
+                    placeholder={t.reviews.shareExperience}
                     className="w-full h-32 p-4 border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground bg-background placeholder:text-muted-foreground/50 mb-6"
                   />
                   <div className="flex gap-3 justify-center">
@@ -946,14 +950,14 @@ export default function Home() {
                       disabled={reviewSubmitting || !reviewComment.trim()}
                       className="bg-primary text-white hover:bg-primary/90 px-8"
                     >
-                      {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                      {reviewSubmitting ? t.reviews.submitting : t.reviews.submitReview}
                     </Button>
                     <Button
                       variant="outline"
                       onClick={() => { setReviewFormOpen(false); setReviewComment(''); setReviewRating(5); }}
                       className="px-8"
                     >
-                      Cancel
+                      {t.reviews.cancel}
                     </Button>
                   </div>
                 </motion.div>
@@ -963,17 +967,17 @@ export default function Home() {
                   variant="outline"
                   className="px-10 py-6 text-[14px] tracking-[0.15em]"
                 >
-                  WRITE A REVIEW
+                  {t.reviews.writeAReview}
                 </Button>
               )
             ) : (
               <div className="text-muted-foreground">
-                <p className="mb-4">Sign in to share your experience</p>
+                <p className="mb-4">{t.reviews.signInToShare}</p>
                 <button
                   onClick={() => setSignInModalOpen(true)}
                   className="text-primary hover:underline text-[14px] tracking-[0.15em] cursor-pointer"
                 >
-                  SIGN IN
+                  {t.reviews.signIn}
                 </button>
               </div>
             )}
@@ -1000,13 +1004,13 @@ export default function Home() {
               viewport={{ once: false }}
               transition={{ duration: 0.8 }}
             >
-              <p className="text-[16px] tracking-[0.35em] text-white/90 drop-shadow-lg mb-6">GET IN TOUCH</p>
+              <p className="text-[16px] tracking-[0.35em] text-white/90 drop-shadow-lg mb-6">{t.contact.getInTouch}</p>
               <h2 className="text-5xl sm:text-6xl md:text-7xl font-serif font-light mb-6 sm:mb-10">
-                <span className="text-[#c2a57b] drop-shadow-lg">Ready to</span>{" "}
-                <span className="font-script text-white text-[1.15em] drop-shadow-lg">order?</span>
+                <span className="text-[#c2a57b] drop-shadow-lg">{t.contact.readyTo}</span>{" "}
+                <span className="font-script text-white text-[1.15em] drop-shadow-lg">{t.contact.order}</span>
               </h2>
               <p className="text-white/70 drop-shadow-lg leading-[1.9] mb-8 sm:mb-14 text-base sm:text-lg">
-                Contact us for orders, catering inquiries, or just to say hello.
+                {t.contact.contactDesc}
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-14">
@@ -1015,7 +1019,7 @@ export default function Home() {
                     size="lg" 
                     className="bg-white text-primary hover:bg-white/90 px-12 py-7 tracking-[0.2em] text-[15px] rounded-none shadow-xl"
                   >
-                    ORDER NOW
+                    {t.contact.orderNow}
                   </Button>
                 </a>
                 <a 
@@ -1030,11 +1034,11 @@ export default function Home() {
           </div>
           <div className="flex items-center justify-center gap-10 mt-12">
             <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-black/60 hover:text-black transition-colors text-[14px] tracking-[0.2em]">
-              INSTAGRAM
+              {t.contact.instagram}
             </a>
             <span className="text-black/20">|</span>
             <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-black/60 hover:text-black transition-colors text-[14px] tracking-[0.2em]">
-              WHATSAPP
+              {t.contact.whatsapp}
             </a>
           </div>
         </div>
@@ -1050,10 +1054,10 @@ export default function Home() {
             
             <div className="flex flex-col items-center md:items-center gap-2">
               <p className="text-sm md:text-base xl:text-lg text-cream tracking-[0.15em]">
-                © 2026 zhyto.london. ALL RIGHTS RESERVED.
+                {t.footer.rights}
               </p>
               <p className="text-xs md:text-sm xl:text-base text-cream tracking-[0.1em]">
-                Designed &amp; Built by{' '}
+                {t.footer.designedBy}{' '}
                 <a
                   href="https://millionpixels.dev"
                   target="_blank"
@@ -1067,10 +1071,10 @@ export default function Home() {
             
             <div className="flex items-center gap-6 md:gap-10">
               <Link href="/privacy" className="text-sm md:text-base text-cream hover:text-white transition-colors tracking-[0.15em]">
-                PRIVACY
+                {t.footer.privacy}
               </Link>
               <Link href="/terms" className="text-sm md:text-base text-cream hover:text-white transition-colors tracking-[0.15em]">
-                TERMS
+                {t.footer.terms}
               </Link>
             </div>
           </div>
@@ -1130,7 +1134,7 @@ export default function Home() {
                         onClick={() => setMobileMenuOpen(false)}
                         className="text-lg tracking-[0.25em] text-primary hover:text-primary/80 transition-colors"
                       >
-                        MY ACCOUNT
+                        {t.mobileMenu.myAccount}
                       </Link>
                     </motion.div>
                     <motion.div
@@ -1144,7 +1148,7 @@ export default function Home() {
                         onClick={() => setMobileMenuOpen(false)}
                         className="text-lg tracking-[0.25em] text-primary hover:text-primary/80 transition-colors"
                       >
-                        ADMIN
+                        {t.mobileMenu.admin}
                       </Link>
                     </motion.div>
                     <motion.button
@@ -1155,7 +1159,7 @@ export default function Home() {
                       onClick={() => { signOut(); setMobileMenuOpen(false) }}
                       className="text-lg tracking-[0.25em] text-destructive/60 hover:text-destructive transition-colors"
                     >
-                      SIGN OUT
+                      {t.mobileMenu.signOut}
                     </motion.button>
                   </>
                 ) : (
@@ -1167,7 +1171,7 @@ export default function Home() {
                     onClick={() => { setMobileMenuOpen(false); setSignInModalOpen(true) }}
                     className="text-lg tracking-[0.25em] text-primary hover:text-primary/80 transition-colors"
                   >
-                    SIGN IN
+                    {t.mobileMenu.signIn}
                   </motion.button>
                 )
               )}
@@ -1223,14 +1227,14 @@ export default function Home() {
 
               {selectedProduct.ingredients && (
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">INGREDIENTS</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">{t.productModal.ingredients}</h4>
                   <p className="text-sm text-gray-600 leading-relaxed">{selectedProduct.ingredients}</p>
                 </div>
               )}
 
               {selectedProduct.cooking && (
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">COOKING INSTRUCTIONS</h4>
+                  <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">{t.productModal.cookingInstructions}</h4>
                   <p className="text-sm text-gray-600 leading-relaxed">{selectedProduct.cooking}</p>
                 </div>
               )}
@@ -1249,7 +1253,7 @@ export default function Home() {
                   </span>
                   <button
                     type="button"
-                    onClick={() => { addToCart(selectedProduct.id); toast.success(`${selectedProduct.name} added to cart`, { duration: 2000 }) }}
+                    onClick={() => { addToCart(selectedProduct.id); toast.success(`${selectedProduct.name} ${t.productModal.addedToCart}`, { duration: 2000 }) }}
                     className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
@@ -1260,7 +1264,7 @@ export default function Home() {
                   onClick={() => setCartOpen(true)}
                   className="text-sm tracking-[0.15em] text-primary hover:text-primary/80 transition-colors cursor-pointer"
                 >
-                  VIEW CART →
+                  {t.productModal.viewCart} →
                 </button>
               </div>
             </motion.div>
@@ -1308,8 +1312,8 @@ export default function Home() {
               >
                 <X className="w-5 h-5" />
               </button>
-              <h3 className="font-serif text-2xl text-center mb-3 text-foreground">Welcome Back</h3>
-              <p className="text-muted-foreground text-center text-sm mb-8">Sign in to your account</p>
+              <h3 className="font-serif text-2xl text-center mb-3 text-foreground">{t.signInModal.welcomeBack}</h3>
+              <p className="text-muted-foreground text-center text-sm mb-8">{t.signInModal.signInToAccount}</p>
               <div className="space-y-4">
                 <button
                   onClick={signInWithGoogle}
@@ -1321,7 +1325,7 @@ export default function Home() {
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                   </svg>
-                  <span className="text-foreground font-medium">Continue with Google</span>
+                  <span className="text-foreground font-medium">{t.signInModal.continueGoogle}</span>
                 </button>
                 <button
                   onClick={signInWithApple}
@@ -1330,7 +1334,7 @@ export default function Home() {
                   <svg className="w-5 h-5 text-foreground" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                   </svg>
-                  <span className="text-foreground font-medium">Continue with Apple</span>
+                  <span className="text-foreground font-medium">{t.signInModal.continueApple}</span>
                 </button>
               </div>
             </motion.div>

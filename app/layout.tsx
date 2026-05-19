@@ -4,6 +4,7 @@ import { Playfair_Display, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
+import { LanguageProvider } from '@/components/language-context'
 import { CookieConsent } from '@/components/cookie-consent'
 import { Toaster } from '@/components/ui/sonner'
 import { NoiseOverlay } from '@/components/noise-overlay'
@@ -59,12 +60,14 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} ${konstrukt.variable} bg-background`} style={{ colorScheme: 'only light' }}>
       <body className="font-serif antialiased">
         <AuthProvider>
+          <LanguageProvider>
           <CartProvider>
 {children}
             <NoiseOverlay />
             <CookieConsent />
             <Toaster />
           </CartProvider>
+        </LanguageProvider>
         </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
