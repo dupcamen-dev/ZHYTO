@@ -936,7 +936,7 @@ export default function Home() {
       </section>
 
       {/* Reviews Section */}
-      <section id="reviews" className="py-28 lg:py-36 relative bg-background overflow-hidden">
+      <section id="reviews" className="py-28 lg:py-36 relative bg-black overflow-hidden">
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -945,10 +945,10 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <p className="text-[13px] tracking-[0.35em] text-primary mb-5">{t.reviews.testimonials}</p>
+            <p className="text-[13px] tracking-[0.35em] text-cream mb-5">{t.reviews.testimonials}</p>
             <h2 className="text-4xl md:text-5xl font-serif font-light">
-              <span className="font-script text-primary text-[1.15em]">{t.reviews.whatOur}</span>{" "}
-              <span className="text-foreground">{t.reviews.customersSay}</span>
+              <span className="font-script text-cream text-[1.15em]">{t.reviews.whatOur}</span>{" "}
+              <span className="text-cream">{t.reviews.customersSay}</span>
             </h2>
           </motion.div>
 
@@ -961,22 +961,22 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card p-8 shadow-sm hover:shadow-md transition-shadow"
+                className="bg-white/10 backdrop-blur-sm p-8 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground/30'}`}
+                      className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-cream/20'}`}
                     />
                   ))}
                 </div>
-                <p className="text-muted-foreground leading-relaxed mb-6 text-[15px]">{review.comment}</p>
+                <p className="text-cream/70 leading-relaxed mb-6 text-[15px]">{review.comment}</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-primary text-sm font-medium">{review.user_name.charAt(0).toUpperCase()}</span>
+                  <div className="w-8 h-8 rounded-full bg-cream/10 flex items-center justify-center">
+                    <span className="text-cream text-sm font-medium">{review.user_name.charAt(0).toUpperCase()}</span>
                   </div>
-                  <span className="text-foreground text-sm font-medium">{review.user_name}</span>
+                  <span className="text-cream text-sm font-medium">{review.user_name}</span>
                 </div>
               </motion.div>
             ))}
@@ -989,9 +989,9 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="max-w-lg mx-auto bg-card p-8 shadow-lg"
+                  className="max-w-lg mx-auto backdrop-blur-sm bg-white/10 p-8 shadow-lg"
                 >
-                  <h3 className="font-serif text-xl mb-6 text-foreground">{t.reviews.leaveReview}</h3>
+                  <h3 className="font-serif text-xl mb-6 text-cream">{t.reviews.leaveReview}</h3>
                   <div className="flex justify-center gap-2 mb-6">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -1009,20 +1009,20 @@ export default function Home() {
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
                     placeholder={t.reviews.shareExperience}
-                    className="w-full h-32 p-4 border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground bg-background placeholder:text-muted-foreground/50 mb-6"
+                    className="w-full h-32 p-4 border border-cream/20 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-cream/50 text-cream bg-black/50 placeholder:text-cream/30 mb-6"
                   />
                   <div className="flex gap-3 justify-center">
                     <Button
                       onClick={submitReview}
                       disabled={reviewSubmitting || !reviewComment.trim()}
-                      className="bg-primary text-white hover:bg-primary/90 px-8"
+                      className="bg-cream text-black hover:bg-cream/90 px-8"
                     >
                       {reviewSubmitting ? t.reviews.submitting : t.reviews.submitReview}
                     </Button>
                     <Button
                       variant="outline"
                       onClick={() => { setReviewFormOpen(false); setReviewComment(''); setReviewRating(5); }}
-                      className="px-8"
+                      className="px-8 border-cream/30 text-cream hover:bg-cream/10"
                     >
                       {t.reviews.cancel}
                     </Button>
@@ -1032,17 +1032,17 @@ export default function Home() {
                 <Button
                   onClick={() => setReviewFormOpen(true)}
                   variant="outline"
-                  className="px-10 py-6 text-[14px] tracking-[0.15em]"
+                  className="px-10 py-6 text-[14px] tracking-[0.15em] border-cream/30 text-cream hover:bg-cream/10"
                 >
                   {t.reviews.writeAReview}
                 </Button>
               )
             ) : (
-              <div className="text-muted-foreground">
+              <div className="text-cream/70">
                 <p className="mb-4">{t.reviews.signInToShare}</p>
                 <button
                   onClick={() => setSignInModalOpen(true)}
-                  className="text-primary hover:underline text-[14px] tracking-[0.15em] cursor-pointer"
+                  className="text-cream hover:underline text-[14px] tracking-[0.15em] cursor-pointer"
                 >
                   {t.reviews.signIn}
                 </button>
