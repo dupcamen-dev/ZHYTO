@@ -2,13 +2,19 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Truck, Save, Loader } from 'lucide-react'
+import { Truck, Save, Loader, Percent, X, Tag } from 'lucide-react'
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState({ min_order: 10, free_threshold: 50, fee: 5 })
   const [loaded, setLoaded] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+
+  const [promoCodes, setPromoCodes] = useState<{ code: string; type: 'percentage' | 'free_delivery'; value: number }[]>([])
+  const [newPromoCode, setNewPromoCode] = useState('')
+  const [newPromoType, setNewPromoType] = useState<'percentage' | 'free_delivery'>('percentage')
+  const [newPromoValue, setNewPromoValue] = useState(10)
+  const [promoLoaded, setPromoLoaded] = useState(false)
 
   useEffect(() => {
     if (!supabase) { setLoaded(true); return }
@@ -18,7 +24,15 @@ export default function AdminSettings() {
     })
   }, [])
 
-  const save = async () => {
+  useEffect(() => {
+    if (!supabase) { setPromoLoaded(true); return }
+    supabase.from('settings').select('value').eq('key', 'promo_codes').single().then(({ data }) => {
+      if (data?.value) setPromoCodes(data.value as typeof promoCodes)
+      setPromoLoaded(true)
+    })
+  }, [])
+
+  const saveSettings = async () => {
     if (!supabase) return
     setSaving(true)
     await supabase.from('settings').upsert(
@@ -28,6 +42,27 @@ export default function AdminSettings() {
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
+  }
+
+  const savePromoCodes = async (newList: typeof promoCodes) => {
+    setPromoCodes(newList)
+    if (!supabase) return
+    await supabase.from('settings').upsert(
+      { key: 'promo_codes', value: newList },
+      { onConflict: 'key' }
+    )
+  }
+
+  const addPromoCode = () => {
+    const code = newPromoCode.trim().toUpperCase().replace(/\s+/g, '')
+    if (!code || promoCodes.some(p => p.code === code)) return
+    savePromoCodes([...promoCodes, { code, type: newPromoType, value: newPromoValue }])
+    setNewPromoCode('')
+    setNewPromoValue(10)
+  }
+
+  const removePromoCode = (code: string) => {
+    savePromoCodes(promoCodes.filter(p => p.code !== code))
   }
 
   return (
@@ -88,13 +123,95 @@ export default function AdminSettings() {
               </div>
             </div>
             <button
-              onClick={save}
+              onClick={saveSettings}
               disabled={saving}
               className="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
             >
               <Save className="w-4 h-4" />
               {saving ? 'SAVING...' : saved ? 'SAVED ✓' : 'SAVE SETTINGS'}
             </button>
+          </>
+        )}
+      </div>
+
+      {/* Promo Codes */}
+      <div className="glass-card rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Percent className="w-6 h-6 text-primary" />
+          <h2 className="font-serif text-xl text-foreground">Promo Codes</h2>
+        </div>
+
+        {!promoLoaded ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader className="w-5 h-5 text-primary animate-spin" />
+          </div>
+        ) : (
+          <>
+            {promoCodes.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {promoCodes.map(p => (
+                  <span
+                    key={p.code}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-lg"
+                  >
+                    <Tag className="w-3.5 h-3.5" />
+                    {p.code}
+                    <span className="text-muted-foreground text-xs">
+                      {p.type === 'percentage' ? `-${p.value}%` : 'FREE DELIVERY'}
+                    </span>
+                    <button
+                      onClick={() => removePromoCode(p.code)}
+                      className="hover:text-destructive transition-colors cursor-pointer ml-1"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3 items-end">
+              <div>
+                <label className="text-xs tracking-[0.1em] text-muted-foreground block mb-1">Code</label>
+                <input
+                  value={newPromoCode}
+                  onChange={e => setNewPromoCode(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addPromoCode()}
+                  className="bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary outline-none w-32"
+                  placeholder="e.g. SUMMER20"
+                />
+              </div>
+              <div>
+                <label className="text-xs tracking-[0.1em] text-muted-foreground block mb-1">Type</label>
+                <select
+                  value={newPromoType}
+                  onChange={e => setNewPromoType(e.target.value as 'percentage' | 'free_delivery')}
+                  className="bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary outline-none"
+                >
+                  <option value="percentage">% Discount</option>
+                  <option value="free_delivery">Free Delivery</option>
+                </select>
+              </div>
+              {newPromoType === 'percentage' && (
+                <div>
+                  <label className="text-xs tracking-[0.1em] text-muted-foreground block mb-1">Value (%)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={newPromoValue}
+                    onChange={e => setNewPromoValue(parseInt(e.target.value) || 0)}
+                    className="bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary outline-none w-20"
+                  />
+                </div>
+              )}
+              <button
+                onClick={addPromoCode}
+                className="px-4 py-2.5 bg-primary text-primary-foreground text-sm tracking-[0.15em] rounded-lg hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                ADD
+              </button>
+            </div>
           </>
         )}
       </div>

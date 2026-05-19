@@ -47,12 +47,6 @@ const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: 
   wallet: { icon: Smartphone,  label: 'applePayGooglePay',   desc: 'walletDesc' },
 }
 
-const PROMO_CODES: Record<string, { type: 'percentage' | 'free_delivery'; value: number }> = {
-  WELCOME10: { type: 'percentage', value: 10 },
-  ZHYTO15: { type: 'percentage', value: 15 },
-  FREESHIP: { type: 'free_delivery', value: 0 },
-}
-
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
   const router = useRouter()
   const { cart, clearCart } = useCart()
@@ -67,6 +61,19 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [promoInput, setPromoInput] = useState('')
   const [promoCode, setPromoCode] = useState<string | null>(null)
   const [promoError, setPromoError] = useState('')
+  const [promoCodes, setPromoCodes] = useState<Record<string, { type: 'percentage' | 'free_delivery'; value: number }>>({})
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase.from('settings').select('value').eq('key', 'promo_codes').single().then(({ data }) => {
+      if (data?.value) {
+        const codes = data.value as { code: string; type: 'percentage' | 'free_delivery'; value: number }[]
+        const map: Record<string, { type: 'percentage' | 'free_delivery'; value: number }> = {}
+        codes.forEach(c => { map[c.code.toUpperCase()] = { type: c.type, value: c.value } })
+        setPromoCodes(map)
+      }
+    })
+  }, [])
 
   const cartItems = Object.entries(cart)
     .map(([id, qty]) => {
@@ -77,7 +84,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
   const delivery = calcDelivery(subtotal, settings)
-  const appliedPromo = promoCode ? PROMO_CODES[promoCode.toUpperCase()] : null
+  const appliedPromo = promoCode ? promoCodes[promoCode.toUpperCase()] : null
   const promoDiscount = appliedPromo?.type === 'percentage' ? subtotal * (appliedPromo.value / 100) : 0
   const promoDelivery = appliedPromo?.type === 'free_delivery' && delivery ? delivery : 0
   const total = subtotal - promoDiscount + (delivery ?? 0) - promoDelivery
@@ -85,7 +92,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const applyPromoCode = () => {
     const code = promoInput.trim().toUpperCase()
     if (!code) return
-    const match = PROMO_CODES[code]
+    const match = promoCodes[code]
     if (!match) {
       setPromoError(t.checkout.invalidPromo)
       return
