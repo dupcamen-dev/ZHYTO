@@ -893,9 +893,11 @@ export default function Home() {
               <h2 className="text-5xl sm:text-6xl md:text-7xl font-serif font-light mb-6 sm:mb-10">
                 <span className="text-primary">{t.contact.readyTo}</span>{" "}
                 <span 
-                  className="font-script text-[1.15em] inline-block bg-contain bg-center bg-no-repeat px-16 py-8"
+                  className="font-script text-[1.15em] inline-block bg-no-repeat px-16 py-8"
                   style={{
                     backgroundImage: `url(${img("/images/contact-photo.png")})`,
+                    backgroundSize: '115%',
+                    backgroundPosition: 'center 35%',
                     color: '#1a1613',
                   }}
                 >{t.contact.order}</span>
