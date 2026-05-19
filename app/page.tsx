@@ -188,6 +188,8 @@ export default function Home() {
   const [reviewComment, setReviewComment] = useState('')
   const [reviewSubmitting, setReviewSubmitting] = useState(false)
   const [signInModalOpen, setSignInModalOpen] = useState(false)
+  const [aboutImageIndex, setAboutImageIndex] = useState(0)
+  const aboutNames = ["Maria", "Olena", "Nataliia", "Anna", "Kateryna"]
   const { scrollYProgress } = useScroll()
   const { settings: delivery } = useDeliverySettings()
   const aboutRef = useRef<HTMLElement>(null)
@@ -686,6 +688,7 @@ export default function Home() {
                         { src: img("/images/about-us.webp"), alt: "Handmade varenyky process" },
                         { src: img("/images/about-us-2.webp"), alt: "Handmade varenyky process" },
                       ]}
+                      onChange={setAboutImageIndex}
                     />
                   </div>
                 </motion.div>
@@ -698,7 +701,7 @@ export default function Home() {
                   className="object-contain"
                 />
                 <div className="absolute inset-0 flex items-center justify-center text-white">
-                  <span className="text-4xl lg:text-[3.5rem] font-bold leading-none">NAME</span>
+                  <span className="text-2xl lg:text-3xl font-script leading-none">{aboutNames[aboutImageIndex]}</span>
                 </div>
               </div>
             </motion.div>

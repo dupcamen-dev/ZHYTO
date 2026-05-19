@@ -5,9 +5,10 @@ import Image from 'next/image'
 
 interface ImageCarouselProps {
   images: { src: string; alt: string }[]
+  onChange?: (index: number) => void
 }
 
-export function ImageCarousel({ images }: ImageCarouselProps) {
+export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
   const [current, setCurrent] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const dragStart = useRef(0)
@@ -15,8 +16,10 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
   const dragging = useRef(false)
 
   const goTo = useCallback((index: number) => {
-    setCurrent(Math.max(0, Math.min(index, images.length - 1)))
-  }, [images.length])
+    const next = Math.max(0, Math.min(index, images.length - 1))
+    setCurrent(next)
+    onChange?.(next)
+  }, [images.length, onChange])
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     dragging.current = true
