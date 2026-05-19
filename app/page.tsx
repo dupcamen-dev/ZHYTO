@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -175,6 +175,14 @@ export default function Home() {
     { name: t.nav.faq, href: "#faq" },
     { name: t.nav.contact, href: "#contact" },
   ]
+  const translatedProducts = useMemo(() => 
+    products.map((p, i) => ({
+      ...p,
+      name: t.products.productList[i]?.name || p.name,
+      description: t.products.productList[i]?.desc || p.description,
+      unit: p.unit === '/ 600g' ? t.products.item : t.products.per,
+    })),
+  [lang])
   const { cart, addToCart, removeFromCart, totalItems } = useCart()
   const { user, loading, signOut, signInWithGoogle, signInWithApple } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -258,7 +266,7 @@ export default function Home() {
     }
   }
 
-  const activeProducts = dbProducts || products
+  const activeProducts = dbProducts || translatedProducts
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
   const productsParallaxY = useTransform(scrollYProgress, [0, 0.25], [200, 0])
@@ -461,10 +469,10 @@ export default function Home() {
                   </motion.button>
                 )
               )}
-              {/* Language Toggle */}
+              {/* Language Toggle - desktop only */}
               <button
                 onClick={toggleLang}
-                className="w-10 h-10 rounded-full border-2 border-foreground/20 flex items-center justify-center text-[13px] tracking-[0.12em] font-medium text-foreground hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
+                className="hidden lg:flex w-10 h-10 rounded-full border-2 border-foreground/20 items-center justify-center text-[13px] tracking-[0.12em] font-medium text-foreground hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
                 aria-label={lang === 'en' ? 'Switch to Ukrainian' : 'Переключити на англійську'}
               >
                 {t.header.lang}
@@ -1175,6 +1183,16 @@ export default function Home() {
                   </motion.button>
                 )
               )}
+              <motion.button
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ delay: 0.15 + (navLinks.length + 3) * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                onClick={toggleLang}
+                className="text-lg tracking-[0.25em] text-foreground/60 hover:text-primary transition-colors"
+              >
+                {lang === 'en' ? 'UA' : 'EN'}
+              </motion.button>
             </motion.nav>
           </motion.div>
         )}

@@ -22,6 +22,7 @@ import { PaymentForm } from '@/components/payment-form'
 import { toast } from 'sonner'
 import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader } from 'lucide-react'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
+import { useLanguage } from '@/components/language-context'
 
 interface Product {
   id: number
@@ -42,8 +43,8 @@ const hasStripe = typeof process !== 'undefined' &&
 type PaymentMethodType = 'card' | 'wallet'
 
 const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: string; desc: string }> = {
-  card:   { icon: CreditCard,  label: 'Pay by Card',              desc: 'Debit or credit card' },
-  wallet: { icon: Smartphone,  label: 'Apple Pay / Google Pay',   desc: 'Fast checkout with your device' },
+  card:   { icon: CreditCard,  label: 'payByCard',              desc: 'cardDesc' },
+  wallet: { icon: Smartphone,  label: 'applePayGooglePay',   desc: 'walletDesc' },
 }
 
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
@@ -51,6 +52,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const { cart, clearCart } = useCart()
   const { user, loading: authLoading, signInWithGoogle, signInWithApple } = useAuth()
   const { settings } = useDeliverySettings()
+  const { t } = useLanguage()
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
@@ -102,7 +104,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
         } else {
-          toast.error('Payment service unavailable. Please try again.')
+          toast.error(t.checkout.paymentUnavailable)
           setSelectedMethod(null)
         }
       } catch {
@@ -132,7 +134,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     setSubmitting(true)
     await new Promise(resolve => setTimeout(resolve, 1500))
     await saveOrder()
-    toast.success('Order confirmed! Expect your delivery. Enjoy!')
+    toast.success(t.checkout.orderConfirmed)
     clearCart()
     onOpenChange(false)
     setShowPayment(false)
@@ -144,7 +146,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   const handlePaymentSuccess = () => {
     saveOrder()
-    toast.success('Order confirmed! Expect your delivery. Enjoy!')
+    toast.success(t.checkout.orderConfirmed)
     clearCart()
     onOpenChange(false)
     setShowPayment(false)
@@ -175,8 +177,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               <Icon className="w-5 h-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base text-foreground font-medium">{config.label}</p>
-              <p className="text-base text-muted-foreground tracking-[0.1em]">{config.desc}</p>
+              <p className="text-base text-foreground font-medium">{t.checkout[config.label]}</p>
+              <p className="text-base text-muted-foreground tracking-[0.1em]">{t.checkout[config.desc]}</p>
             </div>
             {submitting && selectedMethod === key && (
               <Loader className="w-4 h-4 text-primary animate-spin" />
@@ -196,7 +198,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           className="inline-flex items-center gap-2 text-[18px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          {clientSecret ? 'CHANGE METHOD' : 'BACK'}
+          {clientSecret ? t.checkout.changeMethod : t.checkout.back}
         </button>
       )}
 
@@ -205,9 +207,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         <div className="glass-card rounded-lg p-4 space-y-2">
           <div className="flex items-center gap-2 text-base tracking-[0.2em] text-foreground/60 mb-2">
             <Package className="w-3.5 h-3.5" />
-            ACCOUNT
+            {t.checkout.account}
           </div>
-          <p className="text-[18px] text-foreground">{user.user_metadata?.full_name || 'Guest'}</p>
+          <p className="text-[18px] text-foreground">{user.user_metadata?.full_name || ''}</p>
           <p className="text-[16px] text-foreground/60">{user.email}</p>
         </div>
       )}
@@ -215,21 +217,21 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       {/* Delivery address */}
       <div className="space-y-1.5">
         <Label htmlFor="delivery-address" className="text-[18px] text-foreground/60 tracking-[0.1em]">
-          Delivery Address *
+          {t.checkout.deliveryAddress}
         </Label>
         <Textarea
           id="delivery-address"
           value={deliveryAddress}
           onChange={e => setDeliveryAddress(e.target.value)}
           className="bg-transparent border-border/50 text-foreground text-[16px] rounded-none focus:border-primary min-h-[60px]"
-          placeholder="Street, postcode, city"
+          placeholder={t.checkout.addressPlaceholder}
         />
       </div>
 
       {/* Order total */}
       <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
         <span className="text-[16px] text-foreground/60">
-          {cartItems.reduce((s, i) => s + i.qty, 0)} items
+          {cartItems.reduce((s, i) => s + i.qty, 0)} {t.cart.items}
         </span>
         <span className="font-serif text-lg text-primary">£{total}</span>
       </div>
@@ -245,8 +247,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               <Truck className="w-4 h-4 shrink-0 text-primary" />
               <span>
                 {delivery === settings.fee
-                  ? `£${settings.fee} delivery — add £${(settings.free_threshold - subtotal).toFixed(0)} more for free`
-                  : `Minimum £${settings.min_order} — add £${(settings.min_order - subtotal).toFixed(0)} more`}
+                  ? t.checkout.deliveryFee.replace('{fee}', String(settings.fee)).replace('{amount}', (settings.free_threshold - subtotal).toFixed(0))
+                  : t.checkout.minimumOrder.replace('{min}', String(settings.min_order)).replace('{amount}', (settings.min_order - subtotal).toFixed(0))}
               </span>
             </div>
           )}
@@ -260,14 +262,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 onClick={() => onOpenChange(false)}
                 className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent whitespace-normal"
               >
-                CANCEL
+                {t.checkout.cancel}
               </Button>
               <Button
                 type="button"
                 disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
                 className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50 whitespace-normal text-balance"
               >
-                {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'SELECT A METHOD ABOVE'}
+                {!user ? t.checkout.signInToContinue : submitting ? t.checkout.pleaseWait : subtotal < settings.min_order ? t.checkout.minOrder.replace('{min}', String(settings.min_order)).replace('{amount}', (settings.min_order - subtotal).toFixed(0)) : t.checkout.selectMethod}
               </Button>
             </div>
           )}
@@ -294,7 +296,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           /* Mock payment — when Stripe is not configured or still loading */
           <div className="space-y-4">
             <div className="glass-card rounded-lg p-5">
-              <p className="text-base tracking-[0.2em] text-foreground/60 mb-4">PAYMENT METHOD</p>
+              <p className="text-base tracking-[0.2em] text-foreground/60 mb-4">{t.checkout.paymentMethod}</p>
               <div className="flex items-center gap-3 mb-4">
                 {(() => {
                   const config = methodConfig[selectedMethod]
@@ -302,14 +304,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   return (
                     <>
                       <Icon className="w-5 h-5 text-primary" />
-                      <span className="text-[16px] text-foreground">{config.label}</span>
+                      <span className="text-[16px] text-foreground">{t.checkout[config.label]}</span>
                     </>
                   )
                 })()}
               </div>
               <div className="bg-border/10 border border-border/20 rounded-lg p-4 text-center">
                 <p className="font-serif text-3xl text-primary mb-1">£{total}</p>
-                <p className="text-[18px] text-foreground/60 tracking-[0.1em]">Total to pay</p>
+                <p className="text-[18px] text-foreground/60 tracking-[0.1em]">{t.checkout.totalToPay}</p>
               </div>
             </div>
 
@@ -320,7 +322,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               size="lg"
               className="w-full text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
             >
-              {submitting ? 'PROCESSING...' : `CONFIRM PAYMENT — £${total}`}
+              {submitting ? t.checkout.processing : t.checkout.confirmPayment.replace('{amount}', total.toFixed(2))}
             </Button>
           </div>
         )
@@ -333,14 +335,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       <DialogContent className="bg-background border-border/30 sm:max-w-lg max-h-[100dvh] sm:max-h-[90vh] flex flex-col p-4 sm:p-6 max-sm:max-w-full max-sm:rounded-none max-sm:left-0 max-sm:right-0 max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:translate-x-0 max-sm:overflow-x-hidden gap-2">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
-            {showPayment ? 'Pay securely' : user ? 'Checkout' : 'Sign in'}
+            {showPayment ? t.checkout.paySecurely : user ? t.checkout.checkout : t.checkout.signIn}
           </DialogTitle>
           <DialogDescription className="text-[16px] tracking-[0.2em] text-foreground/60">
             {showPayment
-              ? 'Complete your payment — your details are secure'
+              ? t.checkout.completePayment
               : user
-                ? `Review your order — ${cartItems.reduce((s, i) => s + i.qty, 0)} items`
-                : 'Sign in to place your order'}
+                ? t.checkout.reviewOrder.replace('{count}', String(cartItems.reduce((s, i) => s + i.qty, 0)))
+                : t.checkout.signInToOrder}
           </DialogDescription>
         </DialogHeader>
 
@@ -352,17 +354,17 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               {cartItems.length === 0 && !user && (
                 <div className="glass-card rounded-lg p-5 space-y-4">
                   <p className="text-base tracking-[0.2em] text-foreground/60 text-center">
-                    SIGN IN TO YOUR ACCOUNT
+                    {t.checkout.signInToCheckout}
                   </p>
                   <p className="text-[16px] text-muted-foreground text-center leading-relaxed">
-                    Sign in with your Google or Apple account
+                    {t.checkout.signInDesc}
                   </p>
                   <button
                     onClick={signInWithGoogle}
                     className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-base text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
                   >
                     <Chrome className="w-5 h-5" />
-                    Continue with Google
+                    {t.checkout.signInWithGoogle}
                   </button>
                   <button
                     onClick={signInWithApple}
@@ -371,7 +373,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
                       <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                     </svg>
-                    Continue with Apple
+                    {t.checkout.signInWithApple}
                   </button>
                 </div>
               )}
@@ -381,7 +383,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 <>
                   {/* Order summary */}
                   <div className="glass-card rounded-lg p-4 space-y-2">
-                    <p className="text-base tracking-[0.2em] text-foreground/60 mb-3">ORDER SUMMARY</p>
+                    <p className="text-base tracking-[0.2em] text-foreground/60 mb-3">{t.checkout.orderSummary}</p>
                     {cartItems.map(item => (
                       <div key={item.id} className="flex justify-between text-base">
                         <span className="text-foreground">{item.name} × {item.qty}</span>
@@ -390,11 +392,11 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     ))}
                     <div className="border-t border-border/20 pt-2 mt-2 space-y-1">
                       <div className="flex justify-between text-[16px]">
-                        <span className="text-foreground/60">Delivery</span>
-                        <span className="text-foreground/60">{delivery === null ? 'N/A' : delivery === 0 ? 'FREE' : `£${delivery}`}</span>
+                        <span className="text-foreground/60">{t.checkout.delivery}</span>
+                        <span className="text-foreground/60">{delivery === null ? t.cart.na : delivery === 0 ? t.checkout.free : `£${delivery}`}</span>
                       </div>
                       <div className="flex justify-between text-sm font-serif">
-                        <span className="text-foreground">Total</span>
+                        <span className="text-foreground">{t.checkout.total}</span>
                         <span className="text-primary">£{total}</span>
                       </div>
                     </div>
@@ -404,17 +406,17 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                   {!user && !authLoading && (
                     <div className="glass-card rounded-lg p-5 space-y-4">
                       <p className="text-base tracking-[0.2em] text-foreground/60 text-center">
-                        SIGN IN TO CHECKOUT
+                        {t.checkout.signInToCheckout}
                       </p>
                       <p className="text-[16px] text-muted-foreground text-center leading-relaxed">
-                        Sign in with your Google or Apple account — no forms needed
+                        {t.checkout.signInDesc}
                       </p>
                       <button
                         onClick={signInWithGoogle}
                         className="w-full flex items-center justify-center gap-3 border border-border/50 rounded-lg px-4 py-3 text-base text-foreground hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
                       >
                         <Chrome className="w-5 h-5" />
-                        Continue with Google
+                        {t.checkout.signInWithGoogle}
                       </button>
                       <button
                         onClick={signInWithApple}
@@ -423,7 +425,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                         <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
                           <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                         </svg>
-                        Continue with Apple
+                        {t.checkout.signInWithApple}
                       </button>
                     </div>
                   )}
@@ -440,9 +442,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     <div className="flex items-center gap-3 text-[16px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
                       <Truck className="w-4 h-4 shrink-0 text-primary" />
                       <span>
-                        {delivery === 5
-                          ? `£5 delivery — add £${(50 - subtotal).toFixed(0)} more for free`
-                          : `Minimum £10 — add £${(10 - subtotal).toFixed(0)} more`}
+                        {delivery === settings.fee
+                          ? t.checkout.deliveryFee.replace('{fee}', String(settings.fee)).replace('{amount}', (settings.free_threshold - subtotal).toFixed(0))
+                          : t.checkout.minimumOrder.replace('{min}', String(settings.min_order)).replace('{amount}', (settings.min_order - subtotal).toFixed(0))}
                       </span>
                     </div>
                   )}
@@ -456,14 +458,14 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                       disabled={submitting}
                       className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent whitespace-normal"
                     >
-                      CANCEL
+                      {t.checkout.cancel}
                     </Button>
                     <Button
                       type="button"
                       disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
                       className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50 whitespace-normal text-balance"
                     >
-                      {!user ? 'SIGN IN TO CONTINUE' : submitting ? 'PLEASE WAIT...' : subtotal < settings.min_order ? `MINIMUM £${settings.min_order} — ADD £${(settings.min_order - subtotal).toFixed(0)} MORE` : 'CONTINUE TO PAY'}
+                      {!user ? t.checkout.signInToContinue : submitting ? t.checkout.pleaseWait : subtotal < settings.min_order ? t.checkout.minOrder.replace('{min}', String(settings.min_order)).replace('{amount}', (settings.min_order - subtotal).toFixed(0)) : t.checkout.continueToPay}
                     </Button>
                   </div>
                 </>

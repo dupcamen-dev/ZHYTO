@@ -1,6 +1,11 @@
+"use client"
+
 import Link from 'next/link'
+import { useLanguage } from '@/components/language-context'
 
 export function LegalLayout({ children }: { children: React.ReactNode }) {
+  const { t } = useLanguage()
+  
   return (
     <main className="min-h-screen bg-background">
       <nav className="border-b border-border/30">
@@ -20,7 +25,7 @@ export function LegalLayout({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-border/30 py-8">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="text-[11px] text-muted-foreground tracking-[0.15em]">
-            &copy; 2026 zhyto.london. All rights reserved.
+            {t.legalLayout.rights}
           </p>
         </div>
       </footer>

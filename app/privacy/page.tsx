@@ -1,40 +1,36 @@
+"use client"
+
 import { LegalLayout } from '@/components/legal-layout'
+import { useLanguage } from '@/components/language-context'
 
 export default function PrivacyPage() {
+  const { t } = useLanguage()
+  const { privacy } = t
+  
   return (
     <LegalLayout>
-      <h1 className="text-foreground">Privacy Policy</h1>
-      <p className="date text-muted-foreground">Last updated: May 2026</p>
+      <h1 className="text-foreground">{privacy.title}</h1>
+      <p className="date text-muted-foreground">{privacy.lastUpdated}</p>
 
-      <h2 className="text-primary">Information We Collect</h2>
-      <p className="text-foreground/80">
-        When you place an order on zhyto.london, we collect your name, email address, phone number, and delivery address. This information is necessary to process and deliver your order.
-      </p>
+      <h2 className="text-primary">{privacy.headings[0]}</h2>
+      <p className="text-foreground/80">{privacy.bodies[0]}</p>
 
-      <h2 className="text-primary">How We Use Your Information</h2>
-      <p className="text-foreground/80">
-        We use your personal data solely to:
-      </p>
+      <h2 className="text-primary">{privacy.headings[1]}</h2>
+      <p className="text-foreground/80">{privacy.bodies[1]}</p>
       <ul className="text-foreground/80">
-        <li>Process and fulfil your orders</li>
-        <li>Communicate with you about your order</li>
-        <li>Improve our products and services</li>
+        <li>{privacy.list[0]}</li>
+        <li>{privacy.list[1]}</li>
+        <li>{privacy.list[2]}</li>
       </ul>
 
-      <h2 className="text-primary">Data Protection</h2>
-      <p className="text-foreground/80">
-        Your personal information is stored securely and never shared with third parties for marketing purposes. We may share necessary details with delivery partners solely for order fulfilment.
-      </p>
+      <h2 className="text-primary">{privacy.headings[2]}</h2>
+      <p className="text-foreground/80">{privacy.bodies[2]}</p>
 
-      <h2 className="text-primary">Your Rights</h2>
-      <p className="text-foreground/80">
-        You have the right to request access to, correction of, or deletion of your personal data at any time. Contact us at hello@zhyto.london for any data-related requests.
-      </p>
+      <h2 className="text-primary">{privacy.headings[3]}</h2>
+      <p className="text-foreground/80">{privacy.bodies[3]}</p>
 
-      <h2 className="text-primary">Cookies</h2>
-      <p className="text-foreground/80">
-        Our website uses essential cookies to ensure proper functionality. We do not use tracking cookies or third-party analytics without your consent.
-      </p>
+      <h2 className="text-primary">{privacy.headings[4]}</h2>
+      <p className="text-foreground/80">{privacy.bodies[4]}</p>
     </LegalLayout>
   )
 }
