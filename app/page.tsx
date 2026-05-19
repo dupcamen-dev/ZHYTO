@@ -203,7 +203,8 @@ export default function Home() {
   const { settings: delivery } = useDeliverySettings()
   const aboutRef = useRef<HTMLElement>(null)
   const reviewsRef = useRef<HTMLElement>(null)
-  const [varenykyIn, setVarenykyIn] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
   const { scrollYProgress: aboutScroll } = useScroll({
     target: aboutRef,
     offset: ["start end", "end start"]
@@ -291,14 +292,11 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    const el = reviewsRef.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      ([e]) => { setVarenykyIn(e.isIntersecting) },
-      { threshold: 0.1 }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
+    const mq = window.matchMedia('(max-width: 640px)')
+    setIsMobile(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
   }, [])
 
   useEffect(() => {
@@ -312,6 +310,14 @@ export default function Home() {
 
       setShowScrollTop(y > 300)
       setShowScrollBottom(y < maxY - 100)
+      const reviewsEl = document.getElementById('reviews')
+      if (reviewsEl) {
+        const rect = reviewsEl.getBoundingClientRect()
+        const wh = window.innerHeight
+        const total = rect.height + wh
+        const p = Math.max(0, Math.min(1, (wh - rect.top) / total))
+        setProgress(p)
+      }
       if (isMobile && aboutTopRef.current > 0) {
         setIsOnProducts(y >= productsTopRef.current - 100 && y < aboutTopRef.current - 100)
       } else {
@@ -953,29 +959,39 @@ export default function Home() {
       <section id="reviews" ref={reviewsRef} className="py-28 lg:py-36 relative bg-black overflow-hidden">
         
         {/* Floating varenyky */}
-        {[
-          { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -20 },
-          { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 20 },
-          { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 40 },
-          { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -20 },
-          { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 20 },
-          { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 40 },
-        ].map((v, i) => (
-          <img
-            key={i}
-            src={img("/images/varenyk-bg.png")}
-            alt=""
-            className="absolute z-0 pointer-events-none transition-all duration-[1200ms] ease-out"
-            style={{
-              width: `${v.width}px`,
-              top: v.top,
-              [v.side === 'left' ? 'left' : 'right']: varenykyIn ? `${v.final}px` : '-280px',
-              opacity: varenykyIn ? 1 : 0,
-              transform: varenykyIn ? `rotate(${v.rotate}deg)` : `rotate(${v.rotate + 20}deg)`,
-              transitionDelay: `${v.delay}s`,
-            }}
-          />
-        ))}
+        {(() => {
+          const data = [
+            { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -20, finalMob: -15 },
+            { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 20, finalMob: 0 },
+            { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 40, finalMob: 10 },
+            { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -20, finalMob: -15 },
+            { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 20, finalMob: 0 },
+            { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 40, finalMob: 10 },
+          ]
+          return data.map((v) => {
+            const target = isMobile ? v.finalMob : v.final
+            const entryStart = 0.15 + v.delay * 0.12
+            const entryEnd = Math.min(1, entryStart + 0.35)
+            const raw = Math.max(0, Math.min(1, (progress - entryStart) / (entryEnd - entryStart)))
+            const t = 1 - (1 - raw) ** 3
+            const x = -280 + (target + 280) * t
+            return (
+              <img
+                key={`${v.side}-${v.top}`}
+                src={img("/images/varenyk-bg.png")}
+                alt=""
+                className="absolute z-0 pointer-events-none"
+                style={{
+                  width: `${v.width}px`,
+                  top: v.top,
+                  [v.side === 'left' ? 'left' : 'right']: `${x}px`,
+                  opacity: t,
+                  transform: `rotate(${v.rotate}deg)`,
+                }}
+              />
+            )
+          })
+        })()}
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
           <motion.div
