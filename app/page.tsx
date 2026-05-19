@@ -260,7 +260,7 @@ export default function Home() {
   const activeProducts = dbProducts || products
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
-  const productsParallaxY = useTransform(scrollYProgress, [0, 0.2], [80, 0])
+  const productsParallaxY = useTransform(scrollYProgress, [0, 0.25], [200, 0])
 
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showScrollBottom, setShowScrollBottom] = useState(true)
