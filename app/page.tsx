@@ -260,6 +260,7 @@ export default function Home() {
   const activeProducts = dbProducts || products
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
+  const productsParallaxY = useTransform(scrollYProgress, [0, 0.2], [80, 0])
 
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showScrollBottom, setShowScrollBottom] = useState(true)
@@ -551,7 +552,11 @@ export default function Home() {
       </motion.section>
 
       {/* Products Section */}
-      <section id="products" className="py-28 lg:py-36 relative z-20 section-orange">
+      <motion.section 
+        id="products" 
+        className="py-28 lg:py-36 relative z-20 section-orange"
+        style={{ y: productsParallaxY }}
+      >
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -631,7 +636,7 @@ export default function Home() {
             )
           })}
         </div>
-      </section>
+      </motion.section>
 
       {/* About Section */}
       <section id="about" ref={aboutRef} className="py-28 lg:py-36 relative bg-background">
