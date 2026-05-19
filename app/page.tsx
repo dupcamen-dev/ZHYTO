@@ -940,35 +940,23 @@ export default function Home() {
       <section id="reviews" className="py-28 lg:py-36 relative bg-black overflow-hidden">
         
         {/* Floating varenyky */}
-        <motion.img
+        <img
           src={img("/images/varenyk-bg.png")}
           alt=""
           className="absolute z-0 pointer-events-none"
-          style={{ width: '180px', top: '3%', left: '-70px' }}
-          initial={{ x: -250, opacity: 0, rotate: -25 }}
-          whileInView={{ x: 0, opacity: 0.85, rotate: -12 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
+          style={{ width: '180px', top: '3%', left: '-70px', opacity: 0.85, transform: 'translateX(0) rotate(-12deg)' }}
         />
-        <motion.img
+        <img
           src={img("/images/varenyk-bg.png")}
           alt=""
           className="absolute z-0 pointer-events-none"
-          style={{ width: '250px', bottom: '5%', right: '-90px' }}
-          initial={{ x: 250, opacity: 0, rotate: 30 }}
-          whileInView={{ x: 0, opacity: 0.75, rotate: 12 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
+          style={{ width: '250px', bottom: '5%', right: '-90px', opacity: 0.75, transform: 'translateX(0) rotate(12deg)' }}
         />
-        <motion.img
+        <img
           src={img("/images/varenyk-bg.png")}
           alt=""
           className="absolute z-0 pointer-events-none"
-          style={{ width: '150px', top: '45%', left: '-50px' }}
-          initial={{ x: -300, opacity: 0, rotate: 35 }}
-          whileInView={{ x: 0, opacity: 0.65, rotate: 8 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.8, ease: 'easeOut', delay: 0.6 }}
+          style={{ width: '150px', top: '45%', left: '-50px', opacity: 0.65, transform: 'translateX(0) rotate(8deg)' }}
         />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
