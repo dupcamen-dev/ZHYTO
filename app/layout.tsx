@@ -45,11 +45,8 @@ export const metadata: Metadata = {
   description: 'Handcrafted Ukrainian varenyky and syrnyky delivered to your door in London. Marketplace for authentic homemade cuisine.',
   keywords: ['varenyky', 'syrnyky', 'ukrainian food', 'london', 'dumplings', 'marketplace'],
   icons: {
-    icon: [
-      { url: `${BASE_PATH}/favicon.png`, type: 'image/png', sizes: '32x32' },
-      { url: `${BASE_PATH}/favicon.svg`, type: 'image/svg+xml', sizes: 'any' },
-    ],
-    shortcut: `${BASE_PATH}/favicon.png`,
+    icon: `${BASE_PATH}/favicon.svg`,
+    shortcut: `${BASE_PATH}/favicon.svg`,
   },
 }
 
