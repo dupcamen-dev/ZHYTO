@@ -189,7 +189,7 @@ export default function Home() {
   const [reviewSubmitting, setReviewSubmitting] = useState(false)
   const [signInModalOpen, setSignInModalOpen] = useState(false)
   const [aboutImageIndex, setAboutImageIndex] = useState(0)
-  const aboutNames = ["Maria", "Olena", "Nataliia", "Anna", "Kateryna"]
+  const aboutNames = ["Maria", "Olena", "Nataliia", "Anna", "Kateryna", "Iryna"]
   const { scrollYProgress } = useScroll()
   const { settings: delivery } = useDeliverySettings()
   const aboutRef = useRef<HTMLElement>(null)
@@ -687,6 +687,7 @@ export default function Home() {
                       images={[
                         { src: img("/images/about-us.webp"), alt: "Handmade varenyky process" },
                         { src: img("/images/about-us-2.webp"), alt: "Handmade varenyky process" },
+                        { src: img("/images/about-us-3.webp"), alt: "Handmade varenyky process" },
                       ]}
                       onChange={setAboutImageIndex}
                     />

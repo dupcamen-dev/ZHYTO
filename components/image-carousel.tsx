@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronRight } from 'lucide-react'
 
 interface ImageCarouselProps {
   images: { src: string; alt: string }[]
@@ -10,10 +12,12 @@ interface ImageCarouselProps {
 
 export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
   const [current, setCurrent] = useState(0)
+  const [showHint, setShowHint] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
   const dragStart = useRef(0)
   const dragOffset = useRef(0)
   const dragging = useRef(false)
+  const hasSwipedRef = useRef(false)
 
   const goTo = useCallback((index: number) => {
     const next = Math.max(0, Math.min(index, images.length - 1))
@@ -43,6 +47,10 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
     const handleUp = () => {
       if (!dragging.current) return
       dragging.current = false
+      if (!hasSwipedRef.current && Math.abs(dragOffset.current) > 50) {
+        hasSwipedRef.current = true
+        setShowHint(false)
+      }
       if (Math.abs(dragOffset.current) > 50) {
         goTo(current + (dragOffset.current < 0 ? 1 : -1))
       }
@@ -59,6 +67,15 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
       window.removeEventListener('touchend', handleUp)
     }
   }, [current, goTo])
+
+  useEffect(() => {
+    if (current > 0) { setShowHint(false); hasSwipedRef.current = true }
+  }, [current])
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowHint(false), 4000)
+    return () => clearTimeout(timer)
+  }, [])
 
   if (images.length === 0) return null
 
@@ -87,6 +104,26 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
           ))}
         </div>
       </div>
+
+      {images.length > 1 && (
+        <AnimatePresence>
+          {showHint && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0 }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none"
+            >
+              <motion.div
+                animate={{ x: [0, 6, 0] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <ChevronRight className="w-8 h-8 text-white drop-shadow-lg" />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
 
       {images.length > 1 && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
