@@ -701,8 +701,8 @@ export default function Home() {
                   fill
                   className="object-contain"
                 />
-                <div className="absolute inset-0 flex items-center justify-center text-white">
-                  <span className="text-2xl lg:text-3xl font-script leading-none">{aboutNames[aboutImageIndex]}</span>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-2xl lg:text-3xl font-script leading-none text-black">{aboutNames[aboutImageIndex]}</span>
                 </div>
               </div>
             </motion.div>
