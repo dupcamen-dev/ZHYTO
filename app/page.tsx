@@ -738,23 +738,15 @@ export default function Home() {
                     />
                   </div>
                 </h3>
-                <div className="space-y-4 lg:text-left text-center">
-                  <div>
-                    <span className="text-lg text-foreground">Same Day Delivery</span>
-                    <span className="text-lg text-foreground block">London Zones 1-3</span>
-                  </div>
-                  <div>
-                    <span className="text-lg text-foreground">Next Day Delivery</span>
-                    <span className="text-lg text-foreground block">All London</span>
-                  </div>
-                  <div>
-                    <span className="text-lg text-foreground">Minimum Order</span>
-                    <span className="text-lg text-foreground block">£{delivery.min_order}</span>
-                  </div>
-                  <div>
-                    <span className="text-lg text-foreground">Free Delivery</span>
-                    <span className="text-lg text-foreground block">Orders over £{delivery.free_threshold}</span>
-                  </div>
+                <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-48 lg:mt-56">
+                  <span className="text-foreground font-medium">Same Day Delivery</span>
+                  <span className="text-foreground text-right">London Zones 1-3</span>
+                  <span className="text-foreground font-medium">Next Day Delivery</span>
+                  <span className="text-foreground text-right">All London</span>
+                  <span className="text-foreground font-medium">Minimum Order</span>
+                  <span className="text-foreground text-right">£{delivery.min_order}</span>
+                  <span className="text-foreground font-medium">Free Delivery</span>
+                  <span className="text-foreground text-right">Orders over £{delivery.free_threshold}</span>
                 </div>
               </div>
             </motion.div>
