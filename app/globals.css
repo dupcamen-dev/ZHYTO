@@ -59,48 +59,9 @@
   --glass-card-border: #d4b896;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: only light !important;
-    --background: #c2a57b;
-    --foreground: #1a1613;
-    --card: #ffffff;
-    --card-foreground: #1a1613;
-    --popover: #ffffff;
-    --popover-foreground: #1a1613;
-    --primary: #0058d2;
-    --primary-foreground: #ffffff;
-    --secondary: #e8d5b8;
-    --secondary-foreground: #1a1613;
-    --muted: #e8d5b8;
-    --muted-foreground: #6b5b4a;
-    --accent: #e8d5b8;
-    --accent-foreground: #1a1613;
-    --destructive: #dc2626;
-    --destructive-foreground: #ffffff;
-    --border: #d4b896;
-    --input: #d4b896;
-    --ring: #0058d2;
-    --sidebar: #d4b896;
-    --sidebar-foreground: #1a1613;
-    --sidebar-primary: #0058d2;
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #c2a57b;
-    --sidebar-accent-foreground: #1a1613;
-    --sidebar-border: #c2a57b;
-    --sidebar-ring: #0058d2;
-    --glass-bg: #f5ead6;
-    --glass-bg-strong: #f0e2ca;
-    --glass-border: #d4b896;
-    --glass-shadow: oklch(0.3 0.04 55 / 0.12);
-    --glass-card-bg: #ffffff;
-    --glass-card-border: #d4b896;
-  }
-
-  body {
-    background: #c2a57b !important;
-    color: #1a1613 !important;
-  }
+/* ── Force light mode on all devices ── */
+html, html * {
+  color-scheme: only light !important;
 }
 
 /* Darker section override for depth */
