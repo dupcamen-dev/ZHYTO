@@ -939,34 +939,34 @@ export default function Home() {
       {/* Reviews Section */}
       <section id="reviews" className="py-28 lg:py-36 relative bg-black overflow-hidden">
         
-        {/* Floating varenyky */}
+        {/* Floating varenyky — desktop only */}
         <motion.img
           src={img("/images/varenyk-bg.png")}
           alt=""
-          className="absolute z-0 pointer-events-none"
-          style={{ width: '160px', top: '5%', left: '-80px' }}
-          initial={{ x: -200, opacity: 0, rotate: -20 }}
-          whileInView={{ x: 0, opacity: 1, rotate: -10 }}
+          className="absolute z-0 pointer-events-none hidden lg:block"
+          style={{ width: '180px', top: '3%', left: '-70px' }}
+          initial={{ x: -250, opacity: 0, rotate: -25 }}
+          whileInView={{ x: 0, opacity: 0.6, rotate: -12 }}
           viewport={{ once: true }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
         />
         <motion.img
           src={img("/images/varenyk-bg.png")}
           alt=""
-          className="absolute z-0 pointer-events-none"
-          style={{ width: '220px', bottom: '10%', right: '-100px' }}
-          initial={{ x: 200, opacity: 0, rotate: 25 }}
-          whileInView={{ x: 0, opacity: 1, rotate: 15 }}
+          className="absolute z-0 pointer-events-none hidden lg:block"
+          style={{ width: '250px', bottom: '5%', right: '-90px' }}
+          initial={{ x: 250, opacity: 0, rotate: 30 }}
+          whileInView={{ x: 0, opacity: 0.5, rotate: 12 }}
           viewport={{ once: true }}
           transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
         />
         <motion.img
           src={img("/images/varenyk-bg.png")}
           alt=""
-          className="absolute z-0 pointer-events-none"
-          style={{ width: '130px', top: '40%', left: '-60px' }}
-          initial={{ x: -250, opacity: 0, rotate: 30 }}
-          whileInView={{ x: 0, opacity: 1, rotate: 5 }}
+          className="absolute z-0 pointer-events-none hidden lg:block"
+          style={{ width: '150px', top: '45%', left: '-50px' }}
+          initial={{ x: -300, opacity: 0, rotate: 35 }}
+          whileInView={{ x: 0, opacity: 0.4, rotate: 8 }}
           viewport={{ once: true }}
           transition={{ duration: 1.8, ease: 'easeOut', delay: 0.6 }}
         />
