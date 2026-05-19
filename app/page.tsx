@@ -727,7 +727,7 @@ export default function Home() {
               className="order-2 lg:order-1"
             >
               <div className="sm:px-12 py-16 relative">
-                <h3 className="font-script text-4xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase">
+                <h3 className="font-script text-5xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
                   Delivery Info
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] w-[500px] aspect-[661/252] -z-10">
                     <img
@@ -738,7 +738,7 @@ export default function Home() {
                     />
                   </div>
                 </h3>
-                <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-24 lg:mt-32 max-w-[500px] mx-auto lg:mx-0">
+                <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-24 lg:mt-32 max-w-[500px] mx-auto lg:mx-0 lg:ml-8">
                   <span className="text-foreground font-medium">Same Day Delivery</span>
                   <span className="text-foreground text-right">London Zones 1-3</span>
                   <span className="text-foreground font-medium">Next Day Delivery</span>
