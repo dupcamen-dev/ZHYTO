@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
-import { Plus, Pencil, X, Check, Package, AlertCircle, Upload, FolderKanban } from 'lucide-react'
+import { Plus, Pencil, X, Check, Package, AlertCircle, Upload, FolderKanban, ChevronUp, ChevronDown } from 'lucide-react'
 import { img } from '@/lib/constants'
 
 interface Product {
@@ -89,6 +89,14 @@ export default function AdminProducts() {
 
   const removeCategory = (cat: string) => {
     saveCategories(categories.filter(c => c !== cat))
+  }
+
+  const moveCategory = (index: number, direction: -1 | 1) => {
+    const newList = [...categories]
+    const target = index + direction
+    if (target < 0 || target >= newList.length) return
+    ;[newList[index], newList[target]] = [newList[target], newList[index]]
+    saveCategories(newList)
   }
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -255,15 +263,21 @@ export default function AdminProducts() {
         {categoriesOpen && (
           <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-border/30 pt-4 space-y-3">
             <div className="flex flex-wrap gap-2">
-              {categories.map(cat => (
+              {categories.map((cat, i) => (
                 <span
                   key={cat}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-lg"
+                  className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-lg"
                 >
                   {cat}
+                  <button onClick={() => moveCategory(i, -1)} disabled={i === 0} className="hover:text-foreground transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default p-0.5">
+                    <ChevronUp className="w-3 h-3" />
+                  </button>
+                  <button onClick={() => moveCategory(i, 1)} disabled={i === categories.length - 1} className="hover:text-foreground transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default p-0.5">
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
                   <button
                     onClick={() => removeCategory(cat)}
-                    className="hover:text-destructive transition-colors cursor-pointer"
+                    className="hover:text-destructive transition-colors cursor-pointer ml-1"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>

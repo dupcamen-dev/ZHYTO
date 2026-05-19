@@ -205,6 +205,7 @@ export default function Home() {
   const reviewsRef = useRef<HTMLElement>(null)
   const [progress, setProgress] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
+  const [categoryOrder, setCategoryOrder] = useState<string[] | null>(null)
   const { scrollYProgress: aboutScroll } = useScroll({
     target: aboutRef,
     offset: ["start end", "end start"]
@@ -237,6 +238,13 @@ export default function Home() {
     if (!supabase) return
     supabase.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).then(({ data }) => {
       if (data) setReviews(data)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase.from('settings').select('value').eq('key', 'categories').single().then(({ data }) => {
+      if (data?.value) setCategoryOrder(data.value as string[])
     })
   }, [])
 
@@ -609,15 +617,13 @@ export default function Home() {
           </motion.div>
 
           {/* Product categories */}
-          {[
-            { key: 'varenyky', label: t.products.categories.varenyky, desc: t.products.categories.varenykyDesc },
-            { key: 'syrnyky', label: t.products.categories.syrnyky, desc: t.products.categories.syrnykyDesc },
-            { key: 'pelmeni', label: t.products.categories.pelmeni, desc: t.products.categories.pelmeniDesc },
-          ].map((category, catIndex) => {
-            const catProducts = activeProducts.filter(p => p.category === category.key)
+          {(categoryOrder || ['varenyky', 'syrnyky', 'pelmeni']).map((key: string, catIndex: number) => {
+            const catProducts = activeProducts.filter(p => p.category === key)
             if (catProducts.length === 0) return null
+            const label = (t.products.categories as any)[key] || key
+            const desc = (t.products.categories as any)[`${key}Desc`] || ''
             return (
-              <div key={category.key} className={catIndex > 0 ? 'mt-16' : ''}>
+              <div key={key} className={catIndex > 0 ? 'mt-16' : ''}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -625,8 +631,8 @@ export default function Home() {
                   transition={{ duration: 0.6 }}
                   className="mb-8"
                 >
-                  <h3 className="font-serif text-5xl text-foreground mb-2">{category.label}</h3>
-                  <p className="text-base text-muted-foreground">{category.desc}</p>
+                  <h3 className="font-serif text-5xl text-foreground mb-2">{label}</h3>
+                  <p className="text-base text-muted-foreground">{desc}</p>
                 </motion.div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
