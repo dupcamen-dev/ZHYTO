@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import { translations, TranslationKeys } from '@/lib/translations'
 
 type Lang = 'en' | 'uk'
@@ -11,6 +11,16 @@ interface LangContextType {
   toggleLang: () => void
 }
 
+const LS_KEY = 'zhyto-lang'
+
+function getInitialLang(): Lang {
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem(LS_KEY)
+    if (stored === 'en' || stored === 'uk') return stored
+  }
+  return 'en'
+}
+
 const LangContext = createContext<LangContextType>({
   lang: 'en',
   t: translations.en,
@@ -19,8 +29,18 @@ const LangContext = createContext<LangContextType>({
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>('en')
+  const [mounted, setMounted] = useState(false)
 
-  const toggleLang = () => setLang(prev => prev === 'en' ? 'uk' : 'en')
+  useEffect(() => {
+    setLang(getInitialLang())
+    setMounted(true)
+  }, [])
+
+  const toggleLang = () => setLang(prev => {
+    const next = prev === 'en' ? 'uk' : 'en'
+    localStorage.setItem(LS_KEY, next)
+    return next
+  })
 
   return (
     <LangContext.Provider value={{ lang, t: translations[lang], toggleLang }}>
