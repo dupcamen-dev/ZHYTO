@@ -729,7 +729,7 @@ export default function Home() {
               <div className="sm:px-12 py-16 relative">
                 <h3 className="font-script text-3xl mb-6 lg:text-left text-center text-black relative z-10 inline-block">
                   Delivery Information
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[46%] w-[400px] h-[400px] -z-10">
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] w-[400px] h-[400px] -z-10">
                     <img
                       src={img("/images/delivery-art.webp")}
                       alt=""
