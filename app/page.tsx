@@ -961,14 +961,15 @@ export default function Home() {
         {/* Floating varenyky */}
         {(() => {
           const data = [
-            { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -20, finalMob: -15 },
-            { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 20, finalMob: 0 },
-            { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 40, finalMob: 10 },
-            { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -20, finalMob: -15 },
-            { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 20, finalMob: 0 },
-            { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 40, finalMob: 10 },
+            { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -20, finalMob: -25 },
+            { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 20, finalMob: 0, hideMob: true },
+            { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 40, finalMob: -5 },
+            { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -20, finalMob: -25 },
+            { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 20, finalMob: -15 },
+            { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 40, finalMob: -5 },
           ]
           return data.map((v) => {
+            if (isMobile && v.hideMob) return null
             const target = isMobile ? v.finalMob : v.final
             const entryStart = 0.15 + v.delay * 0.12
             const entryEnd = Math.min(1, entryStart + 0.35)
