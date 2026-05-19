@@ -696,7 +696,7 @@ export default function Home() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                  <span className="text-4xl lg:text-[3.5rem] font-bold leading-none mb-1">15+</span>
+                  <span className="text-4xl lg:text-[3.5rem] font-bold leading-none mb-1">NAME</span>
                   <span className="text-[10px] lg:text-sm tracking-[0.3em]">YEARS OF TRADITION</span>
                 </div>
               </div>
