@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
-import { Playfair_Display, Geist } from 'next/font/google'
+import { Playfair_Display, Caveat, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/cart-context'
 import { AuthProvider } from '@/components/auth-context'
@@ -33,6 +33,13 @@ const geist = Geist({
   variable: '--font-geist',
 })
 
+const caveat = Caveat({
+  subsets: ['cyrillic', 'latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-caveat',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   title: 'zhyto.london | Authentic Ukrainian Varenyky & Syrnyky',
   description: 'Handcrafted Ukrainian varenyky and syrnyky delivered to your door in London. Marketplace for authentic homemade cuisine.',
@@ -57,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} ${konstrukt.variable} bg-background`} style={{ colorScheme: 'only light' }}>
+    <html lang="en" className={`${playfair.variable} ${zhyto.variable} ${geist.variable} ${konstrukt.variable} ${caveat.variable} bg-background`} style={{ colorScheme: 'only light' }}>
       <body className="font-serif antialiased">
         <AuthProvider>
           <LanguageProvider>

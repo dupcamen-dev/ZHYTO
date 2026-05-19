@@ -22,7 +22,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const toggleLang = () => setLang(prev => prev === 'en' ? 'uk' : 'en')
 
-  return <LangContext.Provider value={{ lang, t: translations[lang], toggleLang }}>{children}</LangContext.Provider>
+  return (
+    <LangContext.Provider value={{ lang, t: translations[lang], toggleLang }}>
+      <div data-lang={lang} style={{ display: 'contents' }}>
+        {children}
+      </div>
+    </LangContext.Provider>
+  )
 }
 
 export function useLanguage() {
