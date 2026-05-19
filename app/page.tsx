@@ -721,24 +721,34 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div className="sm:px-12 py-16 bg-black/80">
-                <h3 className="font-script text-3xl mb-6 lg:text-left text-center text-cream">Delivery Information</h3>
+              <div className="sm:px-12 py-16">
+                <h3 className="font-script text-3xl mb-6 lg:text-left text-center text-black relative inline-block">
+                  Delivery Information
+                  <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[46%] w-[500%] h-[500%] -z-10">
+                    <Image
+                      src={img("/images/delivery-art.webp")}
+                      alt=""
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </h3>
                 <div className="space-y-4 lg:text-left text-center">
                   <div>
-                    <span className="text-lg text-cream">Same Day Delivery</span>
-                    <span className="text-lg text-cream block">London Zones 1-3</span>
+                    <span className="text-lg text-foreground">Same Day Delivery</span>
+                    <span className="text-lg text-foreground block">London Zones 1-3</span>
                   </div>
                   <div>
-                    <span className="text-lg text-cream">Next Day Delivery</span>
-                    <span className="text-lg text-cream block">All London</span>
+                    <span className="text-lg text-foreground">Next Day Delivery</span>
+                    <span className="text-lg text-foreground block">All London</span>
                   </div>
                   <div>
-                    <span className="text-lg text-cream">Minimum Order</span>
-                    <span className="text-lg text-cream block">£{delivery.min_order}</span>
+                    <span className="text-lg text-foreground">Minimum Order</span>
+                    <span className="text-lg text-foreground block">£{delivery.min_order}</span>
                   </div>
                   <div>
-                    <span className="text-lg text-cream">Free Delivery</span>
-                    <span className="text-lg text-cream block">Orders over £{delivery.free_threshold}</span>
+                    <span className="text-lg text-foreground">Free Delivery</span>
+                    <span className="text-lg text-foreground block">Orders over £{delivery.free_threshold}</span>
                   </div>
                 </div>
               </div>
