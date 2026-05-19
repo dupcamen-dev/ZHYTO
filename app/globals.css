@@ -147,7 +147,7 @@
   --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-serif: var(--font-playfair), Georgia, serif;
   --font-script: var(--font-zhyto), cursive;
-  --font-caveat: var(--font-caveat), cursive;
+  --font-pacifico: var(--font-pacifico), cursive;
   --font-konstrukt: var(--font-konstrukt), sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
@@ -208,7 +208,7 @@
 
 /* Ukrainian script font override */
 [data-lang="uk"] {
-  --font-script: var(--font-caveat), cursive;
+  --font-script: var(--font-pacifico), cursive;
 }
 
 /* Glass effects */
