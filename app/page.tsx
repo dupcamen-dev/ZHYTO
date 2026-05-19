@@ -164,7 +164,7 @@ const products = [
 
 // Navigation links
 const navLinks = [
-  { name: "DUMPLINGS", href: "#products" },
+  { name: "OUR MENU", href: "#products" },
   { name: "ABOUT US", href: "#about" },
   { name: "DELIVERY", href: "#delivery" },
   { name: "REVIEWS", href: "#reviews" },
