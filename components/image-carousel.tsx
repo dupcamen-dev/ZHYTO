@@ -15,6 +15,7 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
   const [showHint, setShowHint] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
   const dragStart = useRef(0)
+  const dragStartY = useRef(0)
   const dragOffset = useRef(0)
   const dragging = useRef(false)
   const hasSwipedRef = useRef(false)
@@ -34,6 +35,7 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     dragging.current = true
     dragStart.current = e.touches[0].clientX
+    dragStartY.current = e.touches[0].clientY
     dragOffset.current = 0
   }, [])
 
@@ -41,7 +43,13 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (!dragging.current) return
       const x = 'touches' in e ? e.touches[0].clientX : e.clientX
-      dragOffset.current = x - dragStart.current
+      const y = 'touches' in e ? e.touches[0].clientY : 0
+      const dx = x - dragStart.current
+      const dy = y - dragStartY.current
+      dragOffset.current = dx
+      if ('touches' in e && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+        e.preventDefault()
+      }
     }
 
     const handleUp = () => {
@@ -58,7 +66,7 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
 
     window.addEventListener('mousemove', handleMove)
     window.addEventListener('mouseup', handleUp)
-    window.addEventListener('touchmove', handleMove, { passive: true })
+    window.addEventListener('touchmove', handleMove, { passive: false })
     window.addEventListener('touchend', handleUp)
     return () => {
       window.removeEventListener('mousemove', handleMove)
@@ -83,7 +91,7 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
     <div className="relative w-full h-full select-none">
       <div
         ref={containerRef}
-        className="relative w-full h-full overflow-hidden"
+        className="relative w-full h-full overflow-hidden touch-pan-y"
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
       >
