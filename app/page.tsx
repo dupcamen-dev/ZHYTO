@@ -726,10 +726,11 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
-              <div className="sm:px-12 py-16">
-                <h3 className="font-script text-3xl mb-6 lg:text-left text-center text-black relative inline-block">
+              <div className="sm:px-12 py-16 relative">
+                <h3 className="font-script text-3xl mb-6 lg:text-left text-center text-black relative inline-block z-10">
                   Delivery Information
-                  <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[46%] w-[500%] h-[500%] -z-10">
+                </h3>
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[46%] w-[600px] h-[600px] -z-10">
                     <Image
                       src={img("/images/delivery-art.webp")}
                       alt=""
@@ -737,7 +738,6 @@ export default function Home() {
                       className="object-contain"
                     />
                   </div>
-                </h3>
                 <div className="space-y-4 lg:text-left text-center">
                   <div>
                     <span className="text-lg text-foreground">Same Day Delivery</span>
