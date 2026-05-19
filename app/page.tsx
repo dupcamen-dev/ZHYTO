@@ -734,7 +734,7 @@ export default function Home() {
 
       {/* Delivery Section */}
       <section id="delivery" className="py-28 lg:py-36 bg-background overflow-hidden">
-        <div className="max-w-7xl mx-auto lg:px-10">
+        <div className="max-w-7xl mx-auto px-5 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
