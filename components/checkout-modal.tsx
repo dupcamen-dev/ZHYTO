@@ -20,7 +20,7 @@ import { supabase } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
 import { toast } from 'sonner'
-import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader } from 'lucide-react'
+import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader, Percent } from 'lucide-react'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
 import { useLanguage } from '@/components/language-context'
 
@@ -47,6 +47,12 @@ const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: 
   wallet: { icon: Smartphone,  label: 'applePayGooglePay',   desc: 'walletDesc' },
 }
 
+const PROMO_CODES: Record<string, { type: 'percentage' | 'free_delivery'; value: number }> = {
+  WELCOME10: { type: 'percentage', value: 10 },
+  ZHYTO15: { type: 'percentage', value: 15 },
+  FREESHIP: { type: 'free_delivery', value: 0 },
+}
+
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
   const router = useRouter()
   const { cart, clearCart } = useCart()
@@ -58,6 +64,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [deliveryAddress, setDeliveryAddress] = useState('')
+  const [promoInput, setPromoInput] = useState('')
+  const [promoCode, setPromoCode] = useState<string | null>(null)
+  const [promoError, setPromoError] = useState('')
 
   const cartItems = Object.entries(cart)
     .map(([id, qty]) => {
@@ -68,7 +77,29 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0)
   const delivery = calcDelivery(subtotal, settings)
-  const total = subtotal + (delivery ?? 0)
+  const appliedPromo = promoCode ? PROMO_CODES[promoCode.toUpperCase()] : null
+  const promoDiscount = appliedPromo?.type === 'percentage' ? subtotal * (appliedPromo.value / 100) : 0
+  const promoDelivery = appliedPromo?.type === 'free_delivery' && delivery ? delivery : 0
+  const total = subtotal - promoDiscount + (delivery ?? 0) - promoDelivery
+
+  const applyPromoCode = () => {
+    const code = promoInput.trim().toUpperCase()
+    if (!code) return
+    const match = PROMO_CODES[code]
+    if (!match) {
+      setPromoError(t.checkout.invalidPromo)
+      return
+    }
+    setPromoCode(code)
+    setPromoError('')
+    setPromoInput('')
+    toast.success(match.type === 'free_delivery' ? t.checkout.promoFreeDelivery : t.checkout.promoApplied.replace('{value}', `${match.value}%`))
+  }
+
+  const removePromoCode = () => {
+    setPromoCode(null)
+    setPromoError('')
+  }
 
   // Advance to payment when user logs in (only if items in cart)
   useEffect(() => {
@@ -228,12 +259,69 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         />
       </div>
 
-      {/* Order total */}
-      <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
-        <span className="text-[16px] text-foreground/60">
-          {cartItems.reduce((s, i) => s + i.qty, 0)} {t.cart.items}
-        </span>
-        <span className="font-serif text-lg text-primary">£{total}</span>
+      {/* Promo code */}
+      <div className="space-y-1.5">
+        <Label className="text-[18px] text-foreground/60 tracking-[0.1em]">
+          {t.checkout.promoCode}
+        </Label>
+        {promoCode ? (
+          <div className="flex items-center justify-between glass-card rounded-lg px-4 py-3">
+            <div className="flex items-center gap-2">
+              <Percent className="w-4 h-4 text-primary" />
+              <span className="text-[16px] text-foreground font-medium">{promoCode}</span>
+              {appliedPromo?.type === 'percentage' && (
+                <span className="text-[14px] text-primary">-{appliedPromo.value}%</span>
+              )}
+              {appliedPromo?.type === 'free_delivery' && (
+                <span className="text-[14px] text-primary">{t.checkout.freeDelivery}</span>
+              )}
+            </div>
+            <button onClick={removePromoCode} className="text-[14px] text-destructive hover:text-destructive/80 transition-colors cursor-pointer">
+              {t.checkout.remove}
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <input
+              value={promoInput}
+              onChange={e => { setPromoInput(e.target.value); setPromoError('') }}
+              onKeyDown={e => e.key === 'Enter' && applyPromoCode()}
+              className="flex-1 bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-[16px] text-foreground focus:border-primary outline-none"
+              placeholder={t.checkout.promoPlaceholder}
+            />
+            <button
+              onClick={applyPromoCode}
+              className="px-4 py-2.5 bg-primary/10 text-primary text-[14px] tracking-[0.15em] rounded-lg hover:bg-primary/20 transition-colors cursor-pointer whitespace-nowrap"
+            >
+              {t.checkout.apply}
+            </button>
+          </div>
+        )}
+        {promoError && <p className="text-[14px] text-destructive">{promoError}</p>}
+      </div>
+      <div className="glass-card rounded-lg px-4 py-3 space-y-1">
+        <div className="flex items-center justify-between">
+          <span className="text-[16px] text-foreground/60">
+            {cartItems.reduce((s, i) => s + i.qty, 0)} {t.cart.items}
+          </span>
+          <span className="text-[16px] text-foreground/60">£{subtotal.toFixed(2)}</span>
+        </div>
+        {promoDiscount > 0 && (
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-primary">{t.checkout.discount} ({promoCode})</span>
+            <span className="text-[14px] text-primary">-£{promoDiscount.toFixed(2)}</span>
+          </div>
+        )}
+        {promoDelivery > 0 && (
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-primary">{t.checkout.discount} ({promoCode})</span>
+            <span className="text-[14px] text-primary">-£{promoDelivery.toFixed(2)}</span>
+          </div>
+        )}
+        <div className="flex items-center justify-between border-t border-border/20 pt-1">
+          <span className="font-serif text-lg text-foreground">{t.checkout.total}</span>
+          <span className="font-serif text-lg text-primary">£{total.toFixed(2)}</span>
+        </div>
       </div>
 
       {/* Payment method selection or form */}
