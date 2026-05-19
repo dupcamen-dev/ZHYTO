@@ -897,7 +897,7 @@ export default function Home() {
                   style={{
                     backgroundImage: `url(${img("/images/contact-photo.png")})`,
                     backgroundSize: '115%',
-                    backgroundPosition: 'center top',
+                    backgroundPosition: 'center -40px',
                     color: '#1a1613',
                   }}
                 >{t.contact.order}</span>
