@@ -1015,7 +1015,7 @@ export default function Home() {
                     <Button
                       onClick={submitReview}
                       disabled={reviewSubmitting || !reviewComment.trim()}
-                      className="bg-cream text-black hover:bg-cream/90 px-8"
+                      className="bg-black/60 text-cream hover:bg-black/80 px-8"
                     >
                       {reviewSubmitting ? t.reviews.submitting : t.reviews.submitReview}
                     </Button>
