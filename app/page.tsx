@@ -727,7 +727,7 @@ export default function Home() {
               className="order-2 lg:order-1"
             >
               <div className="sm:px-12 py-16 relative">
-                <h3 className="font-script text-3xl mb-6 lg:text-left text-center text-black relative z-10 inline-block">
+                <h3 className="font-script text-4xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase">
                   Delivery Information
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] w-[400px] h-[400px] -z-10">
                     <img
