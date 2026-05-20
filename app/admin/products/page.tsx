@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Plus, Pencil, X, Check, Package, AlertCircle, Upload, FolderKanban, ChevronUp, ChevronDown } from 'lucide-react'
 import { img } from '@/lib/constants'
+import { toast } from 'sonner'
 
 interface Product {
   id: number
@@ -147,6 +148,24 @@ export default function AdminProducts() {
     }
   }
 
+  const apiCall = async (method: string, body?: any) => {
+    const { data: { session } } = await supabase!.auth.getSession()
+    if (!session?.access_token) throw new Error('Not authenticated')
+    const res = await fetch('/api/admin/products', {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Request failed' }))
+      throw new Error(err.error || 'Request failed')
+    }
+    return res.json()
+  }
+
   const save = async () => {
     if (!editing) return
     if (!editing.name?.trim()) { setError('Name is required'); return }
@@ -162,7 +181,6 @@ export default function AdminProducts() {
     }
 
     if (!supabase) {
-      // Mock save — update local state
       setProducts(prev => {
         if (editing.id) {
           return prev.map(p => p.id === editing.id ? { ...p, ...payload } as Product : p)
@@ -180,15 +198,17 @@ export default function AdminProducts() {
 
     try {
       if (editing.id) {
-        await supabase.from('products').update(payload).eq('id', editing.id)
+        await apiCall('PUT', { id: editing.id, ...payload })
       } else {
-        await supabase.from('products').insert({ ...payload, sort_order: products.length })
+        await apiCall('POST', { ...payload, sort_order: products.length })
       }
       setSaving(false)
       setEditing(null)
+      setSuccessMsg('Saved')
+      setTimeout(() => setSuccessMsg(''), 2000)
       fetchProducts()
-    } catch {
-      setError('Failed to save. Check your connection.')
+    } catch (e: any) {
+      setError(e?.message || 'Failed to save')
       setSaving(false)
     }
   }
@@ -198,8 +218,12 @@ export default function AdminProducts() {
       setProducts(prev => prev.map(p => p.id === product.id ? { ...p, available: !p.available } : p))
       return
     }
-    await supabase.from('products').update({ available: !product.available }).eq('id', product.id)
-    fetchProducts()
+    try {
+      await apiCall('PUT', { id: product.id, available: !product.available })
+      fetchProducts()
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to update')
+    }
   }
 
   const deleteProduct = async (id: number) => {
@@ -208,8 +232,18 @@ export default function AdminProducts() {
       setProducts(prev => prev.filter(p => p.id !== id))
       return
     }
-    await supabase.from('products').delete().eq('id', id)
-    fetchProducts()
+    try {
+      const { data: { session } } = await supabase!.auth.getSession()
+      if (!session?.access_token) return
+      const res = await fetch(`/api/admin/products?id=${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+      if (!res.ok) throw new Error('Failed to delete')
+      fetchProducts()
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to delete')
+    }
   }
 
   if (loading) return (
