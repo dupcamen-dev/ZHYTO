@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth-context'
+import { supabase } from '@/lib/supabase'
 import { LayoutDashboard, ShoppingBag, ClipboardList, Settings, ArrowLeft, LogOut, Menu, X } from 'lucide-react'
 
 const adminLinks = [
@@ -24,8 +25,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (loading) return
     if (!user) { router.push('/'); return }
-    setIsAdmin(true)
-    setChecking(false)
+    if (!supabase) { router.push('/'); return }
+    supabase.from('profiles').select('role').eq('id', user.id).single().then(({ data, error }) => {
+      if (error || !data || data.role !== 'admin') {
+        router.push('/')
+        return
+      }
+      setIsAdmin(true)
+      setChecking(false)
+    })
   }, [user, loading, router])
 
   // Close sidebar on route change (mobile)
