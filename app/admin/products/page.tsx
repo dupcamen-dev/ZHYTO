@@ -83,20 +83,26 @@ export default function AdminProducts() {
   const saveCategories = async (newList: string[]) => {
     setCategories(newList)
     if (!supabase) return
-    await supabase.from('settings').upsert(
-      { key: 'categories', value: newList },
-      { onConflict: 'key' }
-    )
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch('/api/admin/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ key: 'categories', value: newList }),
+    })
   }
 
   const updateCategoryDesc = async (cat: string, desc: string) => {
     const next = { ...categoryDescriptions, [cat]: desc }
     setCategoryDescriptions(next)
     if (!supabase) return
-    await supabase.from('settings').upsert(
-      { key: 'categories_desc', value: next },
-      { onConflict: 'key' }
-    )
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch('/api/admin/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ key: 'categories_desc', value: next }),
+    })
   }
 
   const addCategory = () => {
