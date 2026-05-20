@@ -1,15 +1,32 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+let _supabase: SupabaseClient | null = null;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+function getClient(): SupabaseClient {
+  if (_supabase) return _supabase;
 
-// Для серверних операцій (якщо потрібен service_role)
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !anonKey) {
+    throw new Error('NEXT_PUBLIC_SUPABASE_URL та NEXT_PUBLIC_SUPABASE_ANON_KEY мають бути налаштовані');
+  }
+
+  _supabase = createClient(url, anonKey);
+  return _supabase;
+}
+
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_, prop) {
+    return getClient()[prop as keyof SupabaseClient];
+  },
+});
+
 export const getSupabaseAdmin = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceRoleKey) {
+  if (!url || !serviceRoleKey) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY не налаштований');
   }
-  return createClient(supabaseUrl, serviceRoleKey);
+  return createClient(url, serviceRoleKey);
 };
