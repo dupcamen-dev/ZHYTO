@@ -242,6 +242,10 @@ export default function Home() {
           stock: p.stock ?? 10,
           ingredients: p.ingredients,
           cooking: p.cooking,
+          ingredients_uk: p.ingredients_uk,
+          ingredients_en: p.ingredients_en,
+          recipe_uk: p.recipe_uk,
+          recipe_en: p.recipe_en,
         })))
       }
     })
@@ -1336,11 +1340,6 @@ export default function Home() {
                   backImage={selectedProduct.background_image || (selectedProduct.category === 'syrnyky' ? img("/images/syrnyky-ingredients.webp") : img("/images/syrnyky-ingredients.webp"))}
                   alt={selectedProduct.name}
                 />
-                {selectedProduct.badge && (
-                  <span className="absolute top-2 right-2 sm:top-3 sm:left-3 px-2 py-0.5 sm:px-3 sm:py-1 bg-primary text-primary-foreground text-[11px] sm:text-[13px] tracking-[0.15em] sm:tracking-[0.2em] uppercase whitespace-nowrap">
-                    {selectedProduct.badge}
-                  </span>
-                )}
               </div>
 
               <h3 className="font-serif text-2xl text-gray-900 mb-2">{selectedProduct.name}</h3>
