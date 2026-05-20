@@ -541,7 +541,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         open={methodModalOpen}
         onOpenChange={setMethodModalOpen}
         onSelect={handleMethodSelect}
-        total={total}
       />
 
       <CardPaymentModal

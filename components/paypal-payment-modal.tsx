@@ -40,16 +40,31 @@ function PayPalForm({ amount, onSuccess, onClose, onBeforePay }: {
     setError(null)
 
     try {
-      const orderId = onBeforePay ? await onBeforePay() : undefined
+      let orderId: string | undefined
+      if (onBeforePay) {
+        try {
+          orderId = await onBeforePay()
+        } catch (e: any) {
+          setError(e?.message || 'Failed to save order. Please try again.')
+          setLoading(false)
+          return
+        }
+      }
 
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount, paymentMethodType: 'paypal', orderId }),
       })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Failed to create payment' }))
+        setError(err.error || 'Payment service error')
+        setLoading(false)
+        return
+      }
       const data = await res.json()
       if (!data.clientSecret) {
-        setError('Failed to create payment. Please try again.')
+        setError('Payment service unavailable. Please try again.')
         setLoading(false)
         return
       }
@@ -62,7 +77,7 @@ function PayPalForm({ amount, onSuccess, onClose, onBeforePay }: {
         setError(confirmError.message ?? 'PayPal payment failed')
       }
     } catch {
-      setError('Network error. Please try again.')
+      setError('Connection error. Please check your internet and try again.')
     } finally {
       setLoading(false)
     }
