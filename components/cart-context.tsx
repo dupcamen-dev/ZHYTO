@@ -2,11 +2,16 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 
-type Cart = Record<number, number>
+interface CartItem {
+  qty: number
+  image: string
+}
+
+type Cart = Record<number, CartItem>
 
 interface CartContextType {
   cart: Cart
-  addToCart: (id: number) => void
+  addToCart: (id: number, image?: string) => void
   removeFromCart: (id: number) => void
   updateQuantity: (id: number, qty: number) => void
   clearCart: () => void
@@ -22,7 +27,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const saved = localStorage.getItem('zhyto-cart')
     if (saved) {
-      try { setCart(JSON.parse(saved)) } catch {}
+      try {
+        const parsed = JSON.parse(saved)
+        // Migrate old format: { id: number } → { id: { qty, image } }
+        const migrated: Cart = {}
+        for (const [id, val] of Object.entries(parsed)) {
+          if (typeof val === 'number') {
+            migrated[Number(id)] = { qty: val, image: '' }
+          } else {
+            migrated[Number(id)] = val as CartItem
+          }
+        }
+        setCart(migrated)
+      } catch {}
     }
     setHydrated(true)
   }, [])
@@ -33,14 +50,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart, hydrated])
 
-  const addToCart = useCallback((id: number) => {
-    setCart(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }))
+  const addToCart = useCallback((id: number, image?: string) => {
+    setCart(prev => {
+      const existing = prev[id]
+      return {
+        ...prev,
+        [id]: {
+          qty: (existing?.qty || 0) + 1,
+          image: image || existing?.image || '',
+        },
+      }
+    })
   }, [])
 
   const removeFromCart = useCallback((id: number) => {
     setCart(prev => {
       const next = { ...prev }
-      if (next[id] > 1) next[id]--
+      if (next[id].qty > 1) next[id] = { ...next[id], qty: next[id].qty - 1 }
       else delete next[id]
       return next
     })
@@ -50,14 +76,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCart(prev => {
       const next = { ...prev }
       if (qty <= 0) delete next[id]
-      else next[id] = qty
+      else if (next[id]) next[id] = { ...next[id], qty }
       return next
     })
   }, [])
 
   const clearCart = useCallback(() => setCart({}), [])
 
-  const totalItems = Object.values(cart).reduce((a, b) => a + b, 0)
+  const totalItems = Object.values(cart).reduce((a, b) => a + b.qty, 0)
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems }}>

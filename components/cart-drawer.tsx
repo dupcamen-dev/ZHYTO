@@ -36,9 +36,9 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
   const { t } = useLanguage()
 
   const cartItems = Object.entries(cart)
-    .map(([id, qty]) => {
+    .map(([id, item]) => {
       const product = products.find(p => p.id === Number(id))
-      return product ? { ...product, qty } : null
+      return product ? { ...product, image: item.image || product.image, qty: item.qty } : null
     })
     .filter(Boolean) as (Product & { qty: number })[]
 

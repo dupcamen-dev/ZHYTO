@@ -1376,11 +1376,11 @@ export default function Home() {
                     <Minus className="w-4 h-4" />
                   </button>
                   <span className="text-lg w-8 text-center font-medium text-gray-900">
-                    {cart[selectedProduct.id] || 0}
+                    {(cart[selectedProduct.id]?.qty || 0)}
                   </span>
                   <button
                     type="button"
-                    onClick={() => { addToCart(selectedProduct.id); toast.success(`${selectedProduct.name} ${t.productModal.addedToCart}`, { duration: 2000 }) }}
+                    onClick={() => { addToCart(selectedProduct.id, selectedProduct.image); toast.success(`${selectedProduct.name} ${t.productModal.addedToCart}`, { duration: 2000 }) }}
                     className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
