@@ -248,6 +248,7 @@ export const translations = {
     },
     legalLayout: {
       rights: '\u00a9 2026 zhyto.london. All rights reserved.',
+      backToSite: '← Back to site',
     },
     header: {
       signIn: 'SIGN IN',
@@ -509,6 +510,7 @@ export const translations = {
     },
     legalLayout: {
       rights: '\u00a9 2026 zhyto.london. Всі права захищено.',
+      backToSite: '← На сайт',
     },
     header: {
       signIn: 'УВІЙТИ',

@@ -9,9 +9,15 @@ export function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-screen bg-background">
       <nav className="border-b border-border/30">
-        <div className="max-w-3xl mx-auto px-6 py-6">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between">
           <Link href="/" className="text-xl font-serif tracking-[0.15em] text-foreground hover:text-primary transition-colors">
             zhyto.london
+          </Link>
+          <Link
+            href="/"
+            className="text-sm tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t.legalLayout.backToSite}
           </Link>
         </div>
       </nav>
