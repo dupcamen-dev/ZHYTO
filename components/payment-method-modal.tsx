@@ -131,13 +131,7 @@ export function PaymentMethodModal({ open, onOpenChange, onSelect, total = 0 }: 
           </div>
         )}
 
-        {walletSupport.raw !== null && !walletSupport.applepay && !walletSupport.googlepay && (
-          <div className="mt-4 p-3 rounded-lg bg-destructive/5 border border-destructive/20">
-            <p className="text-xs font-mono text-muted-foreground break-all">
-              canMakePayment: {JSON.stringify(walletSupport.raw)}
-            </p>
-          </div>
-        )}
+
       </DialogContent>
     </Dialog>
   )
