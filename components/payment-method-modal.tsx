@@ -131,13 +131,10 @@ export function PaymentMethodModal({ open, onOpenChange, onSelect, total = 0 }: 
           </div>
         )}
 
-        {walletSupport.raw !== null && (
-          <div className="mt-4 p-3 rounded-lg bg-border/10 border border-border/20">
+        {walletSupport.raw !== null && !walletSupport.applepay && !walletSupport.googlepay && (
+          <div className="mt-4 p-3 rounded-lg bg-destructive/5 border border-destructive/20">
             <p className="text-xs font-mono text-muted-foreground break-all">
               canMakePayment: {JSON.stringify(walletSupport.raw)}
-            </p>
-            <p className="text-xs font-mono text-muted-foreground/60 mt-1">
-              HTTPS: {typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'yes' : 'no'}
             </p>
           </div>
         )}
