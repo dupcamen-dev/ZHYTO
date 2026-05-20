@@ -113,7 +113,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     if (user && !showPayment && !authLoading && open && cartItems.length > 0) {
       setShowPayment(true)
     }
-  }, [user, authLoading, open])
+  }, [user, authLoading, open, cartItems.length, showPayment])
 
   useEffect(() => {
     if (!open) {
@@ -361,6 +361,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
               </Button>
               <Button
                 type="button"
+                onClick={() => user && setShowPayment(true)}
                 disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
                 className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50 whitespace-normal text-balance"
               >
@@ -557,6 +558,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </Button>
                     <Button
                       type="button"
+                      onClick={() => user && setShowPayment(true)}
                       disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
                       className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50 whitespace-normal text-balance"
                     >
