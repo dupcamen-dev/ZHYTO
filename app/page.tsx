@@ -456,6 +456,10 @@ export default function Home() {
               {!loading && (
                 user ? (
                   <div className="flex items-center gap-3">
+                      {/* Username display - desktop only */}
+                      <span className="hidden lg:inline-block text-[13px] tracking-[0.12em] text-foreground/80 font-medium">
+                        {user.email?.split('@')[0] || user.user_metadata?.full_name || 'User'}
+                      </span>
                       <motion.button
                         onClick={() => router.push('/account')}
                         className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
