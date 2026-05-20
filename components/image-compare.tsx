@@ -15,6 +15,10 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
   const draggingRef = useRef(false)
   const touchActiveRef = useRef(false)
   const touchStartPosRef = useRef({ x: 0, y: 0 })
+  const [frontError, setFrontError] = useState(false)
+  const [backError, setBackError] = useState(false)
+
+  const fallback = '/images/syrnyky-new.webp'
 
   const updatePosition = useCallback((clientX: number) => {
     const el = containerRef.current
@@ -80,11 +84,12 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
       onTouchStart={onTouchStart}
     >
       <Image
-        src={backImage}
+        src={backError ? fallback : backImage}
         alt={alt}
         fill
         className="object-cover pointer-events-none"
         draggable={false}
+        onError={() => setBackError(true)}
       />
 
       <div
@@ -92,11 +97,12 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
         style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
       >
         <Image
-          src={frontImage}
+          src={frontError ? fallback : frontImage}
           alt={alt}
           fill
           className="object-cover"
           draggable={false}
+          onError={() => setFrontError(true)}
         />
       </div>
 

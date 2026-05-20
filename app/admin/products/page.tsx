@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState, useRef } from 'react'
-import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 import { Plus, Pencil, X, Check, Package, AlertCircle, Upload, FolderKanban, ChevronUp, ChevronDown } from 'lucide-react'
 import { img } from '@/lib/constants'
@@ -99,32 +98,36 @@ export default function AdminProducts() {
     saveCategories(newList)
   }
 
+  const uploadFile = async (file: File): Promise<string | null> => {
+    const { data: { session } } = await supabase!.auth.getSession()
+    if (!session?.access_token) return null
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      body: formData,
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.url || null
+  }
+
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !editing) return
 
-    // Show local preview via data URL
     const reader = new FileReader()
     reader.onload = (ev) => {
       setEditing(f => ({ ...f, image: ev.target?.result as string || f?.image }))
     }
     reader.readAsDataURL(file)
 
-    // Try uploading to Supabase Storage
-    if (supabase) {
-      const ext = file.name.split('.').pop()
-      const fileName = `product-${Date.now()}.${ext}`
-      const { data: uploadData } = await supabase.storage
-        .from('product-images')
-        .upload(fileName, file, { upsert: true })
-      if (uploadData) {
-        const { data: urlData } = supabase.storage
-          .from('product-images')
-          .getPublicUrl(uploadData.path)
-        if (urlData) {
-          setEditing(f => ({ ...f, image: urlData.publicUrl }))
-        }
-      }
+    const url = await uploadFile(file)
+    if (url) {
+      setEditing(f => ({ ...f, image: url }))
     }
   }
 
@@ -138,20 +141,9 @@ export default function AdminProducts() {
     }
     reader.readAsDataURL(file)
 
-    if (supabase) {
-      const ext = file.name.split('.').pop()
-      const fileName = `product-bg-${Date.now()}.${ext}`
-      const { data: uploadData } = await supabase.storage
-        .from('product-images')
-        .upload(fileName, file, { upsert: true })
-      if (uploadData) {
-        const { data: urlData } = supabase.storage
-          .from('product-images')
-          .getPublicUrl(uploadData.path)
-        if (urlData) {
-          setEditing(f => ({ ...f, background_image: urlData.publicUrl }))
-        }
-      }
+    const url = await uploadFile(file)
+    if (url) {
+      setEditing(f => ({ ...f, background_image: url }))
     }
   }
 
@@ -310,7 +302,7 @@ export default function AdminProducts() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
               <div className="flex items-start gap-3 sm:gap-0">
                 <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0">
-                  <Image src={img(product.image)} alt={product.name} fill className="object-cover" />
+                  <img src={img(product.image)} alt={product.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
                 </div>
                 <div className="flex-1 min-w-0 sm:hidden ml-1">
                   <div className="flex items-center gap-2">
@@ -434,7 +426,7 @@ export default function AdminProducts() {
                   </div>
                   {editing.image && (
                     <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-border/30">
-                      <Image src={img(editing.image)} alt="preview" fill className="object-cover" />
+                      <img src={img(editing.image)} alt="preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
                     </div>
                   )}
                 </div>
@@ -467,7 +459,7 @@ export default function AdminProducts() {
                   </div>
                   {editing.background_image && (
                     <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-border/30">
-                      <Image src={img(editing.background_image)} alt="preview" fill className="object-cover" />
+                      <img src={img(editing.background_image)} alt="preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
                     </div>
                   )}
                 </div>
