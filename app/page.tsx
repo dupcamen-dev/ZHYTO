@@ -1035,7 +1035,7 @@ export default function Home() {
                     />
                   ))}
                 </div>
-                <p className="text-cream/85 leading-relaxed mb-6 text-[15px]">{review.comment}</p>
+                <p className="text-cream leading-relaxed mb-6 text-[15px]">{review.comment}</p>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-cream/10 flex items-center justify-center">
                     <span className="text-cream text-sm font-medium">{review.user_name.charAt(0).toUpperCase()}</span>
@@ -1050,7 +1050,7 @@ export default function Home() {
           <div className="text-center">
             {user ? (
               userHasReview ? (
-                <p className="text-cream/50 text-sm tracking-[0.15em]">{t.reviews.alreadyReviewed}</p>
+                <p className="text-cream text-sm tracking-[0.15em]">{t.reviews.alreadyReviewed}</p>
               ) : reviewFormOpen ? (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
