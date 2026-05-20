@@ -1,48 +1,26 @@
-import { getStripeServer } from '@/lib/stripe'
-import { NextResponse } from 'next/server'
+import { NextRequest } from 'next/server';
+import { paymentsService } from '@/lib/services/payments.service';
+import { requireAuth } from '@/lib/middleware/auth.middleware';
+import { handleError, ValidationError } from '@/lib/utils/errors';
 
-export async function POST(req: Request) {
-  const stripe = getStripeServer()
-
-  if (!stripe) {
-    return NextResponse.json(
-      { error: 'Payment not configured' },
-      { status: 503 }
-    )
-  }
-
+export async function POST(request: NextRequest) {
   try {
-    const { amount, paymentMethodType } = await req.json()
+    await requireAuth(request);
+    
+    const body = await request.json();
+    const { amount, orderId } = body;
 
-    let paymentIntent
-
-    if (paymentMethodType === 'bank') {
-      paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100),
-        currency: 'gbp',
-        payment_method_types: ['customer_balance'],
-        payment_method_options: {
-          customer_balance: {
-            funding_type: 'bank_transfer',
-            bank_transfer: {
-              type: 'gb_bank_transfer',
-            },
-          },
-        },
-      })
-    } else {
-      paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100),
-        currency: 'gbp',
-        payment_method_types: ['card'],
-      })
+    if (!amount || !orderId) {
+      throw new ValidationError('amount та orderId обов\'язкові');
     }
 
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret })
-  } catch {
-    return NextResponse.json(
-      { error: 'Failed to create payment' },
-      { status: 500 }
-    )
+    const payment = await paymentsService.createPaymentIntent(amount, orderId);
+
+    return Response.json({
+      clientSecret: payment.clientSecret,
+      paymentIntentId: payment.paymentIntentId,
+    });
+  } catch (error) {
+    return handleError(error);
   }
 }
