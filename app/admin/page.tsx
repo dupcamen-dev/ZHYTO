@@ -156,12 +156,12 @@ export default function AdminDashboard() {
       {/* Out of stock warning */}
       {outOfStockProducts.length > 0 && (
         <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-          <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+          <AlertTriangle className="w-5 h-5 text-black shrink-0 mt-0.5" />
           <div>
-            <p className="text-red-400 font-medium">
+            <p className="text-black font-medium">
               {outOfStockProducts.length} {outOfStockProducts.length === 1 ? 'product is' : 'products are'} OUT OF STOCK
             </p>
-            <p className="text-red-400/70 text-sm mt-1">
+            <p className="text-black/70 text-sm mt-1">
               {outOfStockProducts.map(p => p.name).join(', ')} — restock or delete to dismiss this warning.
             </p>
           </div>
