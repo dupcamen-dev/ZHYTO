@@ -243,8 +243,8 @@ export const translations = {
       list: [
         'Same-day delivery: London Zones 1\u20133 (order before 2 PM)',
         'Next-day delivery: All London areas',
-        'Minimum order: £25',
-        'Free delivery on orders over £50',
+        'Minimum order: £{min_order}',
+        'Free delivery on orders over £{free_threshold}',
       ],
     },
     legalLayout: {
@@ -506,8 +506,8 @@ export const translations = {
       list: [
         'Доставка сьогодні: Лондон Зони 1-3 (замовлення до 14:00)',
         'Доставка наступного дня: Всі райони Лондона',
-        'Мінімальне замовлення: £25',
-        'Безкоштовна доставка при замовленні від £50',
+        'Мінімальне замовлення: £{min_order}',
+        'Безкоштовна доставка при замовленні від £{free_threshold}',
       ],
     },
     legalLayout: {
