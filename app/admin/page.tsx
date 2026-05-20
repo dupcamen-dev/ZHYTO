@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { TrendingUp, Package, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { TrendingUp, Package, Clock, CheckCircle, XCircle, Calendar } from 'lucide-react'
 
 interface Order {
   id: string
@@ -17,13 +17,19 @@ interface ProductStat {
   count: number
 }
 
-type Period = 'week' | 'month' | 'all'
-
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
-  const [period, setPeriod] = useState<Period>('all')
+  const today = new Date().toISOString().split('T')[0]
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]
+  const [fromDate, setFromDate] = useState(weekAgo)
+  const [toDate, setToDate] = useState(today)
   const [stats, setStats] = useState({ total: 0, revenue: 0, pending: 0, confirmed: 0, completed: 0 })
+
+  const buildUrl = (from: string, to: string) => {
+    const params = new URLSearchParams({ limit: '50', from, to })
+    return `/api/admin/orders?${params}`
+  }
 
   useEffect(() => {
     if (!supabase) { setLoading(false); return }
@@ -31,7 +37,7 @@ export default function AdminDashboard() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session?.access_token) { setLoading(false); return }
 
-      fetch(`/api/admin/orders?limit=50${period !== 'all' ? `&period=${period}` : ''}`, {
+      fetch(buildUrl(fromDate, toDate), {
         headers: { Authorization: `Bearer ${session.access_token}` },
       })
         .then(res => res.json())
@@ -51,7 +57,14 @@ export default function AdminDashboard() {
         })
         .catch(() => setLoading(false))
     })
-  }, [period])
+  }, [fromDate, toDate])
+
+  const setPeriod = (days: number) => {
+    const to = new Date().toISOString().split('T')[0]
+    const from = new Date(Date.now() - days * 86400000).toISOString().split('T')[0]
+    setFromDate(from)
+    setToDate(to)
+  }
 
   // Top products
   const productCounts: ProductStat[] = orders
@@ -94,21 +107,40 @@ export default function AdminDashboard() {
           <h1 className="font-serif text-3xl text-foreground">Dashboard</h1>
           <p className="text-muted-foreground text-base mt-1">Overview of your shop</p>
         </div>
-        {/* Period filter */}
-        <div className="flex gap-2 flex-wrap">
-          {(['week', 'month', 'all'] as Period[]).map(p => (
-            <button
-              key={p}
-              onClick={() => setPeriod(p)}
-              className={`px-4 py-2 rounded-lg text-sm tracking-[0.15em] transition-colors cursor-pointer ${
-                period === p
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:text-foreground border border-border/30'
-              }`}
-            >
-              {p === 'week' ? 'WEEK' : p === 'month' ? 'MONTH' : 'ALL TIME'}
-            </button>
-          ))}
+        {/* Date range filter */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-muted-foreground" />
+            <input
+              type="date"
+              value={fromDate}
+              onChange={e => setFromDate(e.target.value)}
+              className="bg-transparent border border-border/50 rounded px-3 py-1.5 text-sm text-foreground focus:border-primary outline-none"
+            />
+            <span className="text-muted-foreground text-sm">—</span>
+            <input
+              type="date"
+              value={toDate}
+              onChange={e => setToDate(e.target.value)}
+              className="bg-transparent border border-border/50 rounded px-3 py-1.5 text-sm text-foreground focus:border-primary outline-none"
+            />
+          </div>
+          <div className="flex gap-1.5 flex-wrap">
+            {[
+              { label: '7D', days: 7 },
+              { label: '30D', days: 30 },
+              { label: '90D', days: 90 },
+              { label: 'ALL', days: 3650 },
+            ].map(({ label, days }) => (
+              <button
+                key={label}
+                onClick={() => setPeriod(days)}
+                className="px-2.5 py-1 text-xs tracking-[0.15em] border border-border/30 text-muted-foreground hover:text-foreground hover:border-foreground/50 rounded transition-colors cursor-pointer"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

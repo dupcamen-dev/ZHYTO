@@ -20,4 +20,6 @@ export const OrderFiltersSchema = z.object({
   status: OrderStatusSchema.optional(),
   page: z.number().int().positive().default(1),
   limit: z.number().int().positive().max(100).default(20),
+  fromDate: z.string().optional(),
+  toDate: z.string().optional(),
 });

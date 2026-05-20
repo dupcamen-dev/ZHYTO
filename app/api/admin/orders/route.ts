@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
       status: searchParams.get('status') || undefined,
       page: Number(searchParams.get('page')) || 1,
       limit: Number(searchParams.get('limit')) || 20,
+      fromDate: searchParams.get('from') || undefined,
+      toDate: searchParams.get('to') || undefined,
     };
 
     const validated = OrderFiltersSchema.parse(filters);

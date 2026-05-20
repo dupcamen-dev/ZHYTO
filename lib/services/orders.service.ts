@@ -94,7 +94,7 @@ export const ordersService = {
     } catch {
       // fallback
     }
-    const { status, page = 1, limit = 20 } = filters;
+    const { status, page = 1, limit = 20, fromDate, toDate } = filters;
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
@@ -106,6 +106,14 @@ export const ordersService = {
 
     if (status) {
       query = query.eq('status', status);
+    }
+
+    if (fromDate) {
+      query = query.gte('created_at', fromDate);
+    }
+
+    if (toDate) {
+      query = query.lte('created_at', toDate);
     }
 
     const { data, error, count } = await query;
