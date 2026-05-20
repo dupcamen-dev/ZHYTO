@@ -160,8 +160,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   }
 
   const saveOrder = async () => {
-    if (!supabase || !user) return
-    await supabase.from('orders').insert({
+    if (!supabase || !user) throw new Error('Not authenticated')
+    const { error } = await supabase.from('orders').insert({
       user_id: user.id,
       items: cartItems.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
       total,
@@ -171,12 +171,19 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       customer_email: user.email || '',
       delivery_address: deliveryAddress,
     })
+    if (error) throw error
   }
 
   const handleMockPayment = async () => {
     setSubmitting(true)
     await new Promise(resolve => setTimeout(resolve, 1500))
-    await saveOrder()
+    try {
+      await saveOrder()
+    } catch {
+      toast.error('Order was not saved. Please contact support.')
+      setSubmitting(false)
+      return
+    }
     toast.success(t.checkout.orderConfirmed)
     clearCart()
     onOpenChange(false)
@@ -187,8 +194,13 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     router.push('/account')
   }
 
-  const handlePaymentSuccess = () => {
-    saveOrder()
+  const handlePaymentSuccess = async () => {
+    try {
+      await saveOrder()
+    } catch {
+      toast.error('Order was not saved. Please contact support.')
+      return
+    }
     toast.success(t.checkout.orderConfirmed)
     clearCart()
     onOpenChange(false)
