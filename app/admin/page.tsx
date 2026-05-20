@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { TrendingUp, Package, Clock, CheckCircle, XCircle, Calendar } from 'lucide-react'
+import { TrendingUp, Package, Clock, CheckCircle, XCircle, Calendar, AlertTriangle } from 'lucide-react'
 
 interface Order {
   id: string
@@ -20,6 +20,7 @@ interface ProductStat {
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [outOfStockProducts, setOutOfStockProducts] = useState<{ id: number; name: string }[]>([])
   const fmt = (d: Date) => d.toISOString().split('T')[0]
   const today = fmt(new Date())
   const weekAgo = fmt(new Date(Date.now() - 7 * 86400000))
@@ -56,6 +57,13 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => { fetchOrders(fromDate, toDate) }, [fromDate, toDate])
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase.from('products').select('id, name, stock').lte('stock', 0).then(({ data }) => {
+      if (data) setOutOfStockProducts(data as { id: number; name: string }[])
+    })
+  }, [])
 
   const setPeriod = (days: number) => {
     setActiveDays(days)
@@ -144,6 +152,21 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Out of stock warning */}
+      {outOfStockProducts.length > 0 && (
+        <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+          <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-red-400 font-medium">
+              {outOfStockProducts.length} {outOfStockProducts.length === 1 ? 'product is' : 'products are'} OUT OF STOCK
+            </p>
+            <p className="text-red-400/70 text-sm mt-1">
+              {outOfStockProducts.map(p => p.name).join(', ')} — restock or delete to dismiss this warning.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Stats cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
