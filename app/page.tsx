@@ -245,8 +245,16 @@ export default function Home() {
 
   useEffect(() => {
     if (!supabase || !user) { setIsAdmin(false); return }
-    supabase.from('profiles').select('role').eq('id', user.id).single().then(({ data }) => {
-      setIsAdmin(data?.role === 'admin')
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) { setIsAdmin(false); return }
+      fetch('/api/auth/user', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+        .then(res => res.json())
+        .then(data => {
+          setIsAdmin(data?.user?.profile?.role === 'admin')
+        })
+        .catch(() => setIsAdmin(false))
     })
   }, [user])
 

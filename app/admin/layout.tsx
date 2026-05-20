@@ -26,13 +26,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (loading) return
     if (!user) { router.push('/'); return }
     if (!supabase) { router.push('/'); return }
-    supabase.from('profiles').select('role').eq('id', user.id).single().then(({ data, error }) => {
-      if (error || !data || data.role !== 'admin') {
-        router.push('/')
-        return
-      }
-      setIsAdmin(true)
-      setChecking(false)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) { router.push('/'); return }
+      fetch('/api/auth/user', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data?.user?.profile?.role !== 'admin') {
+            router.push('/')
+            return
+          }
+          setIsAdmin(true)
+          setChecking(false)
+        })
+        .catch(() => router.push('/'))
     })
   }, [user, loading, router])
 

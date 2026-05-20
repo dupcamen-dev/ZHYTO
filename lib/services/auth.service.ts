@@ -52,11 +52,18 @@ export const authService = {
   },
 
   async getUserProfile(userId: string): Promise<Profile | null> {
-    const { data, error } = await supabase
+    let client = supabase;
+    try {
+      const { getSupabaseAdmin } = await import('../utils/supabase');
+      client = getSupabaseAdmin();
+    } catch {
+      // fallback
+    }
+    const { data, error } = await client
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
 
     if (error || !data) return null;
     return data;
