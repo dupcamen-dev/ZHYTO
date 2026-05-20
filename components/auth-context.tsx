@@ -9,7 +9,6 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   signInWithGoogle: () => Promise<void>
-  signInWithApple: () => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -71,19 +70,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const signInWithApple = async () => {
-    if (!supabase) {
-      localStorage.setItem('zhyto-mock-user', 'true')
-      setUser(mockUser)
-      return
-    }
-    try {
-      await supabase.auth.signInWithOAuth({ provider: 'apple' })
-    } catch {
-      toast.error('Apple sign-in failed. Please try again.')
-    }
-  }
-
   const signOut = async () => {
     localStorage.removeItem('zhyto-mock-user')
     if (!supabase) { setUser(null); return }
@@ -91,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signInWithApple, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   )
