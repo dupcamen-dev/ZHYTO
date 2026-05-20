@@ -1088,7 +1088,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white/[0.15] backdrop-blur-sm p-8 shadow-sm hover:shadow-md transition-shadow"
+                className="bg-black/90 backdrop-blur-sm p-8 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
