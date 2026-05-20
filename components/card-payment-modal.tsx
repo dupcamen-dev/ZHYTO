@@ -45,7 +45,8 @@ const elementStyle = {
 
 const elementOptions = { style: elementStyle }
 
-function CardForm({ amount, onSuccess, userName, userEmail, onBack }: {
+function CardForm({ clientSecret, amount, onSuccess, userName, userEmail, onBack }: {
+  clientSecret: string
   amount: number
   onSuccess: () => void
   userName?: string
@@ -156,6 +157,7 @@ export function CardPaymentModal({ open, onOpenChange, clientSecret, amount, onS
         {stripePromise && clientSecret ? (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
             <CardForm
+              clientSecret={clientSecret}
               amount={amount}
               onSuccess={onSuccess}
               userName={userName}
