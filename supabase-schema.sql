@@ -12,11 +12,13 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Users can view own profile"
+DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
+CREATE POLICY "Users can view own profile"
   ON profiles FOR SELECT
   USING (auth.uid() = id);
 
-CREATE POLICY IF NOT EXISTS "Admins can view all profiles"
+DROP POLICY IF EXISTS "Admins can view all profiles" ON profiles;
+CREATE POLICY "Admins can view all profiles"
   ON profiles FOR SELECT
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
@@ -41,19 +43,23 @@ CREATE TABLE IF NOT EXISTS products (
 
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Anyone can view available products"
+DROP POLICY IF EXISTS "Anyone can view available products" ON products;
+CREATE POLICY "Anyone can view available products"
   ON products FOR SELECT
   USING (available = true OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
-CREATE POLICY IF NOT EXISTS "Admins can insert products"
+DROP POLICY IF EXISTS "Admins can insert products" ON products;
+CREATE POLICY "Admins can insert products"
   ON products FOR INSERT
   WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
-CREATE POLICY IF NOT EXISTS "Admins can update products"
+DROP POLICY IF EXISTS "Admins can update products" ON products;
+CREATE POLICY "Admins can update products"
   ON products FOR UPDATE
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
-CREATE POLICY IF NOT EXISTS "Admins can delete products"
+DROP POLICY IF EXISTS "Admins can delete products" ON products;
+CREATE POLICY "Admins can delete products"
   ON products FOR DELETE
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
@@ -95,15 +101,18 @@ CREATE TABLE IF NOT EXISTS orders (
 
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Users can view own orders"
+DROP POLICY IF EXISTS "Users can view own orders" ON orders;
+CREATE POLICY "Users can view own orders"
   ON orders FOR SELECT
   USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
-CREATE POLICY IF NOT EXISTS "Users can insert own orders"
+DROP POLICY IF EXISTS "Users can insert own orders" ON orders;
+CREATE POLICY "Users can insert own orders"
   ON orders FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Admins can update any order"
+DROP POLICY IF EXISTS "Admins can update any order" ON orders;
+CREATE POLICY "Admins can update any order"
   ON orders FOR UPDATE
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
@@ -123,15 +132,18 @@ CREATE TABLE IF NOT EXISTS settings (
 
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Anyone can read settings"
+DROP POLICY IF EXISTS "Anyone can read settings" ON settings;
+CREATE POLICY "Anyone can read settings"
   ON settings FOR SELECT
   USING (true);
 
-CREATE POLICY IF NOT EXISTS "Admins can upsert settings"
+DROP POLICY IF EXISTS "Admins can upsert settings" ON settings;
+CREATE POLICY "Admins can upsert settings"
   ON settings FOR INSERT
   WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
-CREATE POLICY IF NOT EXISTS "Admins can update settings"
+DROP POLICY IF EXISTS "Admins can update settings" ON settings;
+CREATE POLICY "Admins can update settings"
   ON settings FOR UPDATE
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
@@ -153,19 +165,23 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Anyone can view approved reviews"
+DROP POLICY IF EXISTS "Anyone can view approved reviews" ON reviews;
+CREATE POLICY "Anyone can view approved reviews"
   ON reviews FOR SELECT
   USING (approved = true);
 
-CREATE POLICY IF NOT EXISTS "Authenticated users can insert reviews"
+DROP POLICY IF EXISTS "Authenticated users can insert reviews" ON reviews;
+CREATE POLICY "Authenticated users can insert reviews"
   ON reviews FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can update own reviews"
+DROP POLICY IF EXISTS "Users can update own reviews" ON reviews;
+CREATE POLICY "Users can update own reviews"
   ON reviews FOR UPDATE
   USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Admins can delete any review"
+DROP POLICY IF EXISTS "Admins can delete any review" ON reviews;
+CREATE POLICY "Admins can delete any review"
   ON reviews FOR DELETE
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
@@ -186,11 +202,13 @@ CREATE TABLE IF NOT EXISTS stock_history (
 
 ALTER TABLE stock_history ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Admins can view stock history"
+DROP POLICY IF EXISTS "Admins can view stock history" ON stock_history;
+CREATE POLICY "Admins can view stock history"
   ON stock_history FOR SELECT
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
-CREATE POLICY IF NOT EXISTS "Admins can insert stock history"
+DROP POLICY IF EXISTS "Admins can insert stock history" ON stock_history;
+CREATE POLICY "Admins can insert stock history"
   ON stock_history FOR INSERT
   WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
@@ -216,11 +234,13 @@ CREATE TABLE IF NOT EXISTS promo_codes (
 
 ALTER TABLE promo_codes ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Anyone can view active promo codes"
+DROP POLICY IF EXISTS "Anyone can view active promo codes" ON promo_codes;
+CREATE POLICY "Anyone can view active promo codes"
   ON promo_codes FOR SELECT
   USING (active = true AND (valid_until IS NULL OR valid_until > NOW()));
 
-CREATE POLICY IF NOT EXISTS "Admins can manage promo codes"
+DROP POLICY IF EXISTS "Admins can manage promo codes" ON promo_codes;
+CREATE POLICY "Admins can manage promo codes"
   ON promo_codes FOR ALL
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
@@ -242,7 +262,8 @@ CREATE TABLE IF NOT EXISTS order_payments (
 
 ALTER TABLE order_payments ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "Users can view own order payments"
+DROP POLICY IF EXISTS "Users can view own order payments" ON order_payments;
+CREATE POLICY "Users can view own order payments"
   ON order_payments FOR SELECT
   USING (
     EXISTS (
@@ -253,11 +274,13 @@ CREATE POLICY IF NOT EXISTS "Users can view own order payments"
     OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
-CREATE POLICY IF NOT EXISTS "System can insert order payments"
+DROP POLICY IF EXISTS "System can insert order payments" ON order_payments;
+CREATE POLICY "System can insert order payments"
   ON order_payments FOR INSERT
   WITH CHECK (true);
 
-CREATE POLICY IF NOT EXISTS "System can update order payments"
+DROP POLICY IF EXISTS "System can update order payments" ON order_payments;
+CREATE POLICY "System can update order payments"
   ON order_payments FOR UPDATE
   USING (true);
 
