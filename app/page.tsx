@@ -185,6 +185,7 @@ export default function Home() {
   [lang])
   const { cart, addToCart, removeFromCart, totalItems } = useCart()
   const { user, loading, signOut, signInWithGoogle } = useAuth()
+  const [isAdmin, setIsAdmin] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
@@ -241,6 +242,13 @@ export default function Home() {
       if (data) setReviews(data)
     })
   }, [])
+
+  useEffect(() => {
+    if (!supabase || !user) { setIsAdmin(false); return }
+    supabase.from('profiles').select('role').eq('id', user.id).single().then(({ data }) => {
+      setIsAdmin(data?.role === 'admin')
+    })
+  }, [user])
 
   useEffect(() => {
     if (!supabase) return
@@ -466,6 +474,7 @@ export default function Home() {
                       >
                         <User className="w-4 h-4" />
                       </motion.button>
+                      {isAdmin && (
                       <motion.button
                         onClick={() => router.push('/admin')}
                         className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-[13px] tracking-[0.1em] font-medium cursor-pointer"
@@ -475,6 +484,7 @@ export default function Home() {
                       >
                         A
                       </motion.button>
+                      )}
                     <motion.button
                       onClick={signOut}
                       className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-destructive hover:text-destructive hover:bg-destructive/5 transition-all cursor-pointer"
@@ -1211,6 +1221,7 @@ export default function Home() {
                         {t.mobileMenu.myAccount}
                       </Link>
                     </motion.div>
+                      {isAdmin && (
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1225,6 +1236,7 @@ export default function Home() {
                         {t.mobileMenu.admin}
                       </Link>
                     </motion.div>
+                      )}
                     <motion.button
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
