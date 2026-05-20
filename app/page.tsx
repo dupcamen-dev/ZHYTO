@@ -666,10 +666,10 @@ export default function Home() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: false }}
                       transition={{ duration: 0.5 }}
-                      className="group flex flex-col"
+                      className="group flex flex-col relative sm:pt-7"
                     >
                       {product.badge && (
-                        <span className="hidden sm:inline px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase whitespace-nowrap self-start rounded-t-md mb-0">
+                        <span className="hidden sm:absolute sm:inline top-0 left-0 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase whitespace-nowrap rounded-t-md z-10">
                           {product.badge}
                         </span>
                       )}
