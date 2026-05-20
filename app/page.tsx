@@ -1104,7 +1104,7 @@ export default function Home() {
                 </Button>
               )
             ) : (
-              <div className="text-cream/70">
+              <div className="text-cream">
                 <p className="mb-4">{t.reviews.signInToShare}</p>
                 <button
                   onClick={() => setSignInModalOpen(true)}
