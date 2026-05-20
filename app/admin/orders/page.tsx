@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Clock, CheckCircle, Package, XCircle, ChevronDown } from 'lucide-react'
+import { Clock, CheckCircle, Package, XCircle } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface Order {
   id: string
@@ -33,20 +34,32 @@ export default function AdminOrders() {
   const [filter, setFilter] = useState<string>('all')
 
   const fetchOrders = () => {
-    if (!supabase) { setLoading(false); return }
-    let query = supabase.from('orders').select('*').order('created_at', { ascending: false })
-    if (filter !== 'all') query = query.eq('status', filter)
-    query.then(({ data, error }) => {
-      if (!error && data) setOrders(data as Order[])
-      setLoading(false)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) { setLoading(false); return }
+      const url = `/api/admin/orders?limit=50${filter !== 'all' ? `&status=${filter}` : ''}`
+      fetch(url, { headers: { Authorization: `Bearer ${session.access_token}` } })
+        .then(res => res.json())
+        .then(data => {
+          if (data?.orders) setOrders(data.orders as Order[])
+          setLoading(false)
+        })
+        .catch(() => { setLoading(false); toast.error('Failed to load orders') })
     })
   }
 
   useEffect(() => { fetchOrders() }, [filter])
 
   const updateStatus = async (id: string, status: string) => {
-    if (!supabase) return
-    await supabase.from('orders').update({ status }).eq('id', id)
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch(`/api/orders/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ status }),
+    })
     fetchOrders()
   }
 

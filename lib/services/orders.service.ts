@@ -22,11 +22,17 @@ export const ordersService = {
   },
 
   async getOrderById(id: string): Promise<Order> {
-    const { data, error } = await supabase
+    let client = supabase;
+    try {
+      client = getSupabaseAdmin();
+    } catch {
+      // fallback
+    }
+    const { data, error } = await client
       .from('orders')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       throw new NotFoundError('Замовлення не знайдено');
@@ -61,12 +67,18 @@ export const ordersService = {
   },
 
   async updateOrderStatus(id: string, status: OrderStatus): Promise<Order> {
-    const { data, error } = await supabase
+    let client = supabase;
+    try {
+      client = getSupabaseAdmin();
+    } catch {
+      // fallback
+    }
+    const { data, error } = await client
       .from('orders')
       .update({ status })
       .eq('id', id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       throw new NotFoundError('Замовлення не знайдено');
@@ -76,11 +88,17 @@ export const ordersService = {
   },
 
   async getAllOrders(filters: OrderFilters): Promise<{ orders: Order[]; total: number }> {
+    let client = supabase;
+    try {
+      client = getSupabaseAdmin();
+    } catch {
+      // fallback
+    }
     const { status, page = 1, limit = 20 } = filters;
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    let query = supabase
+    let query = client
       .from('orders')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })

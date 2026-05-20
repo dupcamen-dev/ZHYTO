@@ -1,16 +1,27 @@
-import { supabase } from '../utils/supabase';
+import { supabase, getSupabaseAdmin } from '../utils/supabase';
 import { AuthorizationError } from '../utils/errors';
 import { requireAuth } from './auth.middleware';
 import { User } from '../types/user.types';
 
+async function getProfileClient() {
+  let client = supabase;
+  try {
+    client = getSupabaseAdmin();
+  } catch {
+    // fallback
+  }
+  return client;
+}
+
 export async function requireAdmin(request: Request): Promise<User> {
   const user = await requireAuth(request);
+  const client = await getProfileClient();
 
-  const { data: profile, error } = await supabase
+  const { data: profile, error } = await client
     .from('profiles')
     .select('role')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
   if (error || !profile || profile.role !== 'admin') {
     throw new AuthorizationError('Потрібні права адміністратора');
@@ -20,11 +31,12 @@ export async function requireAdmin(request: Request): Promise<User> {
 }
 
 export async function isAdmin(userId: string): Promise<boolean> {
-  const { data: profile } = await supabase
+  const client = await getProfileClient();
+  const { data: profile } = await client
     .from('profiles')
     .select('role')
     .eq('id', userId)
-    .single();
+    .maybeSingle();
 
   return profile?.role === 'admin';
 }
