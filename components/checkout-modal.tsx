@@ -21,8 +21,10 @@ import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
 import { CardPaymentModal } from '@/components/card-payment-modal'
 import { WalletPaymentModal } from '@/components/wallet-payment-modal'
+import { BankPaymentModal } from '@/components/bank-payment-modal'
+import { PayPalPaymentModal } from '@/components/paypal-payment-modal'
 import { toast } from 'sonner'
-import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader, Percent } from 'lucide-react'
+import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader, Percent, Banknote, Wallet } from 'lucide-react'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
 import { useLanguage } from '@/components/language-context'
 
@@ -42,11 +44,13 @@ const hasStripe = typeof process !== 'undefined' &&
   !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY &&
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.startsWith('pk_')
 
-type PaymentMethodType = 'card' | 'wallet'
+type PaymentMethodType = 'card' | 'wallet' | 'bank' | 'paypal'
 
 const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: string; desc: string }> = {
   card:   { icon: CreditCard,  label: 'payByCard',              desc: 'cardDesc' },
   wallet: { icon: Smartphone,  label: 'applePayGooglePay',   desc: 'walletDesc' },
+  bank:   { icon: Banknote,    label: 'payByBank',             desc: 'bankDesc' },
+  paypal: { icon: Wallet,      label: 'payPal',                desc: 'payPalDesc' },
 }
 
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
@@ -59,6 +63,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [showPayment, setShowPayment] = useState(false)
   const [cardModalOpen, setCardModalOpen] = useState(false)
   const [walletModalOpen, setWalletModalOpen] = useState(false)
+  const [bankModalOpen, setBankModalOpen] = useState(false)
+  const [paypalModalOpen, setPaypalModalOpen] = useState(false)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [deliveryAddress, setDeliveryAddress] = useState('')
@@ -131,6 +137,15 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const handleMethodSelect = async (method: PaymentMethodType) => {
     setSelectedMethod(method)
 
+    if (method === 'bank') {
+      setBankModalOpen(true)
+      return
+    }
+    if (method === 'paypal') {
+      setPaypalModalOpen(true)
+      return
+    }
+
     if (hasStripe) {
       setSubmitting(true)
       try {
@@ -143,13 +158,13 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           }),
         })
         const data = await res.json()
-          if (data.clientSecret) {
-            setClientSecret(data.clientSecret)
-            if (method === 'card') {
-              setCardModalOpen(true)
-            } else if (method === 'wallet') {
-              setWalletModalOpen(true)
-            }
+        if (data.clientSecret) {
+          setClientSecret(data.clientSecret)
+          if (method === 'card') {
+            setCardModalOpen(true)
+          } else if (method === 'wallet') {
+            setWalletModalOpen(true)
+          }
         } else {
           toast.error(t.checkout.paymentUnavailable)
           setSelectedMethod(null)
@@ -407,8 +422,13 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             {t.checkout.changeMethod}
           </button>
         </div>
+      ) : selectedMethod === 'bank' || selectedMethod === 'paypal' ? (
+        <div className="text-center py-8 text-muted-foreground">
+          <button onClick={handleBackToMethods} className="text-primary hover:underline mt-3 text-[16px] tracking-[0.15em] cursor-pointer">
+            {t.checkout.changeMethod}
+          </button>
+        </div>
       ) : (
-        /* Stripe form or mock payment (bank) */
         hasStripe && clientSecret && stripePromise ? (
           <Elements
             stripe={stripePromise}
@@ -619,6 +639,32 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           }
         }}
         clientSecret={clientSecret || ''}
+        amount={total}
+        onSuccess={handlePaymentSuccess}
+      />
+
+      <BankPaymentModal
+        open={bankModalOpen}
+        onOpenChange={(open) => {
+          setBankModalOpen(open)
+          if (!open) {
+            setSelectedMethod(null)
+            setClientSecret(null)
+          }
+        }}
+        amount={total}
+        onSuccess={handlePaymentSuccess}
+      />
+
+      <PayPalPaymentModal
+        open={paypalModalOpen}
+        onOpenChange={(open) => {
+          setPaypalModalOpen(open)
+          if (!open) {
+            setSelectedMethod(null)
+            setClientSecret(null)
+          }
+        }}
         amount={total}
         onSuccess={handlePaymentSuccess}
       />
