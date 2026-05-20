@@ -658,7 +658,7 @@ export default function Home() {
             const catProducts = activeProducts.filter(p => p.category === key)
             if (catProducts.length === 0) return null
             const label = (t.products.categories as any)[key] || key
-            const desc = (t.products.categories as any)[`${key}Desc`] || categoryDescriptions[key] || ''
+            const desc = categoryDescriptions[key] || ''
             return (
               <div key={key} className={catIndex > 0 ? 'mt-16' : ''}>
                 <motion.div
