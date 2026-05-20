@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
 import { paymentsService } from '@/lib/services/payments.service';
 import { ordersService } from '@/lib/services/orders.service';
-import { productsService } from '@/lib/services/products.service';
 import { emailService } from '@/lib/services/email.service';
 import { handleError } from '@/lib/utils/errors';
 import Stripe from 'stripe';
@@ -23,13 +22,8 @@ export async function POST(request: NextRequest) {
       const orderId = paymentIntent.metadata.order_id;
 
       if (orderId) {
-        // Оновлюємо статус замовлення
+        // Оновлюємо статус замовлення (stock зменшується всередині)
         const order = await ordersService.updateOrderStatus(orderId, 'confirmed');
-
-        // Зменшуємо stock
-        for (const item of order.items) {
-          await productsService.updateStock(item.product_id, -item.quantity);
-        }
 
         // Відправляємо email
         await emailService.sendOrderConfirmation(order);

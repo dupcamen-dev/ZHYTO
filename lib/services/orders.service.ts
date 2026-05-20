@@ -1,7 +1,7 @@
 import { supabase, getSupabaseAdmin } from '../utils/supabase';
 import { Order, OrderInput, OrderStatus, OrderFilters } from '../types/order.types';
 import { CartItem } from '../types/product.types';
-import { NotFoundError } from '../utils/errors';
+import { NotFoundError, ValidationError } from '../utils/errors';
 
 export const ordersService = {
   async getUserOrders(userId: string): Promise<Order[]> {
@@ -82,6 +82,24 @@ export const ordersService = {
 
     if (error || !data) {
       throw new NotFoundError('Замовлення не знайдено');
+    }
+
+    // Reduce stock when confirmed
+    if (status === 'confirmed' && data.items?.length) {
+      for (const item of data.items) {
+        const { data: product } = await client
+          .from('products')
+          .select('stock')
+          .eq('id', item.product_id)
+          .maybeSingle();
+        if (product) {
+          const newStock = Math.max(0, product.stock - item.quantity);
+          await client
+            .from('products')
+            .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
+            .eq('id', item.product_id);
+        }
+      }
     }
 
     return data;
