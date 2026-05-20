@@ -1,7 +1,15 @@
 import { NextRequest } from 'next/server';
 import { requireAdmin } from '@/lib/middleware/admin.middleware';
-import { supabase } from '@/lib/utils/supabase';
+import { supabase, getSupabaseAdmin } from '@/lib/utils/supabase';
 import { handleError } from '@/lib/utils/errors';
+
+function getClient() {
+  try {
+    return getSupabaseAdmin();
+  } catch {
+    return supabase;
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -29,8 +37,10 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    const client = getClient();
+
     // Загальний дохід
-    const { data: revenueData } = await supabase
+    const { data: revenueData } = await client
       .from('orders')
       .select('total, delivery_fee')
       .eq('status', 'completed')
@@ -42,13 +52,13 @@ export async function GET(request: NextRequest) {
     ) || 0;
 
     // Кількість замовлень
-    const { count: ordersCount } = await supabase
+    const { count: ordersCount } = await client
       .from('orders')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', startDate.toISOString());
 
     // Популярні продукти
-    const { data: orders } = await supabase
+    const { data: orders } = await client
       .from('orders')
       .select('items')
       .eq('status', 'completed')
@@ -71,7 +81,7 @@ export async function GET(request: NextRequest) {
       .map(([id, data]) => ({ id: Number(id), ...data }));
 
     // Статуси замовлень
-    const { data: statusData } = await supabase
+    const { data: statusData } = await client
       .from('orders')
       .select('status')
       .gte('created_at', startDate.toISOString());

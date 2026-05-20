@@ -28,28 +28,28 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (!supabase) { setLoading(false); return }
 
-    const fromDate = period === 'week'
-      ? new Date(Date.now() - 7 * 86400000).toISOString()
-      : period === 'month'
-        ? new Date(Date.now() - 30 * 86400000).toISOString()
-        : null
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) { setLoading(false); return }
 
-    let query = supabase.from('orders').select('*').order('created_at', { ascending: false })
-    if (fromDate) query = query.gte('created_at', fromDate)
-
-    query.then(({ data, error }) => {
-      if (!error && data) {
-        const orders = data as Order[]
-        setOrders(orders)
-        setStats({
-          total: orders.length,
-          revenue: orders.reduce((s, o) => s + o.total, 0),
-          pending: orders.filter(o => o.status === 'pending').length,
-          confirmed: orders.filter(o => o.status === 'confirmed').length,
-          completed: orders.filter(o => o.status === 'completed').length,
+      fetch(`/api/admin/orders?limit=50${period !== 'all' ? `&period=${period}` : ''}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data?.orders) {
+            const orders = data.orders as Order[]
+            setOrders(orders)
+            setStats({
+              total: orders.length,
+              revenue: orders.reduce((s, o) => s + o.total, 0),
+              pending: orders.filter(o => o.status === 'pending').length,
+              confirmed: orders.filter(o => o.status === 'confirmed').length,
+              completed: orders.filter(o => o.status === 'completed').length,
+            })
+          }
+          setLoading(false)
         })
-      }
-      setLoading(false)
+        .catch(() => setLoading(false))
     })
   }, [period])
 
