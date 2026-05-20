@@ -20,24 +20,20 @@ interface ProductStat {
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
-  const today = new Date().toISOString().split('T')[0]
-  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]
+  const fmt = (d: Date) => d.toISOString().split('T')[0]
+  const today = fmt(new Date())
+  const weekAgo = fmt(new Date(Date.now() - 7 * 86400000))
   const [fromDate, setFromDate] = useState(weekAgo)
   const [toDate, setToDate] = useState(today)
   const [stats, setStats] = useState({ total: 0, revenue: 0, pending: 0, confirmed: 0, completed: 0 })
+  const [activeDays, setActiveDays] = useState<number | null>(7)
 
-  const buildUrl = (from: string, to: string) => {
-    const params = new URLSearchParams({ limit: '50', from, to })
-    return `/api/admin/orders?${params}`
-  }
-
-  useEffect(() => {
+  const fetchOrders = (from: string, to: string) => {
     if (!supabase) { setLoading(false); return }
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session?.access_token) { setLoading(false); return }
-
-      fetch(buildUrl(fromDate, toDate), {
+      const params = new URLSearchParams({ limit: '50', from, to })
+      fetch(`/api/admin/orders?${params}`, {
         headers: { Authorization: `Bearer ${session.access_token}` },
       })
         .then(res => res.json())
@@ -57,13 +53,14 @@ export default function AdminDashboard() {
         })
         .catch(() => setLoading(false))
     })
-  }, [fromDate, toDate])
+  }
+
+  useEffect(() => { fetchOrders(fromDate, toDate) }, [fromDate, toDate])
 
   const setPeriod = (days: number) => {
-    const to = new Date().toISOString().split('T')[0]
-    const from = new Date(Date.now() - days * 86400000).toISOString().split('T')[0]
-    setFromDate(from)
-    setToDate(to)
+    setActiveDays(days)
+    setFromDate(fmt(new Date(Date.now() - days * 86400000)))
+    setToDate(fmt(new Date()))
   }
 
   // Top products
@@ -110,19 +107,19 @@ export default function AdminDashboard() {
         {/* Date range filter */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
+            <Calendar className="w-4 h-4 text-muted-foreground shrink-0" />
             <input
-              type="date"
               value={fromDate}
               onChange={e => setFromDate(e.target.value)}
-              className="bg-transparent border border-border/50 rounded px-3 py-1.5 text-sm text-foreground focus:border-primary outline-none"
+              className="w-28 bg-transparent border border-border/50 rounded px-3 py-1.5 text-sm text-foreground focus:border-primary outline-none font-mono tracking-wider"
+              placeholder="YYYY-MM-DD"
             />
             <span className="text-muted-foreground text-sm">—</span>
             <input
-              type="date"
               value={toDate}
               onChange={e => setToDate(e.target.value)}
-              className="bg-transparent border border-border/50 rounded px-3 py-1.5 text-sm text-foreground focus:border-primary outline-none"
+              className="w-28 bg-transparent border border-border/50 rounded px-3 py-1.5 text-sm text-foreground focus:border-primary outline-none font-mono tracking-wider"
+              placeholder="YYYY-MM-DD"
             />
           </div>
           <div className="flex gap-1.5 flex-wrap">
@@ -135,7 +132,11 @@ export default function AdminDashboard() {
               <button
                 key={label}
                 onClick={() => setPeriod(days)}
-                className="px-2.5 py-1 text-xs tracking-[0.15em] border border-border/30 text-muted-foreground hover:text-foreground hover:border-foreground/50 rounded transition-colors cursor-pointer"
+                className={`px-2.5 py-1 text-xs tracking-[0.15em] border rounded transition-colors cursor-pointer ${
+                  activeDays === days
+                    ? 'bg-primary/10 text-primary border-primary/30'
+                    : 'border-border/30 text-muted-foreground hover:text-foreground hover:border-foreground/50'
+                }`}
               >
                 {label}
               </button>
