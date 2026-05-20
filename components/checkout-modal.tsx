@@ -19,6 +19,7 @@ import { useAuth } from '@/components/auth-context'
 import { supabase } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
+import { CardPaymentModal } from '@/components/card-payment-modal'
 import { toast } from 'sonner'
 import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader, Percent } from 'lucide-react'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
@@ -55,6 +56,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const { t } = useLanguage()
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
+  const [cardModalOpen, setCardModalOpen] = useState(false)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [deliveryAddress, setDeliveryAddress] = useState('')
@@ -141,6 +143,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         const data = await res.json()
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
+          if (method === 'card') {
+            setCardModalOpen(true)
+          }
         } else {
           toast.error(t.checkout.paymentUnavailable)
           setSelectedMethod(null)
@@ -369,8 +374,16 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             </div>
           )}
         </>
+      ) : selectedMethod === 'card' ? (
+        /* Card opens in a separate modal — show placeholder */
+        <div className="text-center py-8 text-muted-foreground">
+          <p className="text-[18px]">Enter your card details in the secure popup.</p>
+          <button onClick={handleBackToMethods} className="text-primary hover:underline mt-3 text-[16px] tracking-[0.15em] cursor-pointer">
+            {t.checkout.changeMethod}
+          </button>
+        </div>
       ) : (
-        /* Stripe form or mock payment */
+        /* Stripe form or mock payment (wallet / bank) */
         hasStripe && clientSecret && stripePromise ? (
           <Elements
             stripe={stripePromise}
@@ -554,6 +567,22 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           </div>
         </ScrollArea>
       </DialogContent>
+
+      <CardPaymentModal
+        open={cardModalOpen}
+        onOpenChange={(open) => {
+          setCardModalOpen(open)
+          if (!open) {
+            setSelectedMethod(null)
+            setClientSecret(null)
+          }
+        }}
+        clientSecret={clientSecret || ''}
+        amount={total}
+        onSuccess={handlePaymentSuccess}
+        userName={user?.user_metadata?.full_name || ''}
+        userEmail={user?.email || ''}
+      />
     </Dialog>
   )
 }
