@@ -7,6 +7,7 @@ import { useAuth } from '@/components/auth-context'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Clock, Package, ArrowLeft, LogOut } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface Order {
   id: string
@@ -35,15 +36,26 @@ export default function AccountPage() {
     if (!user) { router.push('/'); return }
     if (!supabase) { setOrdersLoading(false); return }
 
-    supabase
-      .from('orders')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .then(({ data, error }) => {
-        if (!error && data) setOrders(data as Order[])
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) {
         setOrdersLoading(false)
+        return
+      }
+
+      fetch('/api/orders', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
       })
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setOrders(data as Order[])
+          else toast.error('Failed to load orders')
+          setOrdersLoading(false)
+        })
+        .catch(() => {
+          toast.error('Failed to load orders')
+          setOrdersLoading(false)
+        })
+    })
   }, [user, loading, router])
 
   if (loading || !user) return null

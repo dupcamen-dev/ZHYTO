@@ -160,7 +160,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   }
 
   const saveOrder = async () => {
-    if (!supabase || !user) throw new Error('Not authenticated')
+    if (!supabase) throw new Error('Supabase client not available')
+    if (!user) throw new Error('User not authenticated')
     const { error } = await supabase.from('orders').insert({
       user_id: user.id,
       items: cartItems.map(i => ({ name: i.name, price: i.price, qty: i.qty })),

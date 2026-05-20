@@ -1,11 +1,17 @@
-import { supabase } from '../utils/supabase';
+import { supabase, getSupabaseAdmin } from '../utils/supabase';
 import { Order, OrderInput, OrderStatus, OrderFilters } from '../types/order.types';
 import { CartItem } from '../types/product.types';
 import { NotFoundError } from '../utils/errors';
 
 export const ordersService = {
   async getUserOrders(userId: string): Promise<Order[]> {
-    const { data, error } = await supabase
+    let client = supabase;
+    try {
+      client = getSupabaseAdmin();
+    } catch {
+      // fallback to anon client (will be limited by RLS)
+    }
+    const { data, error } = await client
       .from('orders')
       .select('*')
       .eq('user_id', userId)
