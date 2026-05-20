@@ -84,7 +84,7 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                       />
                     </div>
                     <div className="flex-1 min-w-0">

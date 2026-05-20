@@ -87,7 +87,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
         src={backError ? fallback : backImage}
         alt={alt}
         fill
-        className="object-cover pointer-events-none"
+        className="object-contain pointer-events-none"
         draggable={false}
         onError={() => setBackError(true)}
       />
@@ -100,7 +100,7 @@ export function ImageCompare({ frontImage, backImage, alt = "" }: ImageComparePr
           src={frontError ? fallback : frontImage}
           alt={alt}
           fill
-          className="object-cover"
+          className="object-contain"
           draggable={false}
           onError={() => setFrontError(true)}
         />
