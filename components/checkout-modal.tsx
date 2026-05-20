@@ -20,6 +20,7 @@ import { supabase } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
 import { PaymentForm } from '@/components/payment-form'
 import { CardPaymentModal } from '@/components/card-payment-modal'
+import { WalletPaymentModal } from '@/components/wallet-payment-modal'
 import { toast } from 'sonner'
 import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader, Percent } from 'lucide-react'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
@@ -57,6 +58,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [submitting, setSubmitting] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
   const [cardModalOpen, setCardModalOpen] = useState(false)
+  const [walletModalOpen, setWalletModalOpen] = useState(false)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [deliveryAddress, setDeliveryAddress] = useState('')
@@ -141,11 +143,13 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           }),
         })
         const data = await res.json()
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret)
-          if (method === 'card') {
-            setCardModalOpen(true)
-          }
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret)
+            if (method === 'card') {
+              setCardModalOpen(true)
+            } else if (method === 'wallet') {
+              setWalletModalOpen(true)
+            }
         } else {
           toast.error(t.checkout.paymentUnavailable)
           setSelectedMethod(null)
@@ -395,8 +399,16 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             {t.checkout.changeMethod}
           </button>
         </div>
+      ) : selectedMethod === 'wallet' ? (
+        /* Wallet opens in a separate modal — show placeholder */
+        <div className="text-center py-8 text-muted-foreground">
+          <p className="text-[18px]">Apple Pay / Google Pay checkout opening...</p>
+          <button onClick={handleBackToMethods} className="text-primary hover:underline mt-3 text-[16px] tracking-[0.15em] cursor-pointer">
+            {t.checkout.changeMethod}
+          </button>
+        </div>
       ) : (
-        /* Stripe form or mock payment (wallet / bank) */
+        /* Stripe form or mock payment (bank) */
         hasStripe && clientSecret && stripePromise ? (
           <Elements
             stripe={stripePromise}
@@ -595,6 +607,20 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         onSuccess={handlePaymentSuccess}
         userName={user?.user_metadata?.full_name || ''}
         userEmail={user?.email || ''}
+      />
+
+      <WalletPaymentModal
+        open={walletModalOpen}
+        onOpenChange={(open) => {
+          setWalletModalOpen(open)
+          if (!open) {
+            setSelectedMethod(null)
+            setClientSecret(null)
+          }
+        }}
+        clientSecret={clientSecret || ''}
+        amount={total}
+        onSuccess={handlePaymentSuccess}
       />
     </Dialog>
   )
