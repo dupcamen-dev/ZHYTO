@@ -342,13 +342,15 @@ export default function AdminProducts() {
           <div key={product.id} className={`glass-card rounded-xl p-4 sm:p-5 ${!product.available ? 'opacity-50' : ''}`}>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
               <div className="flex items-start gap-3 sm:gap-0">
-                <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0">
-                  <img src={img(product.image)} alt={product.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
+                <div className="flex flex-col items-start shrink-0">
                   {product.badge && (
-                    <span className="hidden sm:inline absolute top-1 left-1 px-1.5 py-0.5 bg-primary/85 text-primary-foreground text-[10px] tracking-[0.15em] rounded font-semibold leading-none">
+                    <span className="hidden sm:inline px-2 py-0.5 bg-primary text-primary-foreground text-[11px] tracking-[0.15em] rounded font-semibold leading-none mb-0.5">
                       {product.badge}
                     </span>
                   )}
+                  <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0">
+                    <img src={img(product.image)} alt={product.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
+                  </div>
                 </div>
                 <div className="flex-1 min-w-0 sm:hidden ml-1">
                   <div className="flex items-center gap-2">
