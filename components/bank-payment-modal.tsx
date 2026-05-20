@@ -22,13 +22,15 @@ interface BankPaymentModalProps {
   clientSecret: string
   amount: number
   onSuccess: () => void
+  onBeforePay?: () => Promise<void>
 }
 
-function BankForm({ amount, clientSecret, onSuccess, onClose }: {
+function BankForm({ amount, clientSecret, onSuccess, onClose, onBeforePay }: {
   amount: number
   clientSecret: string
   onSuccess: () => void
   onClose: () => void
+  onBeforePay?: () => Promise<void>
 }) {
   const stripe = useStripe()
   const [loading, setLoading] = useState(false)
@@ -55,6 +57,8 @@ function BankForm({ amount, clientSecret, onSuccess, onClose }: {
     setError(null)
 
     try {
+      if (onBeforePay) await onBeforePay()
+
       const { error: confirmError } = await stripe.confirmCustomerBalancePayment(clientSecret, {
         return_url: `${window.location.origin}/account`,
       })
@@ -159,6 +163,7 @@ export function BankPaymentModal({ open, onOpenChange, clientSecret, amount, onS
               clientSecret={clientSecret}
               onSuccess={onSuccess}
               onClose={() => onOpenChange(false)}
+              onBeforePay={onBeforePay}
             />
           </Elements>
         ) : (

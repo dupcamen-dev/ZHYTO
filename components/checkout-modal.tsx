@@ -650,6 +650,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         clientSecret={clientSecret || ''}
         amount={total}
         onSuccess={handlePaymentSuccess}
+        onBeforePay={saveOrder}
       />
 
       <PayPalPaymentModal
@@ -664,6 +665,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         clientSecret={clientSecret || ''}
         amount={total}
         onSuccess={handlePaymentSuccess}
+        onBeforePay={saveOrder}
       />
     </Dialog>
   )

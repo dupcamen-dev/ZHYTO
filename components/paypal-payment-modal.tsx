@@ -22,13 +22,15 @@ interface PayPalPaymentModalProps {
   clientSecret: string
   amount: number
   onSuccess: () => void
+  onBeforePay?: () => Promise<void>
 }
 
-function PayPalForm({ amount, clientSecret, onSuccess, onClose }: {
+function PayPalForm({ amount, clientSecret, onSuccess, onClose, onBeforePay }: {
   amount: number
   clientSecret: string
   onSuccess: () => void
   onClose: () => void
+  onBeforePay?: () => Promise<void>
 }) {
   const stripe = useStripe()
   const [loading, setLoading] = useState(false)
@@ -40,15 +42,14 @@ function PayPalForm({ amount, clientSecret, onSuccess, onClose }: {
     setError(null)
 
     try {
+      if (onBeforePay) await onBeforePay()
+
       const { error: confirmError } = await stripe.confirmPayPalPayment(clientSecret, {
         return_url: `${window.location.origin}/account`,
       })
 
       if (confirmError) {
         setError(confirmError.message ?? 'PayPal payment failed')
-      } else {
-        toast.success('PayPal payment successful!')
-        onSuccess()
       }
     } catch {
       setError('Network error. Please try again.')
@@ -111,6 +112,7 @@ export function PayPalPaymentModal({ open, onOpenChange, clientSecret, amount, o
               clientSecret={clientSecret}
               onSuccess={onSuccess}
               onClose={() => onOpenChange(false)}
+              onBeforePay={onBeforePay}
             />
           </Elements>
         ) : (
