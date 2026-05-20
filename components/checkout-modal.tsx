@@ -131,6 +131,16 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   }, [open])
 
   const handleMethodSelect = async (method: PaymentMethodType) => {
+    try {
+      await checkStock()
+    } catch (e: any) {
+      if (e?.message?.startsWith('OUT_OF_STOCK')) {
+        toast.error(e.message.replace('OUT_OF_STOCK: ', ''))
+      }
+      setSelectedMethod(null)
+      return
+    }
+
     setSelectedMethod(method)
 
     if (method === 'paypal') {
@@ -189,9 +199,30 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     }
   }
 
+  const checkStock = async () => {
+    if (!supabase) return
+    const ids = cartItems.map(i => i.id)
+    const { data: products } = await supabase
+      .from('products')
+      .select('id, name, stock')
+      .in('id', ids)
+    if (!products) return
+    const errors: string[] = []
+    for (const item of cartItems) {
+      const p = products.find(p => p.id === item.id)
+      if (p && p.stock < item.qty) {
+        errors.push(`${p.name}: only ${p.stock} left, you added ${item.qty}`)
+      }
+    }
+    if (errors.length > 0) {
+      throw new Error('OUT_OF_STOCK: ' + errors.join('. '))
+    }
+  }
+
   const saveOrder = async () => {
     if (!supabase) throw new Error('Supabase client not available')
     if (!user) throw new Error('User not authenticated')
+    await checkStock()
     const { data, error } = await supabase.from('orders').insert({
       user_id: user.id,
       items: cartItems.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
@@ -211,8 +242,12 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     await new Promise(resolve => setTimeout(resolve, 1500))
     try {
       await saveOrder()
-    } catch {
-      toast.error('Order was not saved. Please contact support.')
+    } catch (e: any) {
+      if (e?.message?.startsWith('OUT_OF_STOCK')) {
+        toast.error(e.message.replace('OUT_OF_STOCK: ', ''))
+      } else {
+        toast.error('Order was not saved. Please contact support.')
+      }
       setSubmitting(false)
       return
     }
@@ -229,8 +264,12 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const handlePaymentSuccess = async () => {
     try {
       await saveOrder()
-    } catch {
-      toast.error('Order was not saved. Please contact support.')
+    } catch (e: any) {
+      if (e?.message?.startsWith('OUT_OF_STOCK')) {
+        toast.error(e.message.replace('OUT_OF_STOCK: ', ''))
+      } else {
+        toast.error('Order was not saved. Please contact support.')
+      }
       return
     }
     toast.success(t.checkout.orderConfirmed)
