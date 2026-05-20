@@ -1047,7 +1047,11 @@ export default function Home() {
 
           {/* Write Review */}
           <div className="text-center">
-            {user ? (
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="w-6 h-6 border-2 border-cream/30 border-t-cream rounded-full animate-spin" />
+              </div>
+            ) : user ? (
               reviewFormOpen ? (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
