@@ -63,6 +63,29 @@ export const ordersService = {
       .single();
 
     if (error) throw error;
+
+    // Decrement stock on order creation
+    let client = supabase;
+    try {
+      client = getSupabaseAdmin();
+    } catch {
+      // fallback
+    }
+    for (const item of input.items) {
+      const { data: product } = await client
+        .from('products')
+        .select('stock')
+        .eq('id', item.product_id)
+        .maybeSingle();
+      if (product) {
+        const newStock = Math.max(0, product.stock - item.quantity);
+        await client
+          .from('products')
+          .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
+          .eq('id', item.product_id);
+      }
+    }
+
     return data;
   },
 
@@ -84,8 +107,8 @@ export const ordersService = {
       throw new NotFoundError('Замовлення не знайдено');
     }
 
-    // Reduce stock when confirmed
-    if (status === 'confirmed' && data.items?.length) {
+    // Restore stock when cancelled
+    if (status === 'cancelled' && data.items?.length) {
       for (const item of data.items) {
         const { data: product } = await client
           .from('products')
@@ -93,10 +116,10 @@ export const ordersService = {
           .eq('id', item.product_id)
           .maybeSingle();
         if (product) {
-          const newStock = Math.max(0, product.stock - item.quantity);
+          const newStock = product.stock + item.quantity;
           await client
             .from('products')
-            .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
+            .update({ stock: newStock, available: true, updated_at: new Date().toISOString() })
             .eq('id', item.product_id);
         }
       }
