@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -8,27 +8,39 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Banknote, Copy, Check, ArrowLeft } from 'lucide-react'
+import {
+  useStripe,
+  Elements,
+} from '@stripe/react-stripe-js'
+import { getStripe } from '@/lib/stripe'
+import { Banknote, Copy, Check } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface BankPaymentModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  clientSecret: string
   amount: number
   onSuccess: () => void
 }
 
-export function BankPaymentModal({ open, onOpenChange, amount, onSuccess }: BankPaymentModalProps) {
+function BankForm({ amount, clientSecret, onSuccess, onClose }: {
+  amount: number
+  clientSecret: string
+  onSuccess: () => void
+  onClose: () => void
+}) {
+  const stripe = useStripe()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [showDetails, setShowDetails] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
-  const [confirmed, setConfirmed] = useState(false)
-
-  const reference = `ZHYTO-${Date.now().toString(36).toUpperCase()}`
 
   const bankDetails = [
     { label: 'Account Name', value: 'ZHYTO LONDON LTD' },
     { label: 'Sort Code', value: '60-83-71' },
     { label: 'Account Number', value: '20517627' },
-    { label: 'Reference', value: reference },
+    { label: 'Reference', value: `ZHYTO-${Date.now().toString(36).toUpperCase()}` },
   ]
 
   const copyToClipboard = (text: string, label: string) => {
@@ -37,11 +49,99 @@ export function BankPaymentModal({ open, onOpenChange, amount, onSuccess }: Bank
     setTimeout(() => setCopied(null), 2000)
   }
 
-  const handleConfirm = () => {
-    setConfirmed(true)
-    toast.success('Bank transfer instructions saved. Order will be processed after payment is received.')
-    onSuccess()
+  const handleBankTransfer = async () => {
+    if (!stripe || !clientSecret) return
+    setLoading(true)
+    setError(null)
+
+    try {
+      const { error: confirmError } = await stripe.confirmCustomerBalancePayment(clientSecret, {
+        return_url: `${window.location.origin}/account`,
+      })
+
+      if (confirmError) {
+        setError(confirmError.message ?? 'Bank transfer failed')
+      } else {
+        setShowDetails(true)
+        toast.success('Bank transfer initiated. Order will be processed after payment is received.')
+        onSuccess()
+      }
+    } catch {
+      setError('Network error. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
+
+  if (showDetails) {
+    return (
+      <div className="space-y-5">
+        <div className="glass-card rounded-xl p-5 space-y-4">
+          <p className="text-base tracking-[0.2em] text-foreground/60">BANK TRANSFER DETAILS</p>
+          <p className="text-[16px] text-muted-foreground leading-relaxed">
+            Please transfer the amount to the account below. Your order will be processed once the payment is received.
+          </p>
+          <div className="bg-background/80 border border-border/20 rounded-xl p-4 space-y-3">
+            {bankDetails.map(item => (
+              <div key={item.label} className="flex items-center justify-between gap-4">
+                <span className="text-sm tracking-[0.1em] text-muted-foreground shrink-0">{item.label}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[16px] font-mono text-foreground">{item.value}</span>
+                  <button
+                    onClick={() => copyToClipboard(item.value, item.label)}
+                    className="text-primary/60 hover:text-primary transition-colors cursor-pointer"
+                  >
+                    {copied === item.label ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <Button type="button" onClick={onClose} size="lg" className="w-full text-[16px] tracking-[0.2em] rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6">
+          CLOSE
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="glass-card rounded-xl p-5 space-y-4">
+        <div className="flex items-center gap-3 text-foreground/60">
+          <Banknote className="w-5 h-5 text-primary" />
+          <span className="text-lg tracking-[0.15em]">Pay by Bank Transfer</span>
+        </div>
+        <p className="text-[16px] text-muted-foreground leading-relaxed">
+          Pay directly from your bank account. After confirming, you will receive the bank details to complete the transfer.
+        </p>
+        <div className="bg-background/80 border border-border/20 rounded-xl p-4 text-center">
+          <p className="font-serif text-3xl text-primary mb-1">£{amount.toFixed(2)}</p>
+          <p className="text-base text-foreground/60 tracking-[0.1em]">Total to pay</p>
+        </div>
+      </div>
+
+      {error && (
+        <div className="bg-destructive/10 border border-destructive/30 rounded-xl px-4 py-3">
+          <p className="text-[16px] text-destructive leading-relaxed">{error}</p>
+        </div>
+      )}
+
+      <Button
+        type="button"
+        onClick={handleBankTransfer}
+        disabled={!stripe || loading}
+        size="lg"
+        className="w-full text-[16px] tracking-[0.2em] rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+      >
+        {loading ? 'PROCESSING...' : `CONFIRM BANK TRANSFER — £${amount.toFixed(2)}`}
+      </Button>
+    </div>
+  )
+}
+
+export function BankPaymentModal({ open, onOpenChange, clientSecret, amount, onSuccess }: BankPaymentModalProps) {
+  const stripePromise = getStripe()
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -52,49 +152,18 @@ export function BankPaymentModal({ open, onOpenChange, amount, onSuccess }: Bank
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5">
-          <div className="glass-card rounded-xl p-5 space-y-4">
-            <div className="flex items-center gap-3 text-foreground/60">
-              <Banknote className="w-5 h-5 text-primary" />
-              <span className="text-lg tracking-[0.15em]">Pay by Bank Transfer</span>
-            </div>
-            <p className="text-[16px] text-muted-foreground leading-relaxed">
-              Pay directly from your bank account. Your order will be processed once the payment is received.
-            </p>
-
-            <div className="bg-background/80 border border-border/20 rounded-xl p-4 text-center">
-              <p className="font-serif text-3xl text-primary mb-1">£{amount.toFixed(2)}</p>
-              <p className="text-base text-foreground/60 tracking-[0.1em]">Total to pay</p>
-            </div>
-
-            <div className="bg-background/80 border border-border/20 rounded-xl p-4 space-y-3">
-              {bankDetails.map(item => (
-                <div key={item.label} className="flex items-center justify-between gap-4">
-                  <span className="text-sm tracking-[0.1em] text-muted-foreground shrink-0">{item.label}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[16px] font-mono text-foreground">{item.value}</span>
-                    <button
-                      onClick={() => copyToClipboard(item.value, item.label)}
-                      className="text-primary/60 hover:text-primary transition-colors cursor-pointer"
-                      title={`Copy ${item.label}`}
-                    >
-                      {copied === item.label ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Button
-            type="button"
-            onClick={handleConfirm}
-            size="lg"
-            className="w-full text-[16px] tracking-[0.2em] rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6"
-          >
-            I WILL TRANSFER — CONFIRM ORDER
-          </Button>
-        </div>
+        {stripePromise && clientSecret ? (
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <BankForm
+              amount={amount}
+              clientSecret={clientSecret}
+              onSuccess={onSuccess}
+              onClose={() => onOpenChange(false)}
+            />
+          </Elements>
+        ) : (
+          <div className="text-center py-8 text-foreground/60">Loading payment...</div>
+        )}
       </DialogContent>
     </Dialog>
   )

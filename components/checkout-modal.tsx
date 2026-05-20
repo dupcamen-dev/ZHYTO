@@ -137,15 +137,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const handleMethodSelect = async (method: PaymentMethodType) => {
     setSelectedMethod(method)
 
-    if (method === 'bank') {
-      setBankModalOpen(true)
-      return
-    }
-    if (method === 'paypal') {
-      setPaypalModalOpen(true)
-      return
-    }
-
     if (hasStripe) {
       setSubmitting(true)
       try {
@@ -164,6 +155,10 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             setCardModalOpen(true)
           } else if (method === 'wallet') {
             setWalletModalOpen(true)
+          } else if (method === 'bank') {
+            setBankModalOpen(true)
+          } else if (method === 'paypal') {
+            setPaypalModalOpen(true)
           }
         } else {
           toast.error(t.checkout.paymentUnavailable)
@@ -652,6 +647,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             setClientSecret(null)
           }
         }}
+        clientSecret={clientSecret || ''}
         amount={total}
         onSuccess={handlePaymentSuccess}
       />
@@ -665,6 +661,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             setClientSecret(null)
           }
         }}
+        clientSecret={clientSecret || ''}
         amount={total}
         onSuccess={handlePaymentSuccess}
       />

@@ -21,6 +21,12 @@ export const paymentsService = {
           },
         },
       });
+    } else if (paymentMethodType === 'paypal') {
+      paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100),
+        currency: 'gbp',
+        payment_method_types: ['paypal'],
+      });
     } else {
       paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100),
