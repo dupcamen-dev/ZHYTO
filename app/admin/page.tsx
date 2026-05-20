@@ -32,7 +32,7 @@ export default function AdminDashboard() {
     if (!supabase) { setLoading(false); return }
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session?.access_token) { setLoading(false); return }
-      const params = new URLSearchParams({ limit: '50', from, to })
+      const params = new URLSearchParams({ limit: '50', from: `${from}T00:00:00.000Z`, to: `${to}T23:59:59.999Z` })
       fetch(`/api/admin/orders?${params}`, {
         headers: { Authorization: `Bearer ${session.access_token}` },
       })
