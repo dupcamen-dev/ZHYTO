@@ -95,6 +95,7 @@ export const translations = {
       failedSubmit: 'Failed to submit review',
       reviewSubmitted: 'Review submitted!',
       alreadyReviewed: 'You have already left a review',
+      mustOrderFirst: 'You must place an order before leaving a review',
     },
     contact: {
       getInTouch: 'GET IN TOUCH',
@@ -357,6 +358,7 @@ export const translations = {
       failedSubmit: 'Не вдалося надіслати відгук',
       reviewSubmitted: 'Відгук надіслано!',
       alreadyReviewed: 'Ви вже залишили відгук',
+      mustOrderFirst: 'Спочатку потрібно зробити замовлення, щоб залишити відгук',
     },
     contact: {
       getInTouch: 'ЗВ\'ЯЖІТЬСЯ',

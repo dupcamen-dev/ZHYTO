@@ -292,6 +292,13 @@ export default function Home() {
       toast.error(t.reviews.pleaseWriteComment)
       return
     }
+
+    const { data: existingOrder } = await supabase!.from('orders').select('id').eq('user_id', user.id).limit(1).maybeSingle()
+    if (!existingOrder) {
+      toast.error(t.reviews.mustOrderFirst)
+      return
+    }
+
     setReviewSubmitting(true)
     const { error } = await supabase!.from('reviews').insert({
       user_id: user.id,
