@@ -19,6 +19,10 @@ interface Product {
   available: boolean
   stock: number
   sort_order: number
+  recipe_uk?: string | null
+  recipe_en?: string | null
+  ingredients_uk?: string | null
+  ingredients_en?: string | null
 }
 
 const fallbackCategories = ['varenyky', 'syrnyky', 'pelmeni']
@@ -39,6 +43,7 @@ const emptyProduct = {
   name: '', description: '', price: 0, unit: '/ kg',
   image: '/images/syrnyky-new.webp', background_image: '', badge: null,
   category: 'varenyky', available: true, stock: 10, sort_order: 0,
+  recipe_uk: '', recipe_en: '', ingredients_uk: '', ingredients_en: '',
 }
 
 export default function AdminProducts() {
@@ -178,6 +183,8 @@ export default function AdminProducts() {
       unit: editing.unit, image: editing.image || '/images/syrnyky-new.webp',
       background_image: editing.background_image || null, badge: editing.badge || null, category: editing.category,
       available: editing.available ?? true, stock: editing.stock ?? 10,
+      recipe_uk: editing.recipe_uk || null, recipe_en: editing.recipe_en || null,
+      ingredients_uk: editing.ingredients_uk || null, ingredients_en: editing.ingredients_en || null,
     }
 
     if (!supabase) {
@@ -428,6 +435,42 @@ export default function AdminProducts() {
                   onChange={e => setEditing(f => ({ ...f, description: e.target.value }))}
                   className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[60px]"
                   placeholder="Product description"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Recipe (Ukrainian)</label>
+                <textarea
+                  value={editing.recipe_uk || ''}
+                  onChange={e => setEditing(f => ({ ...f, recipe_uk: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[80px]"
+                  placeholder="Рецепт приготування українською"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Recipe (English)</label>
+                <textarea
+                  value={editing.recipe_en || ''}
+                  onChange={e => setEditing(f => ({ ...f, recipe_en: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[80px]"
+                  placeholder="Cooking instructions in English"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Ingredients (Ukrainian)</label>
+                <textarea
+                  value={editing.ingredients_uk || ''}
+                  onChange={e => setEditing(f => ({ ...f, ingredients_uk: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[80px]"
+                  placeholder="Склад / інгредієнти українською"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Ingredients (English)</label>
+                <textarea
+                  value={editing.ingredients_en || ''}
+                  onChange={e => setEditing(f => ({ ...f, ingredients_en: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[80px]"
+                  placeholder="Ingredients / composition in English"
                 />
               </div>
               <div>
