@@ -51,8 +51,9 @@ function WalletForm({ amount, clientSecret, onSuccess, onClose }: {
     })
 
     pr.canMakePayment().then((result: any) => {
-      setCanMakePayment(!!result)
-      if (!result) {
+      const available = !!(result?.applePay || result?.googlePay)
+      setCanMakePayment(available)
+      if (!available) {
         setError('Apple Pay / Google Pay is not available on this device.')
       }
     })
