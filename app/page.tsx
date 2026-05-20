@@ -779,10 +779,25 @@ export default function Home() {
                         { src: img("/images/about-us-3.webp"), alt: "Handmade varenyky process" },
                       ]}
                       onChange={setAboutImageIndex}
+                      showDots={false}
                     />
                   </div>
                 </motion.div>
               </div>
+              {/* Dots always visible below the parallax container */}
+              {aboutNames.length > 0 && (
+                <div className="flex justify-center gap-2 mt-4 z-10">
+                  {[0, 1, 2].map(i => (
+                    <button
+                      key={i}
+                      onClick={() => setAboutImageIndex(i)}
+                      className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                        i === aboutImageIndex ? 'bg-primary w-5' : 'bg-primary/30 hover:bg-primary/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
               <div className="absolute -bottom-8 -left-8 lg:-bottom-12 lg:-left-12 w-56 h-56 lg:w-72 lg:h-72 overflow-hidden">
                 <Image
                   src={img("/images/about-card.webp")}

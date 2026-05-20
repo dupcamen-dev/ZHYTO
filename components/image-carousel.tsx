@@ -8,9 +8,10 @@ import { ChevronRight, ChevronLeft } from 'lucide-react'
 interface ImageCarouselProps {
   images: { src: string; alt: string }[]
   onChange?: (index: number) => void
+  showDots?: boolean
 }
 
-export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
+export function ImageCarousel({ images, onChange, showDots = true }: ImageCarouselProps) {
   const [current, setCurrent] = useState(0)
   const [showHint, setShowHint] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -150,7 +151,7 @@ export function ImageCarousel({ images, onChange }: ImageCarouselProps) {
         </>
       )}
 
-      {images.length > 1 && (
+      {showDots && images.length > 1 && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {images.map((_, i) => (
             <button
