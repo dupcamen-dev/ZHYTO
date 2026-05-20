@@ -1,6 +1,14 @@
-import { supabase } from '../utils/supabase';
+import { supabase, getSupabaseAdmin } from '../utils/supabase';
 import { Review, ReviewInput } from '../types/review.types';
 import { NotFoundError } from '../utils/errors';
+
+function getClient() {
+  try {
+    return getSupabaseAdmin();
+  } catch {
+    return supabase;
+  }
+}
 
 export const reviewsService = {
   async getApprovedReviews(limit: number = 10): Promise<Review[]> {
@@ -23,7 +31,7 @@ export const reviewsService = {
         user_name: userName,
         rating: input.rating,
         comment: input.comment,
-        approved: true, // Автоматично схвалюємо, або false для модерації
+        approved: true,
       })
       .select()
       .single();
@@ -33,7 +41,8 @@ export const reviewsService = {
   },
 
   async moderateReview(id: number, approved: boolean): Promise<Review> {
-    const { data, error } = await supabase
+    const client = getClient();
+    const { data, error } = await client
       .from('reviews')
       .update({ approved })
       .eq('id', id)
@@ -48,16 +57,21 @@ export const reviewsService = {
   },
 
   async deleteReview(id: number): Promise<void> {
-    const { error } = await supabase
+    const client = getClient();
+    const { data, error } = await client
       .from('reviews')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .select();
 
-    if (error) throw error;
+    if (error || !data || data.length === 0) {
+      throw new NotFoundError('Відгук не знайдено');
+    }
   },
 
   async getAllReviews(): Promise<Review[]> {
-    const { data, error } = await supabase
+    const client = getClient();
+    const { data, error } = await client
       .from('reviews')
       .select('*')
       .order('created_at', { ascending: false });
