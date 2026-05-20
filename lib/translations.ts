@@ -94,6 +94,7 @@ export const translations = {
       pleaseWriteComment: 'Please write a comment',
       failedSubmit: 'Failed to submit review',
       reviewSubmitted: 'Review submitted!',
+      alreadyReviewed: 'You have already left a review',
     },
     contact: {
       getInTouch: 'GET IN TOUCH',
@@ -350,6 +351,7 @@ export const translations = {
       pleaseWriteComment: 'Будь ласка, напишіть коментар',
       failedSubmit: 'Не вдалося надіслати відгук',
       reviewSubmitted: 'Відгук надіслано!',
+      alreadyReviewed: 'Ви вже залишили відгук',
     },
     contact: {
       getInTouch: 'ЗВ\'ЯЖІТЬСЯ',

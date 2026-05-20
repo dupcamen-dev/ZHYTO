@@ -170,6 +170,7 @@ CREATE TABLE IF NOT EXISTS reviews (
   rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
   comment TEXT NOT NULL,
   approved BOOLEAN DEFAULT true,
+  UNIQUE (user_id),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

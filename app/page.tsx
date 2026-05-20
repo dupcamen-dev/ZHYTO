@@ -191,12 +191,13 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [dbProducts, setDbProducts] = useState<typeof products | null>(null)
-  const [reviews, setReviews] = useState<{ id: number; user_name: string; rating: number; comment: string; created_at: string }[]>([])
+  const [reviews, setReviews] = useState<{ id: number; user_id: string; user_name: string; rating: number; comment: string; created_at: string }[]>([])
   const [reviewFormOpen, setReviewFormOpen] = useState(false)
   const [reviewRating, setReviewRating] = useState(5)
   const [reviewComment, setReviewComment] = useState('')
   const [reviewSubmitting, setReviewSubmitting] = useState(false)
   const [signInModalOpen, setSignInModalOpen] = useState(false)
+  const userHasReview = user ? reviews.some(r => r.user_id === user.id) : false
   const [aboutImageIndex, setAboutImageIndex] = useState(0)
   const aboutNames = ["Illia", "Victor", "Nataliia", "Anna", "Kateryna", "Iryna"]
   const { scrollYProgress } = useScroll()
@@ -1034,7 +1035,7 @@ export default function Home() {
                     />
                   ))}
                 </div>
-                <p className="text-cream/70 leading-relaxed mb-6 text-[15px]">{review.comment}</p>
+                <p className="text-cream/85 leading-relaxed mb-6 text-[15px]">{review.comment}</p>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-cream/10 flex items-center justify-center">
                     <span className="text-cream text-sm font-medium">{review.user_name.charAt(0).toUpperCase()}</span>
@@ -1048,7 +1049,9 @@ export default function Home() {
           {/* Write Review */}
           <div className="text-center">
             {user ? (
-              reviewFormOpen ? (
+              userHasReview ? (
+                <p className="text-cream/50 text-sm tracking-[0.15em]">{t.reviews.alreadyReviewed}</p>
+              ) : reviewFormOpen ? (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
