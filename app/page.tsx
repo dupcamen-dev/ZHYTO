@@ -666,8 +666,13 @@ export default function Home() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: false }}
                       transition={{ duration: 0.5 }}
-                      className="group flex"
+                      className="group flex flex-col"
                     >
+                      {product.badge && (
+                        <span className="hidden sm:inline px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase whitespace-nowrap self-start rounded-t-md mb-0">
+                          {product.badge}
+                        </span>
+                      )}
                       <div className={'aspect-square overflow-hidden flex flex-col w-full' + (product.stock === 0 ? ' opacity-40' : '')}>
                         <div className="relative flex-1 overflow-hidden w-full">
                           <ImageCompare
@@ -676,7 +681,7 @@ export default function Home() {
                             alt={product.name}
                           />
                           {product.badge && (
-                            <span className="absolute top-2 right-2 sm:top-3 sm:left-3 px-2 py-0.5 sm:px-3 sm:py-1 bg-primary text-primary-foreground text-[11px] sm:text-[13px] tracking-[0.15em] sm:tracking-[0.2em] uppercase whitespace-nowrap">
+                            <span className="sm:hidden absolute top-2 right-2 px-2 py-0.5 bg-primary text-primary-foreground text-[11px] tracking-[0.15em] uppercase whitespace-nowrap">
                               {product.badge}
                             </span>
                           )}
