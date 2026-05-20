@@ -67,12 +67,8 @@ export const ordersService = {
   },
 
   async updateOrderStatus(id: string, status: OrderStatus): Promise<Order> {
-    let client = supabase;
-    try {
-      client = getSupabaseAdmin();
-    } catch {
-      // fallback
-    }
+    const adminClient = getSupabaseAdmin();
+    const client = adminClient;
 
     // Get the old order before updating
     const { data: oldOrder } = await client
@@ -111,10 +107,11 @@ export const ordersService = {
           .maybeSingle();
         if (product) {
           const newStock = Math.max(0, product.stock - item.quantity);
-          await client
+          const { error: updateErr } = await client
             .from('products')
             .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
             .eq('id', item.product_id);
+          if (updateErr) console.error('Stock decrement failed:', updateErr);
         }
       }
     }
@@ -129,10 +126,11 @@ export const ordersService = {
           .maybeSingle();
         if (product) {
           const newStock = product.stock + item.quantity;
-          await client
+          const { error: updateErr } = await client
             .from('products')
             .update({ stock: newStock, available: true, updated_at: new Date().toISOString() })
             .eq('id', item.product_id);
+          if (updateErr) console.error('Stock restore failed:', updateErr);
         }
       }
     }
