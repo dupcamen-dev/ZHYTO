@@ -5,12 +5,13 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth-context'
 import { supabase } from '@/lib/supabase'
-import { LayoutDashboard, ShoppingBag, ClipboardList, Settings, ArrowLeft, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, ShoppingBag, ClipboardList, Settings, MessageSquare, ArrowLeft, LogOut, Menu, X } from 'lucide-react'
 
 const adminLinks = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/orders', label: 'Orders', icon: ClipboardList },
   { href: '/admin/products', label: 'Menu', icon: ShoppingBag },
+  { href: '/admin/reviews', label: 'Reviews', icon: MessageSquare },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]
 
