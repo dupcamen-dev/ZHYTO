@@ -62,9 +62,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <>
       <div className="p-6 border-b border-border/30 flex items-center justify-between">
         <Link href="/admin" className="font-serif text-xl tracking-[0.1em] text-foreground">zhyto.admin</Link>
-        <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-muted-foreground hover:text-foreground cursor-pointer">
-          <X className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <Link href="/" className="hidden lg:flex items-center gap-1 text-xs tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-3 h-3" />
+            SITE
+          </Link>
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-muted-foreground hover:text-foreground cursor-pointer">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {adminLinks.map(link => {
@@ -140,7 +146,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="font-serif text-base tracking-[0.1em] text-foreground">zhyto.admin</span>
+          <span className="font-serif text-base tracking-[0.1em] text-foreground flex-1">zhyto.admin</span>
+          <Link
+            href="/"
+            className="flex items-center gap-1 text-xs tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-3 h-3" />
+            SITE
+          </Link>
         </div>
 
         <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
