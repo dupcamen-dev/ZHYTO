@@ -54,6 +54,7 @@ export default function AdminProducts() {
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [categories, setCategories] = useState<string[]>(fallbackCategories)
+  const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
   const [newCategory, setNewCategory] = useState('')
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -72,6 +73,9 @@ export default function AdminProducts() {
     supabase.from('settings').select('value').eq('key', 'categories').single().then(({ data }) => {
       if (data?.value) setCategories(data.value as string[])
     })
+    supabase.from('settings').select('value').eq('key', 'categories_desc').single().then(({ data }) => {
+      if (data?.value) setCategoryDescriptions(data.value as Record<string, string>)
+    })
   }
 
   useEffect(() => { fetchProducts(); fetchCategories() }, [])
@@ -81,6 +85,16 @@ export default function AdminProducts() {
     if (!supabase) return
     await supabase.from('settings').upsert(
       { key: 'categories', value: newList },
+      { onConflict: 'key' }
+    )
+  }
+
+  const updateCategoryDesc = async (cat: string, desc: string) => {
+    const next = { ...categoryDescriptions, [cat]: desc }
+    setCategoryDescriptions(next)
+    if (!supabase) return
+    await supabase.from('settings').upsert(
+      { key: 'categories_desc', value: next },
       { onConflict: 'key' }
     )
   }
@@ -297,24 +311,29 @@ export default function AdminProducts() {
           <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-border/30 pt-4 space-y-3">
             <div className="flex flex-wrap gap-2">
               {categories.map((cat, i) => (
-                <span
-                  key={cat}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-lg"
-                >
-                  {cat}
-                  <button onClick={() => moveCategory(i, -1)} disabled={i === 0} className="hover:text-foreground transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default p-0.5">
-                    <ChevronUp className="w-3 h-3" />
-                  </button>
-                  <button onClick={() => moveCategory(i, 1)} disabled={i === categories.length - 1} className="hover:text-foreground transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default p-0.5">
-                    <ChevronDown className="w-3 h-3" />
-                  </button>
-                  <button
-                    onClick={() => removeCategory(cat)}
-                    className="hover:text-destructive transition-colors cursor-pointer ml-1"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </span>
+                <div key={cat} className="flex flex-col gap-1 w-full sm:w-auto">
+                  <div className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary text-sm rounded-lg">
+                    {cat}
+                    <button onClick={() => moveCategory(i, -1)} disabled={i === 0} className="hover:text-foreground transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default p-0.5">
+                      <ChevronUp className="w-3 h-3" />
+                    </button>
+                    <button onClick={() => moveCategory(i, 1)} disabled={i === categories.length - 1} className="hover:text-foreground transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default p-0.5">
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => removeCategory(cat)}
+                      className="hover:text-destructive transition-colors cursor-pointer ml-1"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <input
+                    value={categoryDescriptions[cat] || ''}
+                    onChange={e => updateCategoryDesc(cat, e.target.value)}
+                    className="w-full sm:w-64 bg-transparent border border-border/20 rounded px-2 py-1 text-xs text-muted-foreground focus:border-primary outline-none"
+                    placeholder="Subtitle (e.g. Traditional meat-filled dumplings)"
+                  />
+                </div>
               ))}
             </div>
             <div className="flex gap-2">

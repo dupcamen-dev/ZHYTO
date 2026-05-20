@@ -208,6 +208,7 @@ export default function Home() {
   const [progress, setProgress] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
   const [categoryOrder, setCategoryOrder] = useState<string[] | null>(null)
+  const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
   const { scrollYProgress: aboutScroll } = useScroll({
     target: aboutRef,
     offset: ["start end", "end start"]
@@ -262,6 +263,9 @@ export default function Home() {
     if (!supabase) return
     supabase.from('settings').select('value').eq('key', 'categories').single().then(({ data }) => {
       if (data?.value) setCategoryOrder(data.value as string[])
+    })
+    supabase.from('settings').select('value').eq('key', 'categories_desc').single().then(({ data }) => {
+      if (data?.value) setCategoryDescriptions(data.value as Record<string, string>)
     })
   }, [])
 
@@ -640,7 +644,7 @@ export default function Home() {
             const catProducts = activeProducts.filter(p => p.category === key)
             if (catProducts.length === 0) return null
             const label = (t.products.categories as any)[key] || key
-            const desc = (t.products.categories as any)[`${key}Desc`] || ''
+            const desc = (t.products.categories as any)[`${key}Desc`] || categoryDescriptions[key] || ''
             return (
               <div key={key} className={catIndex > 0 ? 'mt-16' : ''}>
                 <motion.div
