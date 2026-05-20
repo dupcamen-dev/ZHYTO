@@ -1,13 +1,12 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import {
   useStripe,
   useElements,
   CardNumberElement,
   CardExpiryElement,
   CardCvcElement,
-  PaymentRequestButtonElement,
 } from '@stripe/react-stripe-js'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
@@ -47,58 +46,63 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
   const elements = useElements()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [paymentRequest, setPaymentRequest] = useState<any>(null)
-  const [canMakePayment, setCanMakePayment] = useState(false)
   const [showBankDetails, setShowBankDetails] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
   const clientSecretRef = useRef(clientSecret)
   clientSecretRef.current = clientSecret
 
-  // Set up Apple Pay / Google Pay via Payment Request
-  useEffect(() => {
-    if (!stripe || paymentMethod !== 'wallet' || !stripe.paymentRequest) return
+  const handleWalletPay = async () => {
+    if (!stripe) return
 
-    const pr = stripe.paymentRequest({
-      country: 'GB',
-      currency: 'gbp',
-      total: { label: 'ZHYTO', amount: Math.round(amount * 100) },
-      requestPayerName: true,
-      requestPayerEmail: true,
-    })
+    setLoading(true)
+    setError(null)
 
-    pr.canMakePayment().then((result: any) => {
-      setCanMakePayment(!!result)
-    })
+    try {
+      const pr = stripe.paymentRequest({
+        country: 'GB',
+        currency: 'gbp',
+        total: { label: 'ZHYTO', amount: Math.round(amount * 100) },
+        requestPayerName: true,
+        requestPayerEmail: true,
+      })
 
-    pr.on('paymentmethod', async (event: any) => {
-      setLoading(true)
-      const cs = clientSecretRef.current
-      if (!cs) {
-        event.complete('fail')
-        setError('Payment not initialized. Please try again.')
+      const canPay = await pr.canMakePayment()
+      if (!canPay) {
+        setError('Apple Pay / Google Pay is not available on this device.')
         setLoading(false)
         return
       }
-      const { error: confirmError } = await stripe.confirmCardPayment(cs, {
-        payment_method: event.paymentMethod.id,
+
+      pr.on('paymentmethod', async (event: any) => {
+        setLoading(true)
+        const cs = clientSecretRef.current
+        if (!cs) {
+          event.complete('fail')
+          setError('Payment not initialized. Please try again.')
+          setLoading(false)
+          return
+        }
+        const { error: confirmError } = await stripe.confirmCardPayment(cs, {
+          payment_method: event.paymentMethod.id,
+        })
+        if (confirmError) {
+          event.complete('fail')
+          setError(confirmError.message ?? 'Payment failed')
+          setLoading(false)
+        } else {
+          event.complete('success')
+          toast.success('Payment successful!')
+          onSuccess()
+        }
       })
-      if (confirmError) {
-        event.complete('fail')
-        setError(confirmError.message ?? 'Payment failed')
-        setLoading(false)
-      } else {
-        event.complete('success')
-        toast.success('Payment successful!')
-        onSuccess()
-      }
-    })
 
-    setPaymentRequest(pr)
-
-    return () => {
-      pr.off('paymentmethod')
+      await pr.show()
+    } catch {
+      setError('Apple Pay / Google Pay failed. Please try another method.')
+    } finally {
+      setLoading(false)
     }
-  }, [stripe, paymentMethod, amount, onSuccess])
+  }
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text)
@@ -225,34 +229,24 @@ export function PaymentForm({ amount, clientSecret, paymentMethod, onSuccess, on
           <span className="text-lg tracking-[0.15em]">Pay with your wallet</span>
         </div>
 
-        {canMakePayment && paymentRequest ? (
-          <>
-            <div className="flex justify-center">
-              <PaymentRequestButtonElement
-                options={{
-                  paymentRequest,
-                  style: {
-                    paymentRequestButton: {
-                      type: 'buy',
-                      theme: 'dark',
-                      height: '48px',
-                    },
-                  },
-                }}
-              />
-            </div>
-            <button onClick={onBack} className="text-base tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors cursor-pointer">
-              CHANGE METHOD
-            </button>
-          </>
-        ) : (
-          <div className="text-lg text-muted-foreground py-4">
-            <p>Apple Pay / Google Pay is not available on this device.</p>
-            <button onClick={onBack} className="text-primary hover:underline mt-2 inline-block text-[18px] tracking-[0.15em] cursor-pointer">
-              TRY ANOTHER METHOD
-            </button>
-          </div>
-        )}
+        <div className="bg-background/80 border border-border/20 rounded-lg p-4 text-center">
+          <p className="font-serif text-3xl text-primary mb-1">£{amount.toFixed(2)}</p>
+          <p className="text-base text-foreground/60 tracking-[0.1em]">Total to pay</p>
+        </div>
+
+        <Button
+          type="button"
+          onClick={handleWalletPay}
+          disabled={!stripe || loading}
+          size="lg"
+          className="w-full text-[16px] tracking-[0.2em] rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+        >
+          {loading ? 'PROCESSING...' : `APPLE PAY / GOOGLE PAY`}
+        </Button>
+
+        <button onClick={onBack} className="text-base tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+          CHANGE METHOD
+        </button>
       </div>
 
       {error && (
