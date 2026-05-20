@@ -170,3 +170,137 @@ CREATE POLICY "Admins can delete any review"
 
 CREATE INDEX idx_reviews_created_at ON reviews(created_at DESC);
 CREATE INDEX idx_reviews_approved ON reviews(approved);
+
+
+-- ============================================================
+-- STOCK HISTORY (історія змін залишків)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS stock_history (
+  id SERIAL PRIMARY KEY,
+  product_id INT REFERENCES products(id) ON DELETE CASCADE,
+  change INT NOT NULL,
+  reason TEXT,
+  admin_id UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE stock_history ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can view stock history"
+  ON stock_history FOR SELECT
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+CREATE POLICY "Admins can insert stock history"
+  ON stock_history FOR INSERT
+  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+CREATE INDEX idx_stock_history_product_id ON stock_history(product_id);
+CREATE INDEX idx_stock_history_created_at ON stock_history(created_at DESC);
+
+-- ============================================================
+-- PROMO CODES (промокоди)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS promo_codes (
+  id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  discount_percent INT CHECK (discount_percent >= 0 AND discount_percent <= 100),
+  discount_fixed DECIMAL(10,2) CHECK (discount_fixed >= 0),
+  min_order DECIMAL(10,2) DEFAULT 0,
+  valid_from TIMESTAMPTZ DEFAULT NOW(),
+  valid_until TIMESTAMPTZ,
+  max_uses INT,
+  used_count INT DEFAULT 0,
+  active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE promo_codes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view active promo codes"
+  ON promo_codes FOR SELECT
+  USING (active = true AND (valid_until IS NULL OR valid_until > NOW()));
+
+CREATE POLICY "Admins can manage promo codes"
+  ON promo_codes FOR ALL
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+CREATE INDEX idx_promo_codes_code ON promo_codes(code);
+CREATE INDEX idx_promo_codes_active ON promo_codes(active);
+
+-- ============================================================
+-- ORDER PAYMENTS (зв'язок замовлень з платежами)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS order_payments (
+  id SERIAL PRIMARY KEY,
+  order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+  stripe_payment_intent_id TEXT UNIQUE NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'succeeded', 'failed', 'refunded')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE order_payments ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own order payments"
+  ON order_payments FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM orders 
+      WHERE orders.id = order_payments.order_id 
+      AND orders.user_id = auth.uid()
+    )
+    OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
+
+CREATE POLICY "System can insert order payments"
+  ON order_payments FOR INSERT
+  WITH CHECK (true);
+
+CREATE POLICY "System can update order payments"
+  ON order_payments FOR UPDATE
+  USING (true);
+
+CREATE INDEX idx_order_payments_order_id ON order_payments(order_id);
+CREATE INDEX idx_order_payments_stripe_id ON order_payments(stripe_payment_intent_id);
+
+-- ============================================================
+-- ФУНКЦІЯ: Автоматичне оновлення updated_at
+-- ============================================================
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Тригер для products
+CREATE TRIGGER update_products_updated_at
+  BEFORE UPDATE ON products
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Тригер для order_payments
+CREATE TRIGGER update_order_payments_updated_at
+  BEFORE UPDATE ON order_payments
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================
+-- ФУНКЦІЯ: Автоматичне створення профілю при реєстрації
+-- ============================================================
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO profiles (id, role)
+  VALUES (NEW.id, 'user');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Тригер для auth.users
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION handle_new_user();
