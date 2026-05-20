@@ -18,13 +18,12 @@ import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
 import { supabase } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
-import { PaymentForm } from '@/components/payment-form'
 import { CardPaymentModal } from '@/components/card-payment-modal'
 import { WalletPaymentModal } from '@/components/wallet-payment-modal'
-import { BankPaymentModal } from '@/components/bank-payment-modal'
 import { PayPalPaymentModal } from '@/components/paypal-payment-modal'
+import { PaymentMethodModal, PaymentMethodType } from '@/components/payment-method-modal'
 import { toast } from 'sonner'
-import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader, Percent, Banknote, Wallet } from 'lucide-react'
+import { ArrowLeft, Package, Truck, CreditCard, Smartphone, Chrome, Loader, Percent, Wallet } from 'lucide-react'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
 import { useLanguage } from '@/components/language-context'
 
@@ -44,13 +43,11 @@ const hasStripe = typeof process !== 'undefined' &&
   !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY &&
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.startsWith('pk_')
 
-type PaymentMethodType = 'card' | 'wallet' | 'bank' | 'paypal'
-
-const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: string; desc: string }> = {
-  card:   { icon: CreditCard,  label: 'payByCard',              desc: 'cardDesc' },
-  wallet: { icon: Smartphone,  label: 'applePayGooglePay',   desc: 'walletDesc' },
-  bank:   { icon: Banknote,    label: 'payByBank',             desc: 'bankDesc' },
-  paypal: { icon: Wallet,      label: 'payPal',                desc: 'payPalDesc' },
+const methodIcons: Record<PaymentMethodType, typeof CreditCard> = {
+  card:     CreditCard,
+  applepay: Smartphone,
+  googlepay:Smartphone,
+  paypal:   Wallet,
 }
 
 export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalProps) {
@@ -63,8 +60,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [showPayment, setShowPayment] = useState(false)
   const [cardModalOpen, setCardModalOpen] = useState(false)
   const [walletModalOpen, setWalletModalOpen] = useState(false)
-  const [bankModalOpen, setBankModalOpen] = useState(false)
   const [paypalModalOpen, setPaypalModalOpen] = useState(false)
+  const [methodModalOpen, setMethodModalOpen] = useState(false)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [deliveryAddress, setDeliveryAddress] = useState('')
@@ -118,7 +115,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     setPromoError('')
   }
 
-  // Advance to payment when user logs in (only if items in cart)
   useEffect(() => {
     if (user && !showPayment && !authLoading && open && cartItems.length > 0) {
       setShowPayment(true)
@@ -137,34 +133,24 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const handleMethodSelect = async (method: PaymentMethodType) => {
     setSelectedMethod(method)
 
-    if (method === 'bank') {
-      setBankModalOpen(true)
-      return
-    }
     if (method === 'paypal') {
       setPaypalModalOpen(true)
       return
     }
 
-    if (hasStripe) {
+    if (method === 'applepay' || method === 'googlepay') {
+      if (!hasStripe) return
       setSubmitting(true)
       try {
         const res = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: total,
-            paymentMethodType: method === 'wallet' ? 'card' : method,
-          }),
+          body: JSON.stringify({ amount: total, paymentMethodType: 'card' }),
         })
         const data = await res.json()
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
-          if (method === 'card') {
-            setCardModalOpen(true)
-          } else if (method === 'wallet') {
-            setWalletModalOpen(true)
-          }
+          setWalletModalOpen(true)
         } else {
           toast.error(t.checkout.paymentUnavailable)
           setSelectedMethod(null)
@@ -175,6 +161,31 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       } finally {
         setSubmitting(false)
       }
+      return
+    }
+
+    if (!hasStripe) return
+
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: total, paymentMethodType: 'card' }),
+      })
+      const data = await res.json()
+      if (data.clientSecret) {
+        setClientSecret(data.clientSecret)
+        setCardModalOpen(true)
+      } else {
+        toast.error(t.checkout.paymentUnavailable)
+        setSelectedMethod(null)
+      }
+    } catch {
+      toast.error('Payment service unavailable. Please try again.')
+      setSelectedMethod(null)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -248,46 +259,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   const stripePromise = hasStripe ? getStripe() : null
 
-  const renderMethodButtons = () => (
-    <div className="grid gap-3">
-      {(Object.entries(methodConfig) as [PaymentMethodType, typeof methodConfig['card']][]).map(([key, config]) => {
-        const Icon = config.icon
-        return (
-          <button
-            key={key}
-            onClick={() => handleMethodSelect(key)}
-            disabled={submitting}
-            className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/30 bg-card/50 hover:border-primary/50 hover:bg-primary/5 transition-all text-left cursor-pointer disabled:opacity-50"
-          >
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <Icon className="w-5 h-5 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-base text-foreground font-medium">{t.checkout[config.label]}</p>
-              <p className="text-base text-muted-foreground tracking-[0.1em]">{t.checkout[config.desc]}</p>
-            </div>
-            {submitting && selectedMethod === key && (
-              <Loader className="w-4 h-4 text-primary animate-spin" />
-            )}
-          </button>
-        )
-      })}
-    </div>
-  )
-
   const renderPaymentStep = () => (
     <div className="space-y-5">
-      {/* Back button (only if method selected and has Stripe) */}
-      {selectedMethod && hasStripe && (
-        <button
-          onClick={handleBackToMethods}
-          className="inline-flex items-center gap-2 text-[18px] tracking-[0.15em] text-foreground/60 hover:text-primary transition-colors cursor-pointer"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          {clientSecret ? t.checkout.changeMethod : t.checkout.back}
-        </button>
-      )}
-
       {/* User summary */}
       {user && (
         <div className="glass-card rounded-lg p-4 space-y-2">
@@ -379,117 +352,63 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         </div>
       </div>
 
-      {/* Payment method selection or form */}
-      {!selectedMethod ? (
-        <>
-          {renderMethodButtons()}
-
-          {/* Delivery threshold info */}
-          {delivery !== null && delivery > 0 && (
-            <div className="flex items-center gap-3 text-[16px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
-              <Truck className="w-4 h-4 shrink-0 text-primary" />
-              <span>
-                {delivery === settings.fee
-                  ? t.checkout.deliveryFee.replace('{fee}', String(settings.fee)).replace('{amount}', (settings.free_threshold - subtotal).toFixed(0))
-                  : t.checkout.minimumOrder.replace('{min}', String(settings.min_order)).replace('{amount}', (settings.min_order - subtotal).toFixed(0))}
-              </span>
-            </div>
+      {/* Selected method info or Select Method button */}
+      {selectedMethod ? (
+        <div className="text-center py-4 text-muted-foreground">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            {(() => {
+              const Icon = methodIcons[selectedMethod]
+              return <Icon className="w-5 h-5 text-primary" />
+            })()}
+            <span className="text-[16px] text-foreground">
+              {t.checkout[selectedMethod === 'card' ? 'payByCard' : selectedMethod === 'applepay' ? 'applePay' : selectedMethod === 'googlepay' ? 'googlePay' : 'payPal']}
+            </span>
+          </div>
+          {selectedMethod !== 'paypal' && !clientSecret && (
+            <p className="text-[14px]">Setting up payment...</p>
           )}
-
-          {cartItems.length > 0 && (
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="lg"
-                onClick={() => onOpenChange(false)}
-                className="flex-1 text-[16px] tracking-[0.2em] rounded-none border-border/50 hover:bg-transparent whitespace-normal"
-              >
-                {t.checkout.cancel}
-              </Button>
-              <Button
-                type="button"
-                disabled={submitting || cartItems.length === 0 || !user || subtotal < settings.min_order}
-                className="flex-1 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50 whitespace-normal text-balance"
-              >
-                {!user ? t.checkout.signInToContinue : submitting ? t.checkout.pleaseWait : subtotal < settings.min_order ? t.checkout.minOrder.replace('{min}', String(settings.min_order)).replace('{amount}', (settings.min_order - subtotal).toFixed(0)) : t.checkout.selectMethod}
-              </Button>
-            </div>
-          )}
-        </>
-      ) : selectedMethod === 'card' ? (
-        /* Card opens in a separate modal — show placeholder */
-        <div className="text-center py-8 text-muted-foreground">
-          <p className="text-[18px]">Enter your card details in the secure popup.</p>
-          <button onClick={handleBackToMethods} className="text-primary hover:underline mt-3 text-[16px] tracking-[0.15em] cursor-pointer">
-            {t.checkout.changeMethod}
-          </button>
-        </div>
-      ) : selectedMethod === 'wallet' ? (
-        /* Wallet opens in a separate modal — show placeholder */
-        <div className="text-center py-8 text-muted-foreground">
-          <p className="text-[18px]">Apple Pay / Google Pay checkout opening...</p>
-          <button onClick={handleBackToMethods} className="text-primary hover:underline mt-3 text-[16px] tracking-[0.15em] cursor-pointer">
-            {t.checkout.changeMethod}
-          </button>
-        </div>
-      ) : selectedMethod === 'bank' || selectedMethod === 'paypal' ? (
-        <div className="text-center py-8 text-muted-foreground">
           <button onClick={handleBackToMethods} className="text-primary hover:underline mt-3 text-[16px] tracking-[0.15em] cursor-pointer">
             {t.checkout.changeMethod}
           </button>
         </div>
       ) : (
-        hasStripe && clientSecret && stripePromise ? (
-          <Elements
-            stripe={stripePromise}
-            options={{ clientSecret }}
-          >
-            <PaymentForm
-              amount={total}
-              clientSecret={clientSecret}
-              paymentMethod={selectedMethod}
-              onSuccess={handlePaymentSuccess}
-              onBack={handleBackToMethods}
-              addressFilled={!!deliveryAddress.trim()}
-              userName={user?.user_metadata?.full_name || ''}
-              userEmail={user?.email || ''}
-            />
-          </Elements>
-        ) : (
-          /* Mock payment — when Stripe is not configured or still loading */
-          <div className="space-y-4">
-            <div className="glass-card rounded-lg p-5">
-              <p className="text-base tracking-[0.2em] text-foreground/60 mb-4">{t.checkout.paymentMethod}</p>
-              <div className="flex items-center gap-3 mb-4">
-                {(() => {
-                  const config = methodConfig[selectedMethod]
-                  const Icon = config.icon
-                  return (
-                    <>
-                      <Icon className="w-5 h-5 text-primary" />
-                      <span className="text-[16px] text-foreground">{t.checkout[config.label]}</span>
-                    </>
-                  )
-                })()}
-              </div>
-              <div className="bg-border/10 border border-border/20 rounded-lg p-4 text-center">
-                <p className="font-serif text-3xl text-primary mb-1">£{total}</p>
-                <p className="text-[18px] text-foreground/60 tracking-[0.1em]">{t.checkout.totalToPay}</p>
-              </div>
-            </div>
+        <button
+          onClick={() => setMethodModalOpen(true)}
+          disabled={submitting || !deliveryAddress.trim()}
+          className="w-full py-4 text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow disabled:opacity-50 cursor-pointer"
+        >
+          {t.checkout.selectMethod}
+        </button>
+      )}
 
-            <Button
-              type="button"
-              onClick={handleMockPayment}
-              disabled={submitting || !deliveryAddress.trim()}
-              size="lg"
-              className="w-full text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
-            >
-              {submitting ? t.checkout.processing : t.checkout.confirmPayment.replace('{amount}', total.toFixed(2))}
-            </Button>
+      {delivery !== null && delivery > 0 && (
+        <div className="flex items-center gap-3 text-[16px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
+          <Truck className="w-4 h-4 shrink-0 text-primary" />
+          <span>
+            {delivery === settings.fee
+              ? t.checkout.deliveryFee.replace('{fee}', String(settings.fee)).replace('{amount}', (settings.free_threshold - subtotal).toFixed(0))
+              : t.checkout.minimumOrder.replace('{min}', String(settings.min_order)).replace('{amount}', (settings.min_order - subtotal).toFixed(0))}
+          </span>
+        </div>
+      )}
+
+      {/* Fallback mock payment when stripe not available */}
+      {!hasStripe && selectedMethod && (
+        <div className="space-y-4">
+          <div className="bg-border/10 border border-border/20 rounded-lg p-4 text-center">
+            <p className="font-serif text-3xl text-primary mb-1">£{total}</p>
+            <p className="text-[18px] text-foreground/60 tracking-[0.1em]">{t.checkout.totalToPay}</p>
           </div>
-        )
+          <Button
+            type="button"
+            onClick={handleMockPayment}
+            disabled={submitting || !deliveryAddress.trim()}
+            size="lg"
+            className="w-full text-[16px] tracking-[0.2em] rounded-none bg-primary text-primary-foreground hover:bg-primary/90 gold-glow py-6 disabled:opacity-50"
+          >
+            {submitting ? t.checkout.processing : t.checkout.confirmPayment.replace('{amount}', total.toFixed(2))}
+          </Button>
+        </div>
       )}
     </div>
   )
@@ -514,7 +433,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           <div className="pb-4 max-sm:overflow-x-hidden">
           {!showPayment ? (
             <div className="space-y-5">
-              {/* Empty cart — pure login modal */}
               {cartItems.length === 0 && !user && (
                 <div className="glass-card rounded-lg p-5 space-y-4">
                   <p className="text-base tracking-[0.2em] text-foreground/60 text-center">
@@ -533,10 +451,8 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                 </div>
               )}
 
-              {/* Items in cart — show full checkout with auth */}
               {cartItems.length > 0 && (
                 <>
-                  {/* Order summary */}
                   <div className="glass-card rounded-lg p-4 space-y-2">
                     <p className="text-base tracking-[0.2em] text-foreground/60 mb-3">{t.checkout.orderSummary}</p>
                     {cartItems.map(item => (
@@ -557,7 +473,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </div>
                   </div>
 
-                  {/* Auth step — only when not logged in */}
                   {!user && !authLoading && (
                     <div className="glass-card rounded-lg p-5 space-y-4">
                       <p className="text-base tracking-[0.2em] text-foreground/60 text-center">
@@ -576,14 +491,12 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
                     </div>
                   )}
 
-                  {/* Loading indicator while advancing to payment */}
                   {user && !showPayment && (
                     <div className="flex items-center justify-center py-8">
                       <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                     </div>
                   )}
 
-                  {/* Delivery threshold info */}
                   {delivery !== null && delivery > 0 && (
                     <div className="flex items-center gap-3 text-[16px] text-foreground/60 bg-border/10 rounded-lg px-4 py-3">
                       <Truck className="w-4 h-4 shrink-0 text-primary" />
@@ -624,6 +537,13 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         </ScrollArea>
       </DialogContent>
 
+      <PaymentMethodModal
+        open={methodModalOpen}
+        onOpenChange={setMethodModalOpen}
+        onSelect={handleMethodSelect}
+        total={total}
+      />
+
       <CardPaymentModal
         open={cardModalOpen}
         onOpenChange={(open) => {
@@ -652,19 +572,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         clientSecret={clientSecret || ''}
         amount={total}
         onSuccess={handlePaymentSuccess}
-      />
-
-      <BankPaymentModal
-        open={bankModalOpen}
-        onOpenChange={(open) => {
-          setBankModalOpen(open)
-          if (!open) {
-            setSelectedMethod(null)
-          }
-        }}
-        amount={total}
-        onSuccess={handlePostRedirectSuccess}
-        onBeforePay={saveOrder}
       />
 
       <PayPalPaymentModal

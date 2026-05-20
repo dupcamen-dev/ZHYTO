@@ -23,6 +23,7 @@ interface WalletPaymentModalProps {
   clientSecret: string
   amount: number
   onSuccess: () => void
+  type?: 'applepay' | 'googlepay'
 }
 
 function WalletForm({ amount, clientSecret, onSuccess, onClose }: {
@@ -130,7 +131,7 @@ function WalletForm({ amount, clientSecret, onSuccess, onClose }: {
   )
 }
 
-export function WalletPaymentModal({ open, onOpenChange, clientSecret, amount, onSuccess }: WalletPaymentModalProps) {
+export function WalletPaymentModal({ open, onOpenChange, clientSecret, amount, onSuccess, type = 'applepay' }: WalletPaymentModalProps) {
   const stripePromise = getStripe()
 
   return (
@@ -138,7 +139,7 @@ export function WalletPaymentModal({ open, onOpenChange, clientSecret, amount, o
       <DialogContent className="bg-background border-border/30 sm:max-w-md max-h-[100dvh] sm:max-h-[90vh] flex flex-col p-4 sm:p-6 max-sm:max-w-full max-sm:rounded-none max-sm:left-0 max-sm:right-0 max-sm:bottom-0 max-sm:top-auto max-sm:translate-y-0 max-sm:translate-x-0 overflow-x-hidden gap-2">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl tracking-[0.1em] text-foreground">
-            Pay with Wallet
+            {type === 'applepay' ? 'Apple Pay' : 'Google Pay'}
           </DialogTitle>
         </DialogHeader>
 
