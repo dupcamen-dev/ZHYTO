@@ -33,7 +33,8 @@ const products = [
     category: "pelmeni",
     stock: 10,
     ingredients: "Dough: flour, water, eggs, salt. Filling: beef, pork, onion, garlic, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce."
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 2,
@@ -47,7 +48,8 @@ const products = [
     category: "pelmeni",
     stock: 10,
     ingredients: "Dough: flour, water, eggs, salt. Filling: chicken, turkey, onion, garlic, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce."
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 3,
@@ -61,7 +63,8 @@ const products = [
     category: "varenyky",
     stock: 10,
     ingredients: "Dough: flour, water, eggs, salt. Filling: mashed potato, fried onion, butter, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with fried onions, sour cream and fresh dill."
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with fried onions, sour cream and fresh dill.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 4,
@@ -75,7 +78,8 @@ const products = [
     category: "varenyky",
     stock: 10,
     ingredients: "Dough: flour, water, eggs, salt. Filling: braised cabbage, carrot, onion, tomato paste, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs."
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 5,
@@ -89,7 +93,8 @@ const products = [
     category: "varenyky",
     stock: 10,
     ingredients: "Dough: flour, water, eggs, salt. Filling: wild mushrooms, onion, butter, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh dill."
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh dill.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 6,
@@ -103,7 +108,8 @@ const products = [
     category: "varenyky",
     stock: 10,
     ingredients: "Dough: flour, water, eggs, salt. Filling: cottage cheese, cherries, sugar, vanilla extract.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream, honey or a dusting of icing sugar."
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream, honey or a dusting of icing sugar.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 7,
@@ -117,7 +123,8 @@ const products = [
     category: "varenyky",
     stock: 10,
     ingredients: "Dough: flour, water, eggs, salt. Filling: cottage cheese, spinach, garlic, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs."
+    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 8,
@@ -131,7 +138,8 @@ const products = [
     category: "syrnyky",
     stock: 10,
     ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, salt. Served with sour cream.",
-    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream, jam or honey."
+    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream, jam or honey.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 9,
@@ -145,7 +153,8 @@ const products = [
     category: "syrnyky",
     stock: 10,
     ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, dark chocolate chunks, salt.",
-    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or a drizzle of melted chocolate."
+    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or a drizzle of melted chocolate.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
   {
     id: 10,
@@ -159,7 +168,8 @@ const products = [
     category: "syrnyky",
     stock: 10,
     ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, wild blueberries, salt.",
-    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or honey."
+    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or honey.",
+    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
   },
 ]
 
@@ -669,7 +679,7 @@ export default function Home() {
                       className="group flex flex-col relative sm:pt-7"
                     >
                       {product.badge && (
-                        <span className="hidden sm:absolute sm:inline top-0 left-0 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase whitespace-nowrap rounded-t-md z-10">
+                          <span className="hidden sm:absolute sm:inline top-0 left-0 px-3 py-1 bg-primary text-primary-foreground text-[13px] tracking-[0.2em] uppercase whitespace-nowrap z-10">
                           {product.badge}
                         </span>
                       )}
@@ -1343,19 +1353,19 @@ export default function Home() {
                 </div>
               </div>
 
-              {selectedProduct.ingredients && (
+              {(selectedProduct as any)[lang === 'uk' ? 'ingredients_uk' : 'ingredients_en'] || selectedProduct.ingredients ? (
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">{t.productModal.ingredients}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{selectedProduct.ingredients}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{(selectedProduct as any)[lang === 'uk' ? 'ingredients_uk' : 'ingredients_en'] || selectedProduct.ingredients}</p>
                 </div>
-              )}
+              ) : null}
 
-              {selectedProduct.cooking && (
+              {(selectedProduct as any)[lang === 'uk' ? 'recipe_uk' : 'recipe_en'] || selectedProduct.cooking ? (
                 <div className="mb-6">
                   <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">{t.productModal.cookingInstructions}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{selectedProduct.cooking}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{(selectedProduct as any)[lang === 'uk' ? 'recipe_uk' : 'recipe_en'] || selectedProduct.cooking}</p>
                 </div>
-              )}
+              ) : null}
 
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">

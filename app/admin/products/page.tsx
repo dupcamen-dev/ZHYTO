@@ -294,7 +294,7 @@ export default function AdminProducts() {
       )}
 
       {/* Categories management */}
-      <div className="glass-card rounded-xl overflow-hidden">
+      <div className="glass-card overflow-hidden">
         <button
           onClick={() => setCategoriesOpen(!categoriesOpen)}
           className="w-full flex items-center justify-between p-4 sm:p-5 text-left hover:bg-border/10 transition-colors cursor-pointer"
@@ -358,7 +358,7 @@ export default function AdminProducts() {
       {/* Product list */}
       <div className="space-y-3">
         {products.map(product => (
-          <div key={product.id} className={`glass-card rounded-xl p-4 sm:p-5 ${!product.available ? 'opacity-50' : ''}`}>
+          <div key={product.id} className={`glass-card p-4 sm:p-5 ${!product.available ? 'opacity-50' : ''}`}>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
               <div className="flex items-start gap-3 sm:gap-0">
                 <div className="flex flex-col items-start shrink-0">
@@ -367,7 +367,7 @@ export default function AdminProducts() {
                       {product.badge}
                     </span>
                   )}
-                  <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0">
+                  <div className="relative w-14 h-14 sm:w-20 sm:h-20 overflow-hidden shrink-0">
                     <img src={img(product.image)} alt={product.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
                   </div>
                 </div>
@@ -429,7 +429,7 @@ export default function AdminProducts() {
       {/* Edit/Create modal */}
       {editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm" onClick={() => setEditing(null)}>
-          <div className="bg-card border border-border/30 rounded-xl p-6 w-full max-w-lg mx-4 space-y-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-card border border-border/30 p-6 w-full max-w-lg mx-4 space-y-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <h2 className="font-serif text-xl text-foreground">{editing.id ? 'Edit Product' : 'Add Product'}</h2>
 
             {error && (
@@ -521,7 +521,7 @@ export default function AdminProducts() {
                     />
                   </div>
                   {editing.image && (
-                    <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-border/30">
+                    <div className="relative w-20 h-20 shrink-0 overflow-hidden border border-border/30">
                       <img src={img(editing.image)} alt="preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
                     </div>
                   )}
@@ -554,7 +554,7 @@ export default function AdminProducts() {
                     />
                   </div>
                   {editing.background_image && (
-                    <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border border-border/30">
+                    <div className="relative w-20 h-20 shrink-0 overflow-hidden border border-border/30">
                       <img src={img(editing.background_image)} alt="preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
                     </div>
                   )}
@@ -634,7 +634,7 @@ export default function AdminProducts() {
       )}
 
       {products.length === 0 && !loading && (
-        <div className="text-center py-20 glass-card rounded-xl">
+        <div className="text-center py-20 glass-card">
           <Package className="w-10 h-10 text-muted-foreground/40 mx-auto mb-4" />
           <p className="text-lg text-muted-foreground">No products yet. Add your first product.</p>
         </div>
