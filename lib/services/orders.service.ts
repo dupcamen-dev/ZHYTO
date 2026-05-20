@@ -63,29 +63,6 @@ export const ordersService = {
       .single();
 
     if (error) throw error;
-
-    // Decrement stock on order creation
-    let client = supabase;
-    try {
-      client = getSupabaseAdmin();
-    } catch {
-      // fallback
-    }
-    for (const item of input.items) {
-      const { data: product } = await client
-        .from('products')
-        .select('stock')
-        .eq('id', item.product_id)
-        .maybeSingle();
-      if (product) {
-        const newStock = Math.max(0, product.stock - item.quantity);
-        await client
-          .from('products')
-          .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
-          .eq('id', item.product_id);
-      }
-    }
-
     return data;
   },
 
@@ -96,6 +73,20 @@ export const ordersService = {
     } catch {
       // fallback
     }
+
+    // Get the old order before updating
+    const { data: oldOrder } = await client
+      .from('orders')
+      .select('status, items')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (!oldOrder) {
+      throw new NotFoundError('Замовлення не знайдено');
+    }
+
+    const oldStatus = oldOrder.status;
+
     const { data, error } = await client
       .from('orders')
       .update({ status })
@@ -105,6 +96,27 @@ export const ordersService = {
 
     if (error || !data) {
       throw new NotFoundError('Замовлення не знайдено');
+    }
+
+    const shouldDecrement = (status === 'confirmed' || status === 'completed')
+      && oldStatus !== 'confirmed' && oldStatus !== 'completed'
+      && data.items?.length;
+
+    if (shouldDecrement) {
+      for (const item of data.items) {
+        const { data: product } = await client
+          .from('products')
+          .select('stock')
+          .eq('id', item.product_id)
+          .maybeSingle();
+        if (product) {
+          const newStock = Math.max(0, product.stock - item.quantity);
+          await client
+            .from('products')
+            .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
+            .eq('id', item.product_id);
+        }
+      }
     }
 
     // Restore stock when cancelled
