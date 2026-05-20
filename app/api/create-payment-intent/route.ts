@@ -1,26 +1,32 @@
 import { NextRequest } from 'next/server';
 import { paymentsService } from '@/lib/services/payments.service';
-import { requireAuth } from '@/lib/middleware/auth.middleware';
-import { handleError, ValidationError } from '@/lib/utils/errors';
+import { getStripeOrNull } from '@/lib/utils/stripe';
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
+  if (!getStripeOrNull()) {
+    return Response.json(
+      { error: 'Payment not configured' },
+      { status: 503 }
+    );
+  }
+
   try {
-    await requireAuth(request);
-    
-    const body = await request.json();
-    const { amount, orderId } = body;
+    const { amount, paymentMethodType } = await req.json();
 
-    if (!amount || !orderId) {
-      throw new ValidationError('amount та orderId обов\'язкові');
+    if (!amount) {
+      return Response.json(
+        { error: 'amount is required' },
+        { status: 400 }
+      );
     }
 
-    const payment = await paymentsService.createPaymentIntent(amount, orderId);
+    const payment = await paymentsService.createPaymentIntent(amount, paymentMethodType || 'card');
 
-    return Response.json({
-      clientSecret: payment.clientSecret,
-      paymentIntentId: payment.paymentIntentId,
-    });
-  } catch (error) {
-    return handleError(error);
+    return Response.json({ clientSecret: payment.clientSecret });
+  } catch {
+    return Response.json(
+      { error: 'Failed to create payment' },
+      { status: 500 }
+    );
   }
 }
