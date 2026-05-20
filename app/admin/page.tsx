@@ -43,7 +43,7 @@ export default function AdminDashboard() {
             setOrders(orders)
             setStats({
               total: orders.length,
-              revenue: orders.reduce((s, o) => s + o.total, 0),
+              revenue: orders.filter(o => o.status === 'confirmed' || o.status === 'completed').reduce((s, o) => s + o.total, 0),
               pending: orders.filter(o => o.status === 'pending').length,
               confirmed: orders.filter(o => o.status === 'confirmed').length,
               completed: orders.filter(o => o.status === 'completed').length,

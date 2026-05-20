@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const { data: revenueData } = await client
       .from('orders')
       .select('total, delivery_fee')
-      .eq('status', 'completed')
+      .in('status', ['confirmed', 'completed'])
       .gte('created_at', startDate.toISOString());
 
     const revenue = revenueData?.reduce(
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     const { data: orders } = await client
       .from('orders')
       .select('items')
-      .eq('status', 'completed')
+      .in('status', ['confirmed', 'completed'])
       .gte('created_at', startDate.toISOString());
 
     const productStats: Record<string, { name: string; count: number }> = {};
