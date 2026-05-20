@@ -17,12 +17,6 @@ export const authService = {
     if (error) throw new AuthenticationError(error.message);
     if (!data.user) throw new AuthenticationError('Помилка реєстрації');
 
-    // Створюємо профіль
-    await supabase.from('profiles').insert({
-      id: data.user.id,
-      role: 'user',
-    });
-
     return {
       user: { id: data.user.id, email: data.user.email! },
       session: data.session,
