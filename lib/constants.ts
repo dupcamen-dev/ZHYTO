@@ -1,3 +1,11 @@
+// Base path for GitHub Pages
+export const BASE_PATH = process.env.NODE_ENV === 'production' ? '' : '';
+
+// Image helper
+export function img(path: string) {
+  return `${BASE_PATH}${path}`;
+}
+
 // Delivery settings
 export const DELIVERY_SETTINGS = {
   MIN_ORDER: 10,
