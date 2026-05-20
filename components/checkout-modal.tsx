@@ -137,6 +137,15 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const handleMethodSelect = async (method: PaymentMethodType) => {
     setSelectedMethod(method)
 
+    if (method === 'bank') {
+      setBankModalOpen(true)
+      return
+    }
+    if (method === 'paypal') {
+      setPaypalModalOpen(true)
+      return
+    }
+
     if (hasStripe) {
       setSubmitting(true)
       try {
@@ -155,10 +164,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             setCardModalOpen(true)
           } else if (method === 'wallet') {
             setWalletModalOpen(true)
-          } else if (method === 'bank') {
-            setBankModalOpen(true)
-          } else if (method === 'paypal') {
-            setPaypalModalOpen(true)
           }
         } else {
           toast.error(t.checkout.paymentUnavailable)
@@ -176,7 +181,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const saveOrder = async () => {
     if (!supabase) throw new Error('Supabase client not available')
     if (!user) throw new Error('User not authenticated')
-    const { error } = await supabase.from('orders').insert({
+    const { data, error } = await supabase.from('orders').insert({
       user_id: user.id,
       items: cartItems.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
       total,
@@ -185,8 +190,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       customer_name: user.user_metadata?.full_name || '',
       customer_email: user.email || '',
       delivery_address: deliveryAddress,
-    })
+    }).select('id').single()
     if (error) throw error
+    return data.id
   }
 
   const handleMockPayment = async () => {
@@ -216,6 +222,16 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       toast.error('Order was not saved. Please contact support.')
       return
     }
+    toast.success(t.checkout.orderConfirmed)
+    clearCart()
+    onOpenChange(false)
+    setShowPayment(false)
+    setSelectedMethod(null)
+    setClientSecret(null)
+    router.push('/account')
+  }
+
+  const handlePostRedirectSuccess = () => {
     toast.success(t.checkout.orderConfirmed)
     clearCart()
     onOpenChange(false)
@@ -644,12 +660,10 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           setBankModalOpen(open)
           if (!open) {
             setSelectedMethod(null)
-            setClientSecret(null)
           }
         }}
-        clientSecret={clientSecret || ''}
         amount={total}
-        onSuccess={handlePaymentSuccess}
+        onSuccess={handlePostRedirectSuccess}
         onBeforePay={saveOrder}
       />
 
@@ -659,12 +673,10 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           setPaypalModalOpen(open)
           if (!open) {
             setSelectedMethod(null)
-            setClientSecret(null)
           }
         }}
-        clientSecret={clientSecret || ''}
         amount={total}
-        onSuccess={handlePaymentSuccess}
+        onSuccess={handlePostRedirectSuccess}
         onBeforePay={saveOrder}
       />
     </Dialog>

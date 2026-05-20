@@ -2,10 +2,12 @@ import { getStripe } from '../utils/stripe';
 import Stripe from 'stripe';
 
 export const paymentsService = {
-  async createPaymentIntent(amount: number, paymentMethodType: string): Promise<{ clientSecret: string; paymentIntentId: string }> {
+  async createPaymentIntent(amount: number, paymentMethodType: string, orderId?: string): Promise<{ clientSecret: string; paymentIntentId: string }> {
     const stripe = getStripe();
 
     let paymentIntent: Stripe.PaymentIntent;
+
+    const metadata = orderId ? { order_id: orderId } : undefined;
 
     if (paymentMethodType === 'bank') {
       paymentIntent = await stripe.paymentIntents.create({
@@ -20,18 +22,21 @@ export const paymentsService = {
             },
           },
         },
+        metadata,
       });
     } else if (paymentMethodType === 'paypal') {
       paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100),
         currency: 'gbp',
         payment_method_types: ['paypal'],
+        metadata,
       });
     } else {
       paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100),
         currency: 'gbp',
         payment_method_types: ['card'],
+        metadata,
       });
     }
 

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { amount, paymentMethodType } = await req.json();
+    const { amount, paymentMethodType, orderId } = await req.json();
 
     if (!amount) {
       return Response.json(
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const payment = await paymentsService.createPaymentIntent(amount, paymentMethodType || 'card');
+    const payment = await paymentsService.createPaymentIntent(amount, paymentMethodType || 'card', orderId);
 
     return Response.json({ clientSecret: payment.clientSecret });
   } catch {

@@ -19,32 +19,42 @@ import { toast } from 'sonner'
 interface PayPalPaymentModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  clientSecret: string
   amount: number
   onSuccess: () => void
-  onBeforePay?: () => Promise<void>
+  onBeforePay?: () => Promise<string | undefined>
 }
 
-function PayPalForm({ amount, clientSecret, onSuccess, onClose, onBeforePay }: {
+function PayPalForm({ amount, onSuccess, onClose, onBeforePay }: {
   amount: number
-  clientSecret: string
   onSuccess: () => void
   onClose: () => void
-  onBeforePay?: () => Promise<void>
+  onBeforePay?: () => Promise<string | undefined>
 }) {
   const stripe = useStripe()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handlePayPal = async () => {
-    if (!stripe || !clientSecret) return
+    if (!stripe) return
     setLoading(true)
     setError(null)
 
     try {
-      if (onBeforePay) await onBeforePay()
+      const orderId = onBeforePay ? await onBeforePay() : undefined
 
-      const { error: confirmError } = await stripe.confirmPayPalPayment(clientSecret, {
+      const res = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, paymentMethodType: 'paypal', orderId }),
+      })
+      const data = await res.json()
+      if (!data.clientSecret) {
+        setError('Failed to create payment. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      const { error: confirmError } = await stripe.confirmPayPalPayment(data.clientSecret, {
         return_url: `${window.location.origin}/account`,
       })
 
@@ -93,7 +103,7 @@ function PayPalForm({ amount, clientSecret, onSuccess, onClose, onBeforePay }: {
   )
 }
 
-export function PayPalPaymentModal({ open, onOpenChange, clientSecret, amount, onSuccess }: PayPalPaymentModalProps) {
+export function PayPalPaymentModal({ open, onOpenChange, amount, onSuccess, onBeforePay }: PayPalPaymentModalProps) {
   const stripePromise = getStripe()
 
   return (
@@ -105,11 +115,14 @@ export function PayPalPaymentModal({ open, onOpenChange, clientSecret, amount, o
           </DialogTitle>
         </DialogHeader>
 
-        {stripePromise && clientSecret ? (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
+        {stripePromise ? (
+          <Elements stripe={stripePromise} options={{
+            mode: 'payment',
+            amount: Math.round(amount * 100),
+            currency: 'gbp',
+          }}>
             <PayPalForm
               amount={amount}
-              clientSecret={clientSecret}
               onSuccess={onSuccess}
               onClose={() => onOpenChange(false)}
               onBeforePay={onBeforePay}

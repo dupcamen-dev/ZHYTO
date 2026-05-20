@@ -19,18 +19,16 @@ import { toast } from 'sonner'
 interface BankPaymentModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  clientSecret: string
   amount: number
   onSuccess: () => void
-  onBeforePay?: () => Promise<void>
+  onBeforePay?: () => Promise<string | undefined>
 }
 
-function BankForm({ amount, clientSecret, onSuccess, onClose, onBeforePay }: {
+function BankForm({ amount, onSuccess, onClose, onBeforePay }: {
   amount: number
-  clientSecret: string
   onSuccess: () => void
   onClose: () => void
-  onBeforePay?: () => Promise<void>
+  onBeforePay?: () => Promise<string | undefined>
 }) {
   const stripe = useStripe()
   const [loading, setLoading] = useState(false)
@@ -52,22 +50,39 @@ function BankForm({ amount, clientSecret, onSuccess, onClose, onBeforePay }: {
   }
 
   const handleBankTransfer = async () => {
-    if (!stripe || !clientSecret) return
+    if (!stripe) return
     setLoading(true)
     setError(null)
 
     try {
-      if (onBeforePay) await onBeforePay()
+      const orderId = onBeforePay ? await onBeforePay() : undefined
 
-      const { error: confirmError } = await stripe.confirmCustomerBalancePayment(clientSecret, {
-        return_url: `${window.location.origin}/account`,
+      const res = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, paymentMethodType: 'bank', orderId }),
       })
+      const data = await res.json()
+      if (!data.clientSecret) {
+        setError('Failed to create payment. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      const { error: confirmError, paymentIntent } = await stripe.confirmCustomerBalancePayment(data.clientSecret)
 
       if (confirmError) {
         setError(confirmError.message ?? 'Bank transfer failed')
-      } else {
+      } else if (paymentIntent?.status === 'requires_action' && paymentIntent?.next_action?.display_bank_transfer_instructions) {
         setShowDetails(true)
         toast.success('Bank transfer initiated. Order will be processed after payment is received.')
+        onSuccess()
+      } else if (paymentIntent?.status === 'succeeded') {
+        toast.success('Bank transfer succeeded. Order confirmed!')
+        onSuccess()
+      } else {
+        setShowDetails(true)
+        toast.success('Bank transfer initiated. Follow the instructions below.')
         onSuccess()
       }
     } catch {
@@ -144,7 +159,7 @@ function BankForm({ amount, clientSecret, onSuccess, onClose, onBeforePay }: {
   )
 }
 
-export function BankPaymentModal({ open, onOpenChange, clientSecret, amount, onSuccess }: BankPaymentModalProps) {
+export function BankPaymentModal({ open, onOpenChange, amount, onSuccess, onBeforePay }: BankPaymentModalProps) {
   const stripePromise = getStripe()
 
   return (
@@ -156,11 +171,14 @@ export function BankPaymentModal({ open, onOpenChange, clientSecret, amount, onS
           </DialogTitle>
         </DialogHeader>
 
-        {stripePromise && clientSecret ? (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
+        {stripePromise ? (
+          <Elements stripe={stripePromise} options={{
+            mode: 'payment',
+            amount: Math.round(amount * 100),
+            currency: 'gbp',
+          }}>
             <BankForm
               amount={amount}
-              clientSecret={clientSecret}
               onSuccess={onSuccess}
               onClose={() => onOpenChange(false)}
               onBeforePay={onBeforePay}
