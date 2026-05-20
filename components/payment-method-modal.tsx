@@ -29,28 +29,26 @@ const methodConfig: Record<PaymentMethodType, { icon: typeof CreditCard; label: 
 
 export function PaymentMethodModal({ open, onOpenChange, onSelect, total = 0 }: PaymentMethodModalProps) {
   const { t } = useLanguage()
-  const [walletSupport, setWalletSupport] = useState<{ applepay: boolean | null; googlepay: boolean | null }>({ applepay: null, googlepay: null })
+  const [walletSupport, setWalletSupport] = useState<{ applepay: boolean | null; googlepay: boolean | null; raw: any }>({ applepay: null, googlepay: null, raw: null })
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
     if (!open) {
-      setWalletSupport({ applepay: null, googlepay: null })
+      setWalletSupport({ applepay: null, googlepay: null, raw: null })
       setChecking(true)
       return
     }
 
     const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
     if (!pk || !pk.startsWith('pk_')) {
-      console.log('[PaymentMethodModal] Stripe key not configured')
-      setWalletSupport({ applepay: false, googlepay: false })
+      setWalletSupport({ applepay: false, googlepay: false, raw: 'Stripe key not configured' })
       setChecking(false)
       return
     }
 
     loadStripe(pk).then(stripe => {
       if (!stripe || !stripe.paymentRequest) {
-        console.log('[PaymentMethodModal] Stripe loaded but paymentRequest unavailable')
-        setWalletSupport({ applepay: false, googlepay: false })
+        setWalletSupport({ applepay: false, googlepay: false, raw: 'paymentRequest unavailable' })
         setChecking(false)
         return
       }
@@ -64,16 +62,15 @@ export function PaymentMethodModal({ open, onOpenChange, onSelect, total = 0 }: 
       })
 
       pr.canMakePayment().then((result: any) => {
-        console.log('[PaymentMethodModal] canMakePayment result:', result)
         setWalletSupport({
           applepay: !!(result?.applePay),
           googlepay: !!(result?.googlePay),
+          raw: result,
         })
         setChecking(false)
       })
     }).catch(err => {
-      console.error('[PaymentMethodModal] loadStripe error:', err)
-      setWalletSupport({ applepay: false, googlepay: false })
+      setWalletSupport({ applepay: false, googlepay: false, raw: `loadStripe error: ${err?.message || err}` })
       setChecking(false)
     })
   }, [open, total])
@@ -131,6 +128,17 @@ export function PaymentMethodModal({ open, onOpenChange, onSelect, total = 0 }: 
                 </button>
               )
             })}
+          </div>
+        )}
+
+        {walletSupport.raw !== null && (
+          <div className="mt-4 p-3 rounded-lg bg-border/10 border border-border/20">
+            <p className="text-xs font-mono text-muted-foreground break-all">
+              canMakePayment: {JSON.stringify(walletSupport.raw)}
+            </p>
+            <p className="text-xs font-mono text-muted-foreground/60 mt-1">
+              HTTPS: {typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'yes' : 'no'}
+            </p>
           </div>
         )}
       </DialogContent>
