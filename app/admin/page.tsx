@@ -9,7 +9,7 @@ interface Order {
   total: number
   status: string
   created_at: string
-  items: { name: string; qty: number }[]
+  items: { name: string; quantity: number }[]
 }
 
 interface ProductStat {
@@ -76,8 +76,9 @@ export default function AdminDashboard() {
     .flatMap(o => o.items || [])
     .reduce((acc: ProductStat[], item) => {
       const existing = acc.find(p => p.name === item.name)
-      if (existing) existing.count += item.qty
-      else acc.push({ name: item.name, count: item.qty })
+      const c = item.quantity ?? 0
+      if (existing) existing.count += c
+      else acc.push({ name: item.name, count: c })
       return acc
     }, [])
     .sort((a, b) => b.count - a.count)
