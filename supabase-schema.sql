@@ -166,6 +166,9 @@ CREATE POLICY "Admins can update settings"
 INSERT INTO settings (key, value) VALUES ('delivery', '{"min_order": 10, "free_threshold": 50, "fee": 5}')
 ON CONFLICT (key) DO NOTHING;
 
+INSERT INTO settings (key, value) VALUES ('promo_codes', '[]')
+ON CONFLICT (key) DO NOTHING;
+
 -- ============================================================
 -- REVIEWS (customer reviews/testimonials)
 -- ============================================================
