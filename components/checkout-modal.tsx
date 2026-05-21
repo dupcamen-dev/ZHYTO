@@ -225,7 +225,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     await checkStock()
     const { data, error } = await supabase.from('orders').insert({
       user_id: user.id,
-      items: cartItems.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
+      items: cartItems.map(i => ({ product_id: i.id, name: i.name, price: i.price, quantity: i.qty })),
       total,
       delivery_fee: delivery,
       status: 'pending',

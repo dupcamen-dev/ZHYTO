@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 
 interface Order {
   id: string
-  items: { name: string; price: number; qty: number }[]
+  items: { name: string; price: number; quantity: number }[]
   total: number
   delivery_fee: number
   status: 'pending' | 'confirmed' | 'completed'
@@ -136,8 +136,8 @@ export default function AccountPage() {
                     <div className="space-y-2 mb-4">
                       {order.items.map((item, i) => (
                         <div key={i} className="flex justify-between text-[14px]">
-                          <span className="text-foreground">{item.name} × {item.qty}</span>
-                          <span className="text-primary">£{item.price * item.qty}</span>
+                          <span className="text-foreground">{item.name} × {item.quantity ?? item.qty}</span>
+                          <span className="text-primary">£{item.price * (item.quantity ?? item.qty)}</span>
                         </div>
                       ))}
                     </div>

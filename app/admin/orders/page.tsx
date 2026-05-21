@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 interface Order {
   id: string
   user_id: string
-  items: { name: string; price: number; qty: number }[]
+  items: { name: string; price: number; quantity: number; qty?: number }[]
   total: number
   delivery_fee: number
   status: string
@@ -52,7 +52,7 @@ export default function AdminOrders() {
   const updateStatus = async (id: string, status: string) => {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return
-    await fetch(`/api/orders/${id}`, {
+    const res = await fetch(`/api/orders/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -60,6 +60,10 @@ export default function AdminOrders() {
       },
       body: JSON.stringify({ status }),
     })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Failed to update status' }))
+      toast.error(err.error || 'Failed to update status')
+    }
     fetchOrders()
   }
 
@@ -126,8 +130,8 @@ export default function AdminOrders() {
                 <div className="space-y-1 mb-4">
                   {order.items.map((item, i) => (
                     <div key={i} className="flex justify-between text-base">
-                      <span className="text-foreground/80">{item.name} × {item.qty}</span>
-                      <span className="text-foreground/60">£{item.price * item.qty}</span>
+                      <span className="text-foreground/80">{item.name} × {item.quantity ?? item.qty}</span>
+                      <span className="text-foreground/60">£{item.price * (item.quantity ?? item.qty)}</span>
                     </div>
                   ))}
                 </div>
