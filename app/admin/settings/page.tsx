@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Truck, Save, Loader, Percent, X, Tag } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState({ min_order: 10, free_threshold: 50, fee: 5 })
@@ -33,28 +34,31 @@ export default function AdminSettings() {
   }, [])
 
   const upsertSetting = async (key: string, value: any) => {
-    let accessToken = ''
-    if (supabase) {
-      const { data: { session } } = await supabase.auth.getSession()
-      accessToken = session?.access_token || ''
-    }
-    await fetch('/api/settings', {
+    const { data: { session } } = await supabase.auth.getSession()
+    const res = await fetch('/api/settings', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        Authorization: `Bearer ${session?.access_token}`,
       },
       body: JSON.stringify({ key, value }),
     })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Failed to save' }))
+      throw new Error(err.error || 'Failed to save')
+    }
   }
 
   const saveSettings = async () => {
-    if (!supabase) return
     setSaving(true)
-    await upsertSetting('delivery', settings)
+    try {
+      await upsertSetting('delivery', settings)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Failed to save')
+    }
     setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
   }
 
   const savePromoCodes = async (newList: typeof promoCodes) => {
