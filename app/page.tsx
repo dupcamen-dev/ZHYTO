@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { img as imgPath } from '@/lib/constants'
 const img = imgPath
-import { motion, useScroll, useTransform, useMotionValue, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, ArrowDown, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
@@ -183,9 +183,9 @@ export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showScrollBottom, setShowScrollBottom] = useState(true)
   const [isOnProducts, setIsOnProducts] = useState(false)
-  const [headerMode, setHeaderMode] = useState<'tall' | 'normal'>('normal')
-  const navY = useMotionValue(0)
-  const hideHeader = useRef(false)
+  const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('normal')
+  const headerModeRef = useRef(headerMode)
+  headerModeRef.current = headerMode
   const prevScrollY = useRef(0)
   const productsTopRef = useRef(0)
   const aboutTopRef = useRef(0)
@@ -235,21 +235,12 @@ export default function Home() {
             setIsOnProducts(false)
           }
 
-          const atDesktopTop = atTop && window.innerWidth >= 1024
-          if (atDesktopTop && headerMode !== 'tall') {
-            setHeaderMode('tall')
-          } else if (atTop && headerMode !== 'normal') {
-            setHeaderMode('normal')
-          } else if (!atDesktopTop && !goingDown && headerMode !== 'normal') {
-            setHeaderMode('normal')
-          }
-          const shouldHide = goingDown && !atTop && !atBottom && y >= productsTopRef.current - 100
-          if (shouldHide && !hideHeader.current) {
-            hideHeader.current = true
-            navY.set(-300)
-          } else if (!shouldHide && hideHeader.current) {
-            hideHeader.current = false
-            navY.set(0)
+          if (atTop && window.innerWidth >= 1024) {
+            if (headerModeRef.current !== 'tall') setHeaderMode('tall')
+          } else if (!goingDown || atBottom) {
+            if (headerModeRef.current !== 'normal') setHeaderMode('normal')
+          } else if (goingDown && y >= productsTopRef.current - 100) {
+            if (headerModeRef.current !== 'hidden') setHeaderMode('hidden')
           }
 
           prevScrollY.current = y
@@ -280,8 +271,9 @@ export default function Home() {
       {/* Navigation */}
       <motion.nav
         className="fixed top-0 left-0 right-0 z-50 overflow-visible"
-        style={{ backgroundColor: '#c2a57b', y: navY }}
+        style={{ backgroundColor: '#c2a57b' }}
         initial={{ y: -80 }}
+        animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
         <div className={`max-w-7xl mx-auto transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? 'px-8 lg:px-14' : 'px-5 lg:px-10'}`} style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
