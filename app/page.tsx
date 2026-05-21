@@ -206,41 +206,52 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+    let ticking = false
+    let lastProgress = -1
     const handleScroll = () => {
-      const y = window.scrollY
-      const maxY = document.documentElement.scrollHeight - window.innerHeight
-      const atTop = y < 50
-      const atBottom = y > maxY - 100
-      const goingDown = y > prevScrollY.current
-      const isMobile = window.innerWidth < 1024
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY
+          const maxY = document.documentElement.scrollHeight - window.innerHeight
+          const atTop = y < 50
+          const atBottom = y > maxY - 100
+          const goingDown = y > prevScrollY.current
+          const isMobile = window.innerWidth < 1024
 
-      setShowScrollTop(y > 300)
-      setShowScrollBottom(y < maxY - 100)
-      const reviewsEl = document.getElementById('reviews')
-      if (reviewsEl) {
-        const rect = reviewsEl.getBoundingClientRect()
-        const wh = window.innerHeight
-        const total = rect.height + wh
-        const p = Math.max(0, Math.min(1, (wh - rect.top) / total))
-        setProgress(p)
-      }
-      if (isMobile && aboutTopRef.current > 0) {
-        setIsOnProducts(y >= productsTopRef.current - 100 && y < aboutTopRef.current - 100)
-      } else {
-        setIsOnProducts(false)
-      }
+          setShowScrollTop(y > 300)
+          setShowScrollBottom(y < maxY - 100)
+          const reviewsEl = document.getElementById('reviews')
+          if (reviewsEl) {
+            const rect = reviewsEl.getBoundingClientRect()
+            const wh = window.innerHeight
+            const total = rect.height + wh
+            const p = Math.max(0, Math.min(1, (wh - rect.top) / total))
+            if (Math.round(p * 100) !== Math.round(lastProgress * 100)) {
+              setProgress(p)
+              lastProgress = p
+            }
+          }
+          if (isMobile && aboutTopRef.current > 0) {
+            setIsOnProducts(y >= productsTopRef.current - 100 && y < aboutTopRef.current - 100)
+          } else {
+            setIsOnProducts(false)
+          }
 
-      if (atTop) {
-        setHeaderMode(window.innerWidth >= 1024 ? 'tall' : 'normal')
-      } else if (!goingDown) {
-        setHeaderMode('normal')
-      } else if (atBottom) {
-        setHeaderMode('normal')
-      } else if (goingDown && y >= productsTopRef.current - 100) {
-        setHeaderMode('hidden')
-      }
+          if (atTop) {
+            setHeaderMode(window.innerWidth >= 1024 ? 'tall' : 'normal')
+          } else if (!goingDown) {
+            setHeaderMode('normal')
+          } else if (atBottom) {
+            setHeaderMode('normal')
+          } else if (goingDown && y >= productsTopRef.current - 100) {
+            setHeaderMode('hidden')
+          }
 
-      prevScrollY.current = y
+          prevScrollY.current = y
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -508,7 +519,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
@@ -530,7 +541,7 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                   className="mb-8"
                 >
@@ -544,7 +555,7 @@ export default function Home() {
                       key={product.id}
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false }}
+                      viewport={{ once: true }}
                       transition={{ duration: 0.5 }}
                       className="group flex flex-col relative sm:pt-7"
                     >
@@ -595,7 +606,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-1"
             >
@@ -628,7 +639,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="relative order-2 lg:order-2"
             >
@@ -687,7 +698,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
@@ -719,7 +730,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-2 px-5 lg:px-0"
             >
@@ -745,7 +756,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
@@ -767,7 +778,7 @@ export default function Home() {
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <button
@@ -807,7 +818,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-center mt-12"
           >
@@ -834,7 +845,7 @@ export default function Home() {
               className="relative z-10"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
               <p className="text-[16px] tracking-[0.35em] text-primary mb-6">{t.contact.getInTouch}</p>
@@ -927,7 +938,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
@@ -945,7 +956,7 @@ export default function Home() {
                 key={review.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-black/90 backdrop-blur-sm p-8 shadow-sm hover:shadow-md transition-shadow"
               >
