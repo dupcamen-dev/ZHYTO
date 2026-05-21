@@ -64,7 +64,10 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [methodModalOpen, setMethodModalOpen] = useState(false)
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
-  const [deliveryAddress, setDeliveryAddress] = useState('')
+  const [deliveryAddress, setDeliveryAddress] = useState(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('zhyto-address') || ''
+    return ''
+  })
   const [promoInput, setPromoInput] = useState('')
   const [promoCode, setPromoCode] = useState<string | null>(null)
   const [promoError, setPromoError] = useState('')
@@ -80,6 +83,10 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       }
     })
   }, [])
+
+  useEffect(() => {
+    try { localStorage.setItem('zhyto-address', deliveryAddress) } catch {}
+  }, [deliveryAddress])
 
   const cartItems = Object.entries(cart)
     .map(([id, item]) => {
@@ -125,7 +132,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       setShowPayment(false)
       setSelectedMethod(null)
       setClientSecret(null)
-      setDeliveryAddress('')
     }
   }, [open])
 

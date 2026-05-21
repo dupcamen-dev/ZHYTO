@@ -354,29 +354,32 @@ export default function Home() {
               {!loading && (
                 user ? (
                   <div className="flex items-center gap-3">
-                      <motion.button
-                        onClick={() => router.push('/account')}
-                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
-                        title={t.header.myAccount}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <User className="w-4 h-4" />
-                      </motion.button>
-                      {isAdmin && (
-                      <motion.button
-                        onClick={() => router.push('/admin')}
-                        className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-[13px] tracking-[0.1em] font-medium cursor-pointer"
-                        title={t.header.admin}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        A
-                      </motion.button>
-                      )}
+                    <motion.button
+                      onClick={() => router.push('/account')}
+                      className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer shrink-0"
+                      title={t.header.myAccount}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <User className="w-4 h-4" />
+                    </motion.button>
+                    <span className="hidden lg:inline text-[13px] tracking-[0.05em] text-foreground/60 max-w-[100px] truncate">
+                      {user.email?.split('@')[0]}
+                    </span>
+                    {isAdmin && (
+                    <motion.button
+                      onClick={() => router.push('/admin')}
+                      className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-[13px] tracking-[0.1em] font-medium cursor-pointer shrink-0"
+                      title={t.header.admin}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      A
+                    </motion.button>
+                    )}
                     <motion.button
                       onClick={signOut}
-                      className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-destructive hover:text-destructive hover:bg-destructive/5 transition-all cursor-pointer"
+                      className="hidden sm:flex w-9 h-9 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-destructive hover:text-destructive hover:bg-destructive/5 transition-all cursor-pointer shrink-0"
                       title={t.header.signOut}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
