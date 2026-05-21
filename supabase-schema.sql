@@ -317,7 +317,7 @@ BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SET search_path = 'public';
 
 DROP TRIGGER IF EXISTS update_products_updated_at ON products;
 CREATE TRIGGER update_products_updated_at
@@ -330,6 +330,14 @@ CREATE TRIGGER update_order_payments_updated_at
   BEFORE UPDATE ON order_payments
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================
+-- ФУНКЦІЯ: Перевірка прав адміністратора
+-- ============================================================
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin');
+$$ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = 'public';
 
 -- ============================================================
 -- ФУНКЦІЯ: Автоматичне створення профілю при реєстрації
@@ -345,7 +353,7 @@ EXCEPTION WHEN OTHERS THEN
   RAISE WARNING 'handle_new_user failed for %: %', NEW.id, SQLERRM;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
