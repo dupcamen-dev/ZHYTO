@@ -1,21 +1,11 @@
-import { supabase, getSupabaseAdmin } from '../utils/supabase';
+import { getSupabaseAdmin } from '../utils/supabase';
 import { AuthorizationError } from '../utils/errors';
 import { requireAuth } from './auth.middleware';
 import { User } from '../types/user.types';
 
-async function getProfileClient() {
-  let client = supabase;
-  try {
-    client = getSupabaseAdmin();
-  } catch {
-    // fallback
-  }
-  return client;
-}
-
 export async function requireAdmin(request: Request): Promise<User> {
   const user = await requireAuth(request);
-  const client = await getProfileClient();
+  const client = getSupabaseAdmin();
 
   const { data: profile, error } = await client
     .from('profiles')
@@ -31,7 +21,7 @@ export async function requireAdmin(request: Request): Promise<User> {
 }
 
 export async function isAdmin(userId: string): Promise<boolean> {
-  const client = await getProfileClient();
+  const client = getSupabaseAdmin();
   const { data: profile } = await client
     .from('profiles')
     .select('role')

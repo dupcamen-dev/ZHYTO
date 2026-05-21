@@ -33,10 +33,12 @@ export async function POST(request: NextRequest) {
       throw new ValidationError(availability.errors.join(', '));
     }
 
-    // Створення замовлення
     const order = await ordersService.createOrder(user.id, validated.data);
 
-    // Створення Payment Intent
+    if (body.skip_payment) {
+      return Response.json({ order }, { status: 201 });
+    }
+
     const payment = await paymentsService.createPaymentIntent(
       order.total + order.delivery_fee,
       order.id

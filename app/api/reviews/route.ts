@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { reviewsService } from '@/lib/services/reviews.service';
 import { requireAuth } from '@/lib/middleware/auth.middleware';
 import { CreateReviewSchema } from '@/lib/validations/review.schema';
+import { supabase } from '@/lib/utils/supabase';
 import { handleError, ValidationError } from '@/lib/utils/errors';
 
 export async function GET(request: NextRequest) {
@@ -26,7 +27,17 @@ export async function POST(request: NextRequest) {
       throw new ValidationError(validated.error.errors[0].message);
     }
 
-    // TODO: Отримати ім'я користувача з профілю або auth metadata
+    const { data: existingOrder } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('user_id', user.id)
+      .limit(1)
+      .maybeSingle();
+
+    if (!existingOrder) {
+      throw new ValidationError('Ви повинні мати хоча б одне замовлення, щоб залишити відгук');
+    }
+
     const userName = body.user_name || user.email;
 
     const review = await reviewsService.createReview(user.id, userName, validated.data);

@@ -143,9 +143,15 @@ CREATE TABLE IF NOT EXISTS settings (
 ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Anyone can read settings" ON settings;
-CREATE POLICY "Anyone can read settings"
+DROP POLICY IF EXISTS "Public can read non-sensitive settings" ON settings;
+CREATE POLICY "Public can read non-sensitive settings"
   ON settings FOR SELECT
-  USING (true);
+  USING (key IN ('delivery', 'categories', 'categories_desc'));
+
+DROP POLICY IF EXISTS "Admins can read all settings" ON settings;
+CREATE POLICY "Admins can read all settings"
+  ON settings FOR SELECT
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
 DROP POLICY IF EXISTS "Admins can upsert settings" ON settings;
 CREATE POLICY "Admins can upsert settings"
@@ -288,12 +294,12 @@ CREATE POLICY "Users can view own order payments"
 DROP POLICY IF EXISTS "System can insert order payments" ON order_payments;
 CREATE POLICY "System can insert order payments"
   ON order_payments FOR INSERT
-  WITH CHECK (true);
+  WITH CHECK (auth.role() = 'service_role');
 
 DROP POLICY IF EXISTS "System can update order payments" ON order_payments;
 CREATE POLICY "System can update order payments"
   ON order_payments FOR UPDATE
-  USING (true);
+  USING (auth.role() = 'service_role');
 
 CREATE INDEX IF NOT EXISTS idx_order_payments_order_id ON order_payments(order_id);
 CREATE INDEX IF NOT EXISTS idx_order_payments_stripe_id ON order_payments(stripe_payment_intent_id);

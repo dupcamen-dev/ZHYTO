@@ -294,30 +294,40 @@ export default function Home() {
       return
     }
 
-    const { data: existingOrder } = await supabase!.from('orders').select('id').eq('user_id', user.id).limit(1).maybeSingle()
-    if (!existingOrder) {
-      toast.error(t.reviews.mustOrderFirst)
-      return
-    }
-
     setReviewSubmitting(true)
-    const { error } = await supabase!.from('reviews').insert({
-      user_id: user.id,
-      user_name: user.user_metadata?.full_name || user.email || 'Anonymous',
-      rating: reviewRating,
-      comment: reviewComment.trim(),
+    let accessToken = ''
+    if (supabase) {
+      const { data: { session } } = await supabase.auth.getSession()
+      accessToken = session?.access_token || ''
+    }
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      body: JSON.stringify({
+        rating: reviewRating,
+        comment: reviewComment.trim(),
+        user_name: user.user_metadata?.full_name || user.email || 'Anonymous',
+      }),
     })
     setReviewSubmitting(false)
-    if (error) {
-      toast.error(t.reviews.failedSubmit)
-    } else {
-      toast.success(t.reviews.reviewSubmitted)
-      setReviewComment('')
-      setReviewRating(5)
-      setReviewFormOpen(false)
-      const { data } = await supabase!.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false })
-      if (data) setReviews(data)
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Unknown error' }))
+      if (err.error?.includes('order')) {
+        toast.error(t.reviews.mustOrderFirst)
+      } else {
+        toast.error(t.reviews.failedSubmit)
+      }
+      return
     }
+    toast.success(t.reviews.reviewSubmitted)
+    setReviewComment('')
+    setReviewRating(5)
+    setReviewFormOpen(false)
+    const { data } = await supabase!.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false })
+    if (data) setReviews(data)
   }
 
   const activeProducts = (dbProducts || translatedProducts).filter(p => p.available !== false)

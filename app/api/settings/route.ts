@@ -5,6 +5,7 @@ import { handleError, ValidationError } from '@/lib/utils/errors';
 
 export async function GET(request: NextRequest) {
   try {
+    await requireAdmin(request);
     const { searchParams } = new URL(request.url);
     const key = searchParams.get('key');
 

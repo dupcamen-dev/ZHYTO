@@ -32,13 +32,26 @@ export default function AdminSettings() {
     })
   }, [])
 
+  const upsertSetting = async (key: string, value: any) => {
+    let accessToken = ''
+    if (supabase) {
+      const { data: { session } } = await supabase.auth.getSession()
+      accessToken = session?.access_token || ''
+    }
+    await fetch('/api/settings', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      body: JSON.stringify({ key, value }),
+    })
+  }
+
   const saveSettings = async () => {
     if (!supabase) return
     setSaving(true)
-    await supabase.from('settings').upsert(
-      { key: 'delivery', value: settings },
-      { onConflict: 'key' }
-    )
+    await upsertSetting('delivery', settings)
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
@@ -47,10 +60,7 @@ export default function AdminSettings() {
   const savePromoCodes = async (newList: typeof promoCodes) => {
     setPromoCodes(newList)
     if (!supabase) return
-    await supabase.from('settings').upsert(
-      { key: 'promo_codes', value: newList },
-      { onConflict: 'key' }
-    )
+    await upsertSetting('promo_codes', newList)
   }
 
   const addPromoCode = () => {
