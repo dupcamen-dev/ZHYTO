@@ -218,8 +218,6 @@ export default function Home() {
           const goingDown = y > prevScrollY.current
           const isMobile = window.innerWidth < 1024
 
-          setShowScrollTop(y > 300)
-          setShowScrollBottom(y < maxY - 100)
           const reviewsEl = document.getElementById('reviews')
           if (reviewsEl) {
             const rect = reviewsEl.getBoundingClientRect()
@@ -256,6 +254,18 @@ export default function Home() {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>
+    const update = () => {
+      const maxY = document.documentElement.scrollHeight - window.innerHeight
+      setShowScrollTop(window.scrollY > 300)
+      setShowScrollBottom(window.scrollY < maxY - 100)
+      timeout = setTimeout(update, 200)
+    }
+    timeout = setTimeout(update, 200)
+    return () => clearTimeout(timeout)
   }, [])
 
   return (
@@ -519,7 +529,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true, margin: "-50px 0px" }}
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
@@ -541,7 +551,7 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false }}
+                  viewport={{ once: true, margin: "-50px 0px" }}
                   transition={{ duration: 0.6 }}
                   className="mb-8"
                 >
@@ -555,7 +565,7 @@ export default function Home() {
                       key={product.id}
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false }}
+                      viewport={{ once: true, margin: "-50px 0px" }}
                       transition={{ duration: 0.5 }}
                       className="group flex flex-col relative sm:pt-7"
                     >
@@ -606,7 +616,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true, margin: "-50px 0px" }}
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-1"
             >
@@ -639,7 +649,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true, margin: "-50px 0px" }}
               transition={{ duration: 0.8 }}
               className="relative order-2 lg:order-2"
             >
@@ -698,7 +708,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true, margin: "-50px 0px" }}
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
@@ -730,7 +740,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true, margin: "-50px 0px" }}
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-2 px-5 lg:px-0"
             >
@@ -756,7 +766,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true, margin: "-50px 0px" }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
@@ -778,7 +788,7 @@ export default function Home() {
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
+                viewport={{ once: true, margin: "-50px 0px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <button
@@ -818,7 +828,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true, margin: "-50px 0px" }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-center mt-12"
           >
@@ -845,7 +855,7 @@ export default function Home() {
               className="relative z-10"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true, margin: "-50px 0px" }}
               transition={{ duration: 0.8 }}
             >
               <p className="text-[16px] tracking-[0.35em] text-primary mb-6">{t.contact.getInTouch}</p>
@@ -938,7 +948,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+            viewport={{ once: true, margin: "-50px 0px" }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
@@ -956,7 +966,7 @@ export default function Home() {
                 key={review.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
+                viewport={{ once: true, margin: "-50px 0px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-black/90 backdrop-blur-sm p-8 shadow-sm hover:shadow-md transition-shadow"
               >
