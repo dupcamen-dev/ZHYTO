@@ -110,9 +110,9 @@ export default function Home() {
       <ProductsSection onProductsChange={setActiveProducts} setCartOpen={setCartOpen} />
       <AboutSection />
       <DeliverySection />
-      <ReviewsSection setSignInModalOpen={setSignInModalOpen} progressRef={progressRef} />
       <FAQSection />
       <ContactSection />
+      <ReviewsSection setSignInModalOpen={setSignInModalOpen} progressRef={progressRef} />
       <Footer />
 
       <CartDrawer
