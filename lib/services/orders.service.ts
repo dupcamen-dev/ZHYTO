@@ -5,13 +5,8 @@ import { NotFoundError, ValidationError } from '../utils/errors';
 
 export const ordersService = {
   async getUserOrders(userId: string): Promise<Order[]> {
-    let client = supabase;
-    try {
-      client = getSupabaseAdmin();
-    } catch {
-      // fallback to anon client (will be limited by RLS)
-    }
-    const { data, error } = await client
+    const admin = getSupabaseAdmin();
+    const { data, error } = await admin
       .from('orders')
       .select('*')
       .eq('user_id', userId)
@@ -22,13 +17,8 @@ export const ordersService = {
   },
 
   async getOrderById(id: string): Promise<Order> {
-    let client = supabase;
-    try {
-      client = getSupabaseAdmin();
-    } catch {
-      // fallback
-    }
-    const { data, error } = await client
+    const admin = getSupabaseAdmin();
+    const { data, error } = await admin
       .from('orders')
       .select('*')
       .eq('id', id)
@@ -45,7 +35,8 @@ export const ordersService = {
     const total = this.calculateTotal(input.items);
     const deliveryFee = await this.calculateDeliveryFee(total);
 
-    const { data, error } = await supabase
+    const admin = getSupabaseAdmin();
+    const { data, error } = await admin
       .from('orders')
       .insert({
         user_id: userId,
@@ -67,11 +58,9 @@ export const ordersService = {
   },
 
   async updateOrderStatus(id: string, status: OrderStatus): Promise<Order> {
-    const adminClient = getSupabaseAdmin();
-    const client = adminClient;
+    const admin = getSupabaseAdmin();
 
-    // Get the old order before updating
-    const { data: oldOrder } = await client
+    const { data: oldOrder } = await admin
       .from('orders')
       .select('status, items')
       .eq('id', id)
@@ -83,7 +72,7 @@ export const ordersService = {
 
     const oldStatus = oldOrder.status;
 
-    const { data, error } = await client
+    const { data, error } = await admin
       .from('orders')
       .update({ status })
       .eq('id', id)
@@ -100,14 +89,14 @@ export const ordersService = {
 
     if (shouldDecrement) {
       for (const item of data.items) {
-        const { data: product } = await client
+        const { data: product } = await admin
           .from('products')
           .select('stock')
           .eq('id', item.product_id)
           .maybeSingle();
         if (product) {
           const newStock = Math.max(0, product.stock - item.quantity);
-          const { error: updateErr } = await client
+          const { error: updateErr } = await admin
             .from('products')
             .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
             .eq('id', item.product_id);
@@ -116,17 +105,16 @@ export const ordersService = {
       }
     }
 
-    // Restore stock when cancelled
     if (status === 'cancelled' && data.items?.length) {
       for (const item of data.items) {
-        const { data: product } = await client
+        const { data: product } = await admin
           .from('products')
           .select('stock')
           .eq('id', item.product_id)
           .maybeSingle();
         if (product) {
           const newStock = product.stock + item.quantity;
-          const { error: updateErr } = await client
+          const { error: updateErr } = await admin
             .from('products')
             .update({ stock: newStock, available: true, updated_at: new Date().toISOString() })
             .eq('id', item.product_id);
@@ -139,17 +127,12 @@ export const ordersService = {
   },
 
   async getAllOrders(filters: OrderFilters): Promise<{ orders: Order[]; total: number }> {
-    let client = supabase;
-    try {
-      client = getSupabaseAdmin();
-    } catch {
-      // fallback
-    }
+    const admin = getSupabaseAdmin();
     const { status, page = 1, limit = 20, fromDate, toDate } = filters;
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    let query = client
+    let query = admin
       .from('orders')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })

@@ -1,4 +1,4 @@
-import { supabase } from '../utils/supabase';
+import { supabase, getSupabaseAdmin } from '../utils/supabase';
 import { User, SignUpInput, SignInInput, Profile } from '../types/user.types';
 import { AuthenticationError } from '../utils/errors';
 
@@ -52,32 +52,15 @@ export const authService = {
   },
 
   async getUserProfile(userId: string): Promise<Profile | null> {
-    let client = supabase;
-    try {
-      const { getSupabaseAdmin } = await import('../utils/supabase');
-      client = getSupabaseAdmin();
-    } catch {
-      // fallback
-    }
-    const { data, error } = await client
+    const admin = getSupabaseAdmin();
+    const { data, error } = await admin
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .maybeSingle();
 
-    if (!error && data) return data;
-
-    if (client !== supabase) {
-      const { data: anonData, error: anonError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
-
-      if (!anonError && anonData) return anonData;
-    }
-
-    return null;
+    if (error || !data) return null;
+    return data;
   },
 
   async isAdmin(userId: string): Promise<boolean> {

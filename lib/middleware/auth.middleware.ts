@@ -2,17 +2,19 @@ import { supabase } from '../utils/supabase';
 import { AuthenticationError } from '../utils/errors';
 import { User } from '../types/user.types';
 
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,https://zhyto.london').split(',');
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
 
 function checkCsrf(request: Request): void {
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
   if (!origin && !referer) return;
   const source = origin || referer || '';
-  const isAllowed = ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed));
-  if (!isAllowed) {
-    throw new AuthenticationError('CSRF: недозволене джерело запиту');
-  }
+  // Allow same-origin requests
+  const host = request.headers.get('host');
+  if (host && (source === `https://${host}` || source === `http://${host}`)) return;
+  // Check explicit whitelist
+  if (ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed))) return;
+  throw new AuthenticationError('CSRF: недозволене джерело запиту');
 }
 
 export async function requireAuth(request: Request): Promise<User> {

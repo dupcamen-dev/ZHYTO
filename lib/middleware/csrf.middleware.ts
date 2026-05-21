@@ -1,6 +1,6 @@
 import { ValidationError } from '../utils/errors';
 
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,https://zhyto.london').split(',');
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
 
 export function validateCsrf(request: Request): void {
   if (request.method === 'GET' || request.method === 'HEAD' || request.method === 'OPTIONS') {
@@ -16,8 +16,11 @@ export function validateCsrf(request: Request): void {
 
   const source = origin || referer || '';
 
-  const isAllowed = ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed));
-  if (!isAllowed) {
-    throw new ValidationError('CSRF: недозволене джерело запиту');
-  }
+  // Allow same-origin requests
+  const host = request.headers.get('host');
+  if (host && (source === `https://${host}` || source === `http://${host}`)) return;
+
+  if (ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed))) return;
+
+  throw new ValidationError('CSRF: недозволене джерело запиту');
 }
