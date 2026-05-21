@@ -183,6 +183,7 @@ export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showScrollBottom, setShowScrollBottom] = useState(true)
   const [isOnProducts, setIsOnProducts] = useState(false)
+  const isOnProductsRef = useRef(false)
   const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('normal')
   const headerModeRef = useRef(headerMode)
   headerModeRef.current = headerMode
@@ -230,9 +231,10 @@ export default function Home() {
             }
           }
           if (isMobile && aboutTopRef.current > 0) {
-            setIsOnProducts(y >= productsTopRef.current - 100 && y < aboutTopRef.current - 100)
-          } else {
-            setIsOnProducts(false)
+            const v = y >= productsTopRef.current - 100 && y < aboutTopRef.current - 100
+            if (v !== isOnProductsRef.current) { isOnProductsRef.current = v; setIsOnProducts(v) }
+          } else if (isOnProductsRef.current) {
+            isOnProductsRef.current = false; setIsOnProducts(false)
           }
 
           if (atTop && window.innerWidth >= 1024) {
