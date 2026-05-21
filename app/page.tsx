@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { img } from '@/lib/constants'
+import { img as imgPath } from '@/lib/constants'
+const img = imgPath
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, ArrowDown, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -19,78 +20,7 @@ import { useDeliverySettings } from '@/lib/use-delivery'
 import { useLanguage } from '@/components/language-context'
 import { toast } from 'sonner'
 
-const products = [
-  {
-    id: 1, name: "Varenyky with potato", description: "Classic Ukrainian varenyky with creamy mashed potato",
-    price: 12, unit: "/ kg", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "varenyky", stock: 10,
-    ingredients: "Dough: flour, water, eggs, salt. Filling: mashed potato, fried onion, butter, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with fried onions, sour cream and fresh dill.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 2, name: "Varenyky with cabbage", description: "Hearty varenyky with savoury braised cabbage",
-    price: 12, unit: "/ kg", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "varenyky", stock: 10,
-    ingredients: "Dough: flour, water, eggs, salt. Filling: braised cabbage, carrot, onion, tomato paste, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 3, name: "Varenyky with mushroom", description: "Rich varenyky with wild forest mushroom filling",
-    price: 12, unit: "/ kg", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "varenyky", stock: 10,
-    ingredients: "Dough: flour, water, eggs, salt. Filling: wild mushrooms, onion, butter, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh dill.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 4, name: "Varenyky with cheese & cherries", description: "Sweet varenyky filled with cottage cheese and cherries",
-    price: 13, unit: "/ kg", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "varenyky", stock: 10,
-    ingredients: "Dough: flour, water, eggs, salt. Filling: cottage cheese, cherries, sugar, vanilla extract.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream, honey or a dusting of icing sugar.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 5, name: "Varenyky with cheese & spinach", description: "Savory varenyky with cottage cheese and fresh spinach",
-    price: 13, unit: "/ kg", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "varenyky", stock: 10,
-    ingredients: "Dough: flour, water, eggs, salt. Filling: cottage cheese, spinach, garlic, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with sour cream and fresh herbs.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 6, name: "Syrnyky", description: "Traditional Ukrainian cheese fritters, golden and fluffy",
-    price: 10, unit: "/ 600g", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "syrnyky", stock: 10,
-    ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, salt. Served with sour cream.",
-    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream, jam or honey.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 7, name: "Syrnyky with chocolate", description: "Decadent syrnyky with rich chocolate chunks",
-    price: 11, unit: "/ 600g", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "syrnyky", stock: 10,
-    ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, dark chocolate chunks, salt.",
-    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or a drizzle of melted chocolate.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 8, name: "Syrnyky with blueberries", description: "Fluffy syrnyky bursting with wild blueberries",
-    price: 11, unit: "/ 600g", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "syrnyky", stock: 10,
-    ingredients: "Cottage cheese, eggs, flour, sugar, vanilla extract, wild blueberries, salt.",
-    cooking: "Fry in butter over medium heat for 3-4 minutes per side until golden brown. Serve warm with sour cream or honey.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 9, name: "Pelmeni (beef & pork)", description: "Hearty Ukrainian dumplings with seasoned beef and pork filling",
-    price: 15, unit: "/ kg", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "pelmeni", stock: 10,
-    ingredients: "Dough: flour, water, eggs, salt. Filling: beef, pork, onion, garlic, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-  {
-    id: 10, name: "Pelmeni (chicken & turkey)", description: "Light and tender pelmeni with poultry filling",
-    price: 15, unit: "/ kg", image: img("/images/syrnyky-new.webp"), background_image: '', badge: null, category: "pelmeni", stock: 10,
-    ingredients: "Dough: flour, water, eggs, salt. Filling: chicken, turkey, onion, garlic, salt, black pepper.",
-    cooking: "Boil in salted water for 5-7 minutes until they float. Serve with butter, sour cream or your favourite sauce.",
-    ingredients_uk: null, ingredients_en: null, recipe_uk: null, recipe_en: null
-  },
-]
+const products: any[] = []
 
 export default function Home() {
   const router = useRouter()
@@ -145,7 +75,6 @@ export default function Home() {
   const aboutImageY = useTransform(aboutScroll, [0, 1], ["-20%", "20%"])
 
   useEffect(() => {
-    if (!supabase) return
     supabase.from('products').select('*').order('sort_order').then(({ data, error }) => {
       if (!error && data && data.length > 0) {
         setDbProducts(data.map(p => ({
@@ -172,7 +101,6 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    if (!supabase) return
     supabase.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).then(({ data }) => {
       if (data) setReviews(data)
     })
@@ -194,7 +122,6 @@ export default function Home() {
   }, [user])
 
   useEffect(() => {
-    if (!supabase) return
     supabase.from('settings').select('value').eq('key', 'categories').single().then(({ data }) => {
       if (data?.value) setCategoryOrder(data.value as string[])
     })
@@ -214,11 +141,8 @@ export default function Home() {
     }
 
     setReviewSubmitting(true)
-    let accessToken = ''
-    if (supabase) {
-      const { data: { session } } = await supabase.auth.getSession()
-      accessToken = session?.access_token || ''
-    }
+    const { data: { session } } = await supabase.auth.getSession()
+    const accessToken = session?.access_token || ''
     const res = await fetch('/api/reviews', {
       method: 'POST',
       headers: {

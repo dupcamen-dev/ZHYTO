@@ -1,18 +1,10 @@
 import { NextRequest } from 'next/server';
 import { paymentsService } from '@/lib/services/payments.service';
-import { getStripeOrNull } from '@/lib/utils/stripe';
 import { requireAuth } from '@/lib/middleware/auth.middleware';
 import { supabase } from '@/lib/utils/supabase';
 import { handleError, ValidationError } from '@/lib/utils/errors';
 
 export async function POST(req: NextRequest) {
-  if (!getStripeOrNull()) {
-    return Response.json(
-      { error: 'Payment not configured' },
-      { status: 503 }
-    );
-  }
-
   try {
     const user = await requireAuth(req);
     const { amount, paymentMethodType, orderId } = await req.json();

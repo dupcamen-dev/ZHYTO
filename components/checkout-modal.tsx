@@ -71,7 +71,6 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [promoCodes, setPromoCodes] = useState<Record<string, { type: 'percentage' | 'free_delivery'; value: number }>>({})
 
   useEffect(() => {
-    if (!supabase) return
     supabase.from('settings').select('value').eq('key', 'promo_codes').single().then(({ data }) => {
       if (data?.value) {
         const codes = data.value as { code: string; type: 'percentage' | 'free_delivery'; value: number }[]
@@ -181,16 +180,13 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
 
   const createOrderViaApi = async (skipPayment = false) => {
     if (!user) throw new Error('User not authenticated')
-    let accessToken = ''
-    if (supabase) {
-      const { data: { session } } = await supabase.auth.getSession()
-      accessToken = session?.access_token || ''
-    }
+    const { data: { session } } = await supabase.auth.getSession()
+    const accessToken = session?.access_token || ''
     const res = await fetch('/api/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         items: cartItems.map(i => ({ product_id: i.id, name: i.name, price: i.price, quantity: i.qty })),

@@ -25,20 +25,7 @@ interface Product {
   ingredients_en?: string | null
 }
 
-const fallbackCategories = ['varenyky', 'syrnyky', 'pelmeni']
-
-const fallbackProducts: Product[] = [
-  { id: 1, name: 'Varenyky with potato', description: 'Classic Ukrainian varenyky with creamy mashed potato', price: 12, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: 'Traditional', category: 'varenyky', available: true, stock: 10, sort_order: 1 },
-  { id: 2, name: 'Varenyky with cabbage', description: 'Hearty varenyky with savoury braised cabbage', price: 12, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 2 },
-  { id: 3, name: 'Varenyky with mushroom', description: 'Rich varenyky with wild forest mushroom filling', price: 12, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 3 },
-  { id: 4, name: 'Varenyky with cheese & cherries', description: 'Sweet varenyky filled with cottage cheese and cherries', price: 13, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: 'Seasonal', category: 'varenyky', available: true, stock: 10, sort_order: 4 },
-  { id: 5, name: 'Varenyky with cheese & spinach', description: 'Savory varenyky with cottage cheese and fresh spinach', price: 13, unit: '/ kg', image: '/images/syrnyky-new.webp', badge: null, category: 'varenyky', available: true, stock: 10, sort_order: 5 },
-  { id: 6, name: 'Syrnyky', description: 'Traditional Ukrainian cheese fritters, golden and fluffy', price: 10, unit: '/ 600g',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 6 },
-  { id: 7, name: 'Syrnyky with chocolate', description: 'Decadent syrnyky with rich chocolate chunks', price: 11, unit: '/ 600g',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 7 },
-  { id: 8, name: 'Syrnyky with blueberries', description: 'Fluffy syrnyky bursting with wild blueberries', price: 11, unit: '/ 600g',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'syrnyky', available: true, stock: 10, sort_order: 8 },
-  { id: 9, name: 'Pelmeni (beef & pork)', description: 'Hearty Ukrainian dumplings with seasoned beef and pork filling', price: 15, unit: '/ kg',   image: '/images/syrnyky-new.webp', background_image: '', badge: 'Bestseller', category: 'pelmeni', available: true, stock: 10, sort_order: 9 },
-  { id: 10, name: 'Pelmeni (chicken & turkey)', description: 'Light and tender pelmeni with poultry filling', price: 15, unit: '/ kg',   image: '/images/syrnyky-new.webp', background_image: '', badge: null, category: 'pelmeni', available: true, stock: 10, sort_order: 10 },
-]
+const defaultCategories = ['varenyky', 'syrnyky', 'pelmeni']
 const emptyProduct = {
   name: '', description: '', price: 0, unit: '/ kg',
   image: '/images/syrnyky-new.webp', background_image: '', badge: null,
@@ -53,7 +40,7 @@ export default function AdminProducts() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
-  const [categories, setCategories] = useState<string[]>(fallbackCategories)
+  const [categories, setCategories] = useState<string[]>(defaultCategories)
   const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
   const [newCategory, setNewCategory] = useState('')
   const [categoriesOpen, setCategoriesOpen] = useState(false)
@@ -61,7 +48,6 @@ export default function AdminProducts() {
   const bgFileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchProducts = () => {
-    if (!supabase) { setProducts(fallbackProducts); setLoading(false); return }
     supabase.from('products').select('*').order('sort_order').then(({ data, error }) => {
       if (!error && data) setProducts(data as Product[])
       setLoading(false)
@@ -69,7 +55,6 @@ export default function AdminProducts() {
   }
 
   const fetchCategories = () => {
-    if (!supabase) return
     supabase.from('settings').select('value').eq('key', 'categories').single().then(({ data }) => {
       if (data?.value) setCategories(data.value as string[])
     })
@@ -82,7 +67,6 @@ export default function AdminProducts() {
 
   const saveCategories = async (newList: string[]) => {
     setCategories(newList)
-    if (!supabase) return
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return
     await fetch('/api/admin/settings', {

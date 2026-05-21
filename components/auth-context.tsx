@@ -14,29 +14,11 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-const mockUser: User = {
-  id: 'mock-user-id',
-  email: 'test@zhyto.london',
-  user_metadata: { full_name: 'Test User' },
-  app_metadata: {},
-  aud: 'authenticated',
-  created_at: new Date().toISOString(),
-  role: 'authenticated',
-} as User
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!supabase) {
-      // Mock mode — check localStorage for mock session
-      const saved = localStorage.getItem('zhyto-mock-user')
-      if (saved === 'true') setUser(mockUser)
-      setLoading(false)
-      return
-    }
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       setLoading(false)
@@ -58,11 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signInWithGoogle = async () => {
-    if (!supabase) {
-      localStorage.setItem('zhyto-mock-user', 'true')
-      setUser(mockUser)
-      return
-    }
     try {
       await supabase.auth.signInWithOAuth({ provider: 'google' })
     } catch {
@@ -71,8 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
-    localStorage.removeItem('zhyto-mock-user')
-    if (!supabase) { setUser(null); return }
     await supabase.auth.signOut()
   }
 
