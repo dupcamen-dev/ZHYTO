@@ -160,15 +160,15 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                       ? t.cart.addMoreMin.replace('{amount}', (settings.min_order - subtotal).toFixed(0)).replace('{min}', settings.min_order)
                       : t.cart.addMoreFree.replace('{amount}', (settings.free_threshold - subtotal).toFixed(0))}
                   </p>
-                  {cartItems.length > 0 && (
-                    <button
-                      onClick={() => clearCart()}
-                      className="w-full text-base tracking-[0.15em] text-foreground/40 hover:text-destructive transition-colors py-1"
-                    >
-                      {t.cart.clearAll}
-                    </button>
-                  )}
                 </div>
+              )}
+              {cartItems.length > 0 && (
+                <button
+                  onClick={() => clearCart()}
+                  className="w-full text-base tracking-[0.15em] text-foreground/40 hover:text-destructive transition-colors py-1"
+                >
+                  {t.cart.clearAll}
+                </button>
               )}
 
               <div className="flex gap-3 pt-2">
