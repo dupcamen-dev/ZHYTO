@@ -13,6 +13,7 @@ import {
   Elements,
 } from '@stripe/react-stripe-js'
 import { getStripe } from '@/lib/stripe'
+import { supabase } from '@/lib/supabase'
 import { Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -51,9 +52,13 @@ function PayPalForm({ amount, onSuccess, onClose, onBeforePay }: {
         }
       }
 
+      const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
         body: JSON.stringify({ amount, paymentMethodType: 'paypal', orderId }),
       })
       if (!res.ok) {
