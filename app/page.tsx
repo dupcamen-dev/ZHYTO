@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { img as imgPath } from '@/lib/constants'
 const img = imgPath
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValue, AnimatePresence } from 'framer-motion'
 import { ShoppingCart, ArrowRight, Minus, Plus, Leaf, Heart, Snowflake, Menu, X, User, LogOut, ArrowUp, HelpCircle, ChevronDown, ArrowDown, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
@@ -183,9 +183,9 @@ export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showScrollBottom, setShowScrollBottom] = useState(true)
   const [isOnProducts, setIsOnProducts] = useState(false)
-  const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('normal')
-  const headerModeRef = useRef(headerMode)
-  headerModeRef.current = headerMode
+  const [headerMode, setHeaderMode] = useState<'tall' | 'normal'>('normal')
+  const navY = useMotionValue(0)
+  const hideHeader = useRef(false)
   const prevScrollY = useRef(0)
   const productsTopRef = useRef(0)
   const aboutTopRef = useRef(0)
@@ -235,14 +235,21 @@ export default function Home() {
             setIsOnProducts(false)
           }
 
-          if (atTop) {
-            setHeaderMode(window.innerWidth >= 1024 ? 'tall' : 'normal')
-          } else if (!goingDown) {
+          const atDesktopTop = atTop && window.innerWidth >= 1024
+          if (atDesktopTop && headerMode !== 'tall') {
+            setHeaderMode('tall')
+          } else if (atTop && headerMode !== 'normal') {
             setHeaderMode('normal')
-          } else if (atBottom) {
+          } else if (!atDesktopTop && !goingDown && headerMode !== 'normal') {
             setHeaderMode('normal')
-          } else if (goingDown && y >= productsTopRef.current - 100) {
-            setHeaderMode('hidden')
+          }
+          const shouldHide = goingDown && !atTop && !atBottom && y >= productsTopRef.current - 100
+          if (shouldHide && !hideHeader.current) {
+            hideHeader.current = true
+            navY.set(-300)
+          } else if (!shouldHide && hideHeader.current) {
+            hideHeader.current = false
+            navY.set(0)
           }
 
           prevScrollY.current = y
@@ -273,9 +280,8 @@ export default function Home() {
       {/* Navigation */}
       <motion.nav
         className="fixed top-0 left-0 right-0 z-50 overflow-visible"
-        style={{ backgroundColor: '#c2a57b' }}
+        style={{ backgroundColor: '#c2a57b', y: navY }}
         initial={{ y: -80 }}
-        animate={{ y: headerMode === 'hidden' ? -300 : 0 }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
         <div className={`max-w-7xl mx-auto transition-all duration-[400ms] ease-in-out ${headerMode === 'tall' ? 'px-8 lg:px-14' : 'px-5 lg:px-10'}`} style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
@@ -529,7 +535,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px 0px" }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
@@ -551,7 +557,7 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px 0px" }}
+                  viewport={{ once: false }}
                   transition={{ duration: 0.6 }}
                   className="mb-8"
                 >
@@ -565,7 +571,7 @@ export default function Home() {
                       key={product.id}
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-50px 0px" }}
+                      viewport={{ once: false }}
                       transition={{ duration: 0.5 }}
                       className="group flex flex-col relative sm:pt-7"
                     >
@@ -616,7 +622,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px 0px" }}
+              viewport={{ once: false }}
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-1"
             >
@@ -649,7 +655,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px 0px" }}
+              viewport={{ once: false }}
               transition={{ duration: 0.8 }}
               className="relative order-2 lg:order-2"
             >
@@ -708,7 +714,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px 0px" }}
+              viewport={{ once: false }}
               transition={{ duration: 0.8 }}
               className="order-2 lg:order-1"
             >
@@ -740,7 +746,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px 0px" }}
+              viewport={{ once: false }}
               transition={{ duration: 0.8 }}
               className="order-1 lg:order-2 px-5 lg:px-0"
             >
@@ -766,7 +772,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px 0px" }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
@@ -788,7 +794,7 @@ export default function Home() {
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px 0px" }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <button
@@ -828,7 +834,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px 0px" }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-center mt-12"
           >
@@ -855,7 +861,7 @@ export default function Home() {
               className="relative z-10"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px 0px" }}
+              viewport={{ once: false }}
               transition={{ duration: 0.8 }}
             >
               <p className="text-[16px] tracking-[0.35em] text-primary mb-6">{t.contact.getInTouch}</p>
@@ -948,7 +954,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px 0px" }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
@@ -966,7 +972,7 @@ export default function Home() {
                 key={review.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px 0px" }}
+                viewport={{ once: false }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-black/90 backdrop-blur-sm p-8 shadow-sm hover:shadow-md transition-shadow"
               >
