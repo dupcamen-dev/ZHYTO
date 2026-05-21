@@ -31,8 +31,6 @@ export const translations = {
       per: '/ kg',
       item: '/ 600g',
       productList: [
-        { name: "Pelmeni (beef & pork)", desc: "Hearty Ukrainian dumplings with seasoned beef and pork filling" },
-        { name: "Pelmeni (chicken & turkey)", desc: "Light and tender pelmeni with poultry filling" },
         { name: "Varenyky with potato", desc: "Classic Ukrainian varenyky with creamy mashed potato" },
         { name: "Varenyky with cabbage", desc: "Hearty varenyky with savoury braised cabbage" },
         { name: "Varenyky with mushroom", desc: "Rich varenyky with wild forest mushroom filling" },
@@ -41,6 +39,8 @@ export const translations = {
         { name: "Syrnyky", desc: "Traditional Ukrainian cheese fritters, golden and fluffy" },
         { name: "Syrnyky with chocolate", desc: "Decadent syrnyky with rich chocolate chunks" },
         { name: "Syrnyky with blueberries", desc: "Fluffy syrnyky bursting with wild blueberries" },
+        { name: "Pelmeni (beef & pork)", desc: "Hearty Ukrainian dumplings with seasoned beef and pork filling" },
+        { name: "Pelmeni (chicken & turkey)", desc: "Light and tender pelmeni with poultry filling" },
       ],
     },
     about: {
@@ -294,8 +294,6 @@ export const translations = {
       per: '/ кг',
       item: '/ 600г',
       productList: [
-        { name: "Пельмені (яловичина & свинина)", desc: "Ситні українські пельмені з приправленою яловичиною і свининою" },
-        { name: "Пельмені (курка & індичка)", desc: "Легкі та ніжні пельмені з птицею" },
         { name: "Вареники з картоплею", desc: "Класичні українські вареники з ніжним картопляним пюре" },
         { name: "Вареники з капустою", desc: "Ситні вареники з тушкованою капустою" },
         { name: "Вареники з грибами", desc: "Багаті вареники з начинкою з лісових грибів" },
@@ -304,6 +302,8 @@ export const translations = {
         { name: "Сирники", desc: "Традиційні українські сирники, золотисті та пухкі" },
         { name: "Сирники з шоколадом", desc: "Розкішні сирники з шматочками темного шоколаду" },
         { name: "Сирники з чорницею", desc: "Пухкі сирники з лісовою чорницею" },
+        { name: "Пельмені (яловичина & свинина)", desc: "Ситні українські пельмені з приправленою яловичиною і свининою" },
+        { name: "Пельмені (курка & індичка)", desc: "Легкі та ніжні пельмені з птицею" },
       ],
     },
     about: {

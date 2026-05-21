@@ -13,7 +13,7 @@ interface DeliverySettings {
 export default function TermsPage() {
   const { t } = useLanguage()
   const { terms } = t
-  const [settings, setSettings] = useState<DeliverySettings>({ min_order: 25, free_threshold: 50 })
+  const [settings, setSettings] = useState<DeliverySettings>({ min_order: 10, free_threshold: 50 })
 
   useEffect(() => {
     if (!supabase) return

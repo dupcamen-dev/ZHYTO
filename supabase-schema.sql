@@ -233,7 +233,8 @@ CREATE INDEX IF NOT EXISTS idx_stock_history_product_id ON stock_history(product
 CREATE INDEX IF NOT EXISTS idx_stock_history_created_at ON stock_history(created_at DESC);
 
 -- ============================================================
--- PROMO CODES
+-- PROMO CODES (DEPRECATED — use settings(key='promo_codes') instead)
+-- Kept for backward compatibility with existing database instances.
 -- ============================================================
 CREATE TABLE IF NOT EXISTS promo_codes (
   id SERIAL PRIMARY KEY,

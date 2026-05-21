@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { paymentsService } from '@/lib/services/payments.service';
 import { ordersService } from '@/lib/services/orders.service';
 import { emailService } from '@/lib/services/email.service';
+import { getSupabaseAdmin } from '@/lib/utils/supabase';
 import { handleError } from '@/lib/utils/errors';
 import Stripe from 'stripe';
 
@@ -16,16 +17,21 @@ export async function POST(request: NextRequest) {
 
     const event = paymentsService.verifyWebhookSignature(body, signature);
 
-    // Обробка події payment_intent.succeeded
     if (event.type === 'payment_intent.succeeded') {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
       const orderId = paymentIntent.metadata.order_id;
 
       if (orderId) {
-        // Оновлюємо статус замовлення (stock зменшується всередині)
         const order = await ordersService.updateOrderStatus(orderId, 'confirmed');
 
-        // Відправляємо email
+        const adminClient = getSupabaseAdmin();
+        await adminClient.from('order_payments').insert({
+          order_id: orderId,
+          stripe_payment_intent_id: paymentIntent.id,
+          amount: paymentIntent.amount_received / 100,
+          status: 'succeeded',
+        }).maybeSingle();
+
         await emailService.sendOrderConfirmation(order);
         await emailService.sendAdminNotification(order);
 

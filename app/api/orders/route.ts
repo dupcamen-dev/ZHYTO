@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
 
     const payment = await paymentsService.createPaymentIntent(
       order.total + order.delivery_fee,
+      'card',
       order.id
     );
 

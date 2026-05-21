@@ -43,7 +43,7 @@ export const ordersService = {
 
   async createOrder(userId: string, input: OrderInput): Promise<Order> {
     const total = this.calculateTotal(input.items);
-    const deliveryFee = this.calculateDeliveryFee(total);
+    const deliveryFee = await this.calculateDeliveryFee(total);
 
     const { data, error } = await supabase
       .from('orders')
@@ -181,22 +181,18 @@ export const ordersService = {
     return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   },
 
-  calculateDeliveryFee(total: number): number {
-    // Отримуємо налаштування доставки з БД
-    // Поки що використовуємо константи
-    const MIN_ORDER = 10;
-    const FREE_THRESHOLD = 50;
-    const DELIVERY_FEE = 5;
+  async calculateDeliveryFee(total: number): Promise<number> {
+    const settings = await this.getDeliverySettings();
 
-    if (total < MIN_ORDER) {
-      return 0; // Замовлення не проходить мінімум
+    if (total < settings.min_order) {
+      return 0;
     }
 
-    if (total >= FREE_THRESHOLD) {
-      return 0; // Безкоштовна доставка
+    if (total >= settings.free_threshold) {
+      return 0;
     }
 
-    return DELIVERY_FEE;
+    return settings.fee;
   },
 
   async getDeliverySettings() {
