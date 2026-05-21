@@ -1,7 +1,14 @@
+import { type SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest } from 'next/server';
 import { requireAdmin } from '@/lib/middleware/admin.middleware';
-import { supabase } from '@/lib/utils/supabase';
+import { getSupabaseAdmin } from '@/lib/utils/supabase';
 import { handleError, ValidationError } from '@/lib/utils/errors';
+
+let _db: SupabaseClient | null = null;
+function adminDb() {
+  if (!_db) _db = getSupabaseAdmin();
+  return _db;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,7 +17,7 @@ export async function GET(request: NextRequest) {
     const key = searchParams.get('key');
 
     if (key) {
-      const { data, error } = await supabase
+      const { data, error } = await adminDb()
         .from('settings')
         .select('*')
         .eq('key', key)
@@ -20,7 +27,7 @@ export async function GET(request: NextRequest) {
       return Response.json(data);
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await adminDb()
       .from('settings')
       .select('*');
 
@@ -40,7 +47,7 @@ export async function PUT(request: NextRequest) {
       throw new ValidationError('key та value обов\'язкові');
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await adminDb()
       .from('settings')
       .upsert({
         key: body.key,
