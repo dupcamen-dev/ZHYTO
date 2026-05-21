@@ -65,8 +65,19 @@ export const authService = {
       .eq('id', userId)
       .maybeSingle();
 
-    if (error || !data) return null;
-    return data;
+    if (!error && data) return data;
+
+    if (client !== supabase) {
+      const { data: anonData, error: anonError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (!anonError && anonData) return anonData;
+    }
+
+    return null;
   },
 
   async isAdmin(userId: string): Promise<boolean> {
