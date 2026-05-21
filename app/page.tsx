@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -559,17 +559,13 @@ export default function Home() {
                   <p className="text-base text-muted-foreground">{desc}</p>
                 </motion.div>
 
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: false }}
-                  variants={{ visible: { transition: { staggerChildren: 0.06 } }, hidden: {} }}
-                  className="grid md:grid-cols-2 lg:grid-cols-4 gap-5"
-                >
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
                   {catProducts.map((product) => (
                     <motion.div
                       key={product.id}
-                      variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false }}
                       transition={{ duration: 0.5 }}
                       className="group flex flex-col relative sm:pt-7"
                     >
@@ -606,7 +602,7 @@ export default function Home() {
                       </div>
                     </motion.div>
                   ))}
-                </motion.div>
+                </div>
               </div>
             )
           })}
@@ -912,41 +908,7 @@ export default function Home() {
       {/* Reviews Section */}
       <section id="reviews" ref={reviewsRef} className="py-28 lg:py-36 relative bg-black overflow-hidden">
         
-        {/* Floating varenyky */}
-        {(() => {
-          const data = [
-            { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -5, finalMob: -45 },
-            { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 40, finalMob: 0, hideMob: true },
-            { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 60, finalMob: -20 },
-            { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -5, finalMob: -45 },
-            { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 40, finalMob: -35 },
-            { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 60, finalMob: -20 },
-          ]
-          return data.map((v) => {
-            if (isMobile && v.hideMob) return null
-            const target = isMobile ? v.finalMob : v.final
-            const entryStart = 0.15 + v.delay * 0.12
-            const entryEnd = Math.min(1, entryStart + 0.35)
-            const raw = Math.max(0, Math.min(1, (progress - entryStart) / (entryEnd - entryStart)))
-            const t = 1 - (1 - raw) ** 3
-            const x = -280 + (target + 280) * t
-            return (
-              <img
-                key={`${v.side}-${v.top}`}
-                src={img("/images/varenyk-bg.png")}
-                alt=""
-                className="absolute z-0 pointer-events-none"
-                style={{
-                  width: `${v.width}px`,
-                  top: v.top,
-                  [v.side === 'left' ? 'left' : 'right']: `${x}px`,
-                  opacity: t,
-                  transform: `rotate(${v.rotate}deg)`,
-                }}
-              />
-            )
-          })
-        })()}
+        <FloatingVarenyky progress={progress} isMobile={isMobile} />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
           <motion.div
@@ -1410,3 +1372,38 @@ export default function Home() {
     </main>
   )
 }
+
+const FloatingVarenyky = React.memo(function FloatingVarenyky({ progress, isMobile }: { progress: number; isMobile: boolean }) {
+  const data = [
+    { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -5, finalMob: -45 },
+    { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 40, finalMob: 0, hideMob: true },
+    { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 60, finalMob: -20 },
+    { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -5, finalMob: -45 },
+    { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 40, finalMob: -35 },
+    { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 60, finalMob: -20 },
+  ]
+  return data.map((v) => {
+    if (isMobile && v.hideMob) return null
+    const target = isMobile ? v.finalMob : v.final
+    const entryStart = 0.15 + v.delay * 0.12
+    const entryEnd = Math.min(1, entryStart + 0.35)
+    const raw = Math.max(0, Math.min(1, (progress - entryStart) / (entryEnd - entryStart)))
+    const t = 1 - (1 - raw) ** 3
+    const x = -280 + (target + 280) * t
+    return (
+      <img
+        key={`${v.side}-${v.top}`}
+        src={img("/images/varenyk-bg.png")}
+        alt=""
+        className="absolute z-0 pointer-events-none"
+        style={{
+          width: `${v.width}px`,
+          top: v.top,
+          [v.side === 'left' ? 'left' : 'right']: `${x}px`,
+          opacity: t,
+          transform: `rotate(${v.rotate}deg)`,
+        }}
+      />
+    )
+  })
+})
