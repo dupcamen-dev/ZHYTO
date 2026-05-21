@@ -19,8 +19,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
+    // Refresh session on mount so API calls never send expired tokens
+    supabase.auth.refreshSession().then(({ data: { session } }) => {
+      if (session) {
+        setUser(session.user)
+      } else {
+        // refresh failed (no stored session) — check URL for OAuth redirect
+        supabase.auth.getSession().then(({ data: { session: s } }) => {
+          setUser(s?.user ?? null)
+        })
+      }
       setLoading(false)
     })
 
