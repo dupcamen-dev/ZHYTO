@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { paymentsService } from '@/lib/services/payments.service';
 import { requireAuth } from '@/lib/middleware/auth.middleware';
-import { supabase } from '@/lib/utils/supabase';
+import { getSupabaseAdmin } from '@/lib/utils/supabase';
 import { handleError, ValidationError } from '@/lib/utils/errors';
 
 export async function POST(req: NextRequest) {
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (orderId) {
-      const { data: order, error } = await supabase
+      const { data: order, error } = await getSupabaseAdmin()
         .from('orders')
         .select('user_id')
         .eq('id', orderId)

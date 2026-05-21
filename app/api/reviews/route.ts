@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { reviewsService } from '@/lib/services/reviews.service';
 import { requireAuth } from '@/lib/middleware/auth.middleware';
 import { CreateReviewSchema } from '@/lib/validations/review.schema';
-import { supabase } from '@/lib/utils/supabase';
+import { getSupabaseAdmin } from '@/lib/utils/supabase';
 import { handleError, ValidationError } from '@/lib/utils/errors';
 
 export async function GET(request: NextRequest) {
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       throw new ValidationError(validated.error.errors[0].message);
     }
 
-    const { data: existingOrder } = await supabase
+    const { data: existingOrder } = await getSupabaseAdmin()
       .from('orders')
       .select('id')
       .eq('user_id', user.id)
