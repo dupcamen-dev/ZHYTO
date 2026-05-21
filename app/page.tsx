@@ -559,13 +559,17 @@ export default function Home() {
                   <p className="text-base text-muted-foreground">{desc}</p>
                 </motion.div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: false }}
+                  variants={{ visible: { transition: { staggerChildren: 0.06 } }, hidden: {} }}
+                  className="grid md:grid-cols-2 lg:grid-cols-4 gap-5"
+                >
                   {catProducts.map((product) => (
                     <motion.div
                       key={product.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false }}
+                      variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
                       transition={{ duration: 0.5 }}
                       className="group flex flex-col relative sm:pt-7"
                     >
@@ -602,7 +606,7 @@ export default function Home() {
                       </div>
                     </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
             )
           })}
