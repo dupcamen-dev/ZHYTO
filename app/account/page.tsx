@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth-context'
+import { useCart } from '@/components/cart-context'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Clock, Package, ArrowLeft, LogOut } from 'lucide-react'
@@ -27,9 +28,21 @@ const statusConfig: Record<string, { label: string; color: string; dot: string }
 
 export default function AccountPage() {
   const { user, loading, signOut } = useAuth()
+  const { clearCart } = useCart()
   const router = useRouter()
   const [orders, setOrders] = useState<Order[]>([])
   const [ordersLoading, setOrdersLoading] = useState(true)
+
+  // Clear cart after successful PayPal/Card redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('redirect_status') === 'succeeded') {
+      clearCart()
+      const url = new URL(window.location.href)
+      url.search = ''
+      window.history.replaceState({}, '', url)
+    }
+  }, [clearCart])
 
   useEffect(() => {
     if (loading) return
