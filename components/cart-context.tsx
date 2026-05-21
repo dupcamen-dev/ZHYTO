@@ -81,7 +81,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     })
   }, [])
 
-  const clearCart = useCallback(() => setCart({}), [])
+  const clearCart = useCallback(() => {
+    setCart({})
+    localStorage.removeItem('zhyto-cart')
+  }, [])
 
   const totalItems = Object.values(cart).reduce((a, b) => a + b.qty, 0)
 
