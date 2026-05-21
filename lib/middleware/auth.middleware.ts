@@ -22,7 +22,7 @@ function checkCsrf(request: Request): void {
 function decodeToken(token: string): { id: string; email: string } {
   // JWT payload is base64url-encoded JSON
   const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-  const payload = JSON.parse(atob(b64));
+  const payload = JSON.parse(Buffer.from(b64, 'base64').toString());
 
   if (!payload.sub || !payload.email) {
     throw new AuthenticationError('Невірний токен');
@@ -56,11 +56,20 @@ export async function requireAuth(request: Request): Promise<User> {
   }
 
   // Fallback: decode JWT locally — handles expired tokens, network blips
-  console.warn('[requireAuth] Auth API failed, falling back to local JWT decode', {
-    error: error?.message,
+  console.warn('[requireAuth] Supabase Auth API failed, falling back to local JWT decode', JSON.stringify({
+    errorMessage: error?.message,
     errorName: error?.name,
-  });
-  return decodeToken(token);
+  }));
+  try {
+    return decodeToken(token);
+  } catch (fallbackErr) {
+    console.error('[requireAuth] JWT decode also failed', JSON.stringify({
+      error: fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr),
+      tokenParts: token.split('.').length,
+      tokenPreview: token.substring(0, 20) + '...',
+    }));
+    throw fallbackErr;
+  }
 }
 
 export async function getUser(request: Request): Promise<User | null> {
