@@ -10,7 +10,14 @@ function checkCsrf(request: Request): void {
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
   if (!origin && !referer) return;
-  const source = origin || referer || '';
+  let source: string;
+  if (origin) {
+    source = origin;
+  } else if (referer) {
+    try { source = new URL(referer).origin; } catch { return; }
+  } else {
+    return;
+  }
   try {
     const reqOrigin = new URL(request.url).origin;
     if (source === reqOrigin) return;

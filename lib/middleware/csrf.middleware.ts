@@ -14,7 +14,14 @@ export function validateCsrf(request: Request): void {
     return;
   }
 
-  const source = origin || referer || '';
+  let source: string;
+  if (origin) {
+    source = origin;
+  } else if (referer) {
+    try { source = new URL(referer).origin; } catch { return; }
+  } else {
+    return;
+  }
 
   // Allow same-origin requests — use request.url (reliable in Next.js serverless)
   try {
