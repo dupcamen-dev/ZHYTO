@@ -240,6 +240,7 @@ export default function Home() {
           badge: p.badge,
           category: p.category,
           stock: p.stock ?? 10,
+          available: p.available ?? true,
           ingredients: p.ingredients,
           cooking: p.cooking,
           ingredients_uk: p.ingredients_uk,
@@ -319,7 +320,7 @@ export default function Home() {
     }
   }
 
-  const activeProducts = dbProducts || translatedProducts
+  const activeProducts = (dbProducts || translatedProducts).filter(p => p.available !== false)
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
   const productsParallaxY = useTransform(scrollYProgress, [0, 0.25], [200, 0])
