@@ -149,8 +149,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
           toast.error(t.checkout.paymentUnavailable)
           setSelectedMethod(null)
         }
-      } catch {
-        toast.error('Payment service unavailable. Please try again.')
+      } catch (e: any) {
+        console.error('Apple Pay error:', e?.message || e)
+        toast.error(e?.message || 'Payment service unavailable. Please try again.')
         setSelectedMethod(null)
       } finally {
         setSubmitting(false)
@@ -170,8 +171,9 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
         toast.error(t.checkout.paymentUnavailable)
         setSelectedMethod(null)
       }
-    } catch {
-      toast.error('Payment service unavailable. Please try again.')
+    } catch (e: any) {
+      console.error('Card payment error:', e?.message || e)
+      toast.error(e?.message || 'Payment service unavailable. Please try again.')
       setSelectedMethod(null)
     } finally {
       setSubmitting(false)

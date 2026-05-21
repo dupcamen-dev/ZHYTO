@@ -7,7 +7,7 @@ export function getStripe(): Stripe {
 
   const secretKey = process.env.STRIPE_SECRET_KEY;
   if (!secretKey) {
-    throw new Error('STRIPE_SECRET_KEY не налаштований');
+    throw new Error('STRIPE_SECRET_KEY is not configured');
   }
 
   _stripe = new Stripe(secretKey, {

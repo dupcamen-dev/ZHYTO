@@ -1,7 +1,7 @@
-import { supabase, getSupabaseAdmin } from '../utils/supabase';
+import { getSupabaseAdmin } from '../utils/supabase';
 import { Order, OrderInput, OrderStatus, OrderFilters } from '../types/order.types';
 import { CartItem } from '../types/product.types';
-import { NotFoundError, ValidationError } from '../utils/errors';
+import { NotFoundError } from '../utils/errors';
 
 export const ordersService = {
   async getUserOrders(userId: string): Promise<Order[]> {
@@ -54,6 +54,26 @@ export const ordersService = {
       .single();
 
     if (error) throw error;
+
+    // Decrement stock for each item when order is created (pending)
+    if (data.items?.length) {
+      for (const item of data.items) {
+        const { data: product } = await admin
+          .from('products')
+          .select('stock')
+          .eq('id', item.product_id)
+          .maybeSingle();
+        if (product) {
+          const newStock = Math.max(0, product.stock - item.quantity);
+          const { error: updateErr } = await admin
+            .from('products')
+            .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
+            .eq('id', item.product_id);
+          if (updateErr) console.error('Stock decrement failed at order creation:', updateErr);
+        }
+      }
+    }
+
     return data;
   },
 
@@ -83,29 +103,7 @@ export const ordersService = {
       throw new NotFoundError('Order not found');
     }
 
-    const shouldDecrement = (status === 'confirmed' || status === 'completed')
-      && oldStatus !== 'confirmed' && oldStatus !== 'completed'
-      && data.items?.length;
-
-    if (shouldDecrement) {
-      for (const item of data.items) {
-        const { data: product } = await admin
-          .from('products')
-          .select('stock')
-          .eq('id', item.product_id)
-          .maybeSingle();
-        if (product) {
-          const newStock = Math.max(0, product.stock - item.quantity);
-          const { error: updateErr } = await admin
-            .from('products')
-            .update({ stock: newStock, available: newStock > 0, updated_at: new Date().toISOString() })
-            .eq('id', item.product_id);
-          if (updateErr) console.error('Stock decrement failed:', updateErr);
-        }
-      }
-    }
-
-    if (status === 'cancelled' && data.items?.length) {
+    if (status === 'cancelled' && oldStatus !== 'cancelled' && data.items?.length) {
       for (const item of data.items) {
         const { data: product } = await admin
           .from('products')
@@ -179,7 +177,8 @@ export const ordersService = {
   },
 
   async getDeliverySettings() {
-    const { data } = await supabase
+    const admin = getSupabaseAdmin();
+    const { data } = await admin
       .from('settings')
       .select('value')
       .eq('key', 'delivery')

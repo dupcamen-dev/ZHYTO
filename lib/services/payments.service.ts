@@ -62,7 +62,7 @@ export const paymentsService = {
     const stripe = getStripe();
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
     if (!webhookSecret) {
-      throw new Error('STRIPE_WEBHOOK_SECRET не налаштований');
+      throw new Error('STRIPE_WEBHOOK_SECRET is not configured');
     }
     return stripe.webhooks.constructEvent(payload, signature, webhookSecret);
   },

@@ -1256,7 +1256,14 @@ export default function Home() {
                   </span>
                   <button
                     type="button"
-                    onClick={() => { addToCart(selectedProduct.id, selectedProduct.image); toast.success(`${selectedProduct.name} ${t.productModal.addedToCart}`, { duration: 2000 }) }}
+                    onClick={() => {
+                      const added = addToCart(selectedProduct.id, selectedProduct.image, selectedProduct.stock)
+                      if (added) {
+                        toast.success(`${selectedProduct.name} ${t.productModal.addedToCart}`, { duration: 2000 })
+                      } else {
+                        toast.error(`Sorry, only ${selectedProduct.stock} of "${selectedProduct.name}" available`)
+                      }
+                    }}
                     className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:border-primary hover:text-primary transition-all text-gray-700 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />

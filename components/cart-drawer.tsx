@@ -15,12 +15,14 @@ import { Button } from '@/components/ui/button'
 import { useCart } from '@/components/cart-context'
 import { useDeliverySettings, calcDelivery } from '@/lib/use-delivery'
 import { useLanguage } from '@/components/language-context'
+import { toast } from 'sonner'
 
 interface Product {
   id: number
   name: string
   price: number
   image: string
+  stock?: number
 }
 
 interface CartDrawerProps {
@@ -101,7 +103,10 @@ export function CartDrawer({ open, onOpenChange, products, onCheckout }: CartDra
                           {item.qty}
                         </span>
                         <button
-                          onClick={() => addToCart(item.id)}
+                          onClick={() => {
+                            const added = addToCart(item.id, undefined, item.stock)
+                            if (!added) toast.error(`Sorry, only ${item.stock} of "${item.name}" available`)
+                          }}
                           className="w-7 h-7 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-all"
                         >
                           <Plus className="w-2.5 h-2.5" />

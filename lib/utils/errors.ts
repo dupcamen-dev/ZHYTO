@@ -45,9 +45,10 @@ export function handleError(error: unknown) {
     );
   }
 
-  console.error('Unexpected error:', error);
+  const message = error instanceof Error ? error.message : 'Internal server error';
+  console.error('Unexpected error:', message, error);
   return Response.json(
-    { error: 'Internal server error' },
+    { error: message },
     { status: 500 }
   );
 }
