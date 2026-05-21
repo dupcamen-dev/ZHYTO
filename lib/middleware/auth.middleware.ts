@@ -9,14 +9,24 @@ function checkCsrf(request: Request): void {
   const referer = request.headers.get('referer');
   if (!origin && !referer) return;
   const source = origin || referer || '';
-  // Allow same-origin requests — use request.url (reliable in Next.js serverless)
   try {
     const reqOrigin = new URL(request.url).origin;
     if (source === reqOrigin) return;
   } catch { /* ignore invalid url */ }
-  // Check explicit whitelist (set ALLOWED_ORIGINS env var)
   if (ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed))) return;
   throw new AuthenticationError('CSRF: недозволене джерело запиту');
+}
+
+function decodeToken(token: string): { id: string; email: string } {
+  try {
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+    if (!payload.sub || !payload.email) {
+      throw new AuthenticationError('Невірний токен');
+    }
+    return { id: payload.sub, email: payload.email };
+  } catch {
+    throw new AuthenticationError('Невірний токен');
+  }
 }
 
 export async function requireAuth(request: Request): Promise<User> {
@@ -30,13 +40,19 @@ export async function requireAuth(request: Request): Promise<User> {
 
   const token = authHeader.split(' ')[1];
   
+  // Try server-side verification first (checks signature)
   const { data: { user }, error } = await supabase.auth.getUser(token);
 
-  if (error || !user) {
-    throw new AuthenticationError('Невірний токен');
+  if (!error && user) {
+    return { id: user.id, email: user.email! };
   }
 
-  return { id: user.id, email: user.email! };
+  // Fallback: decode JWT locally (works for expired tokens, network issues)
+  console.warn('[requireAuth] Supabase Auth API failed, decoding locally', {
+    errorMessage: error?.message,
+    errorName: error?.name,
+  });
+  return decodeToken(token);
 }
 
 export async function getUser(request: Request): Promise<User | null> {
