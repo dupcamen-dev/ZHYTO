@@ -1,250 +1,130 @@
-# 🥟 Варенники - E-commerce Website
+# zhyto.london — Frozen Ukrainian Food E-commerce
 
-Повнофункціональний інтернет-магазин українських вареників з Next.js, Supabase та Stripe.
+Full-featured e-commerce site for frozen Ukrainian dumplings (varenyky, syrnyky, pelmeni). Built with Next.js 16, Supabase, and Stripe.
 
-## ✨ Особливості
+## Tech Stack
 
-### Для клієнтів:
-- 🛍️ Каталог продуктів з категоріями
-- 🛒 Кошик покупок
-- 💳 Безпечна оплата через Stripe
-- 📦 Відстеження замовлень
-- ⭐ Система відгуків
-- 📱 Responsive дизайн
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4, Radix UI primitives |
+| Animations | framer-motion 12 |
+| Database | Supabase (PostgreSQL + RLS) |
+| Auth | Supabase Auth (Google OAuth) |
+| Payments | Stripe (cards, Apple Pay, Google Pay, PayPal) |
+| Rate Limiting | Upstash Redis |
+| Storage | Supabase Storage (product images) |
+| Deployment | Vercel |
 
-### Для адміністраторів:
-- 📊 Панель управління
-- 📈 Статистика продажів
-- 📦 Управління замовленнями
-- 🏷️ Управління продуктами
-- 💬 Модерація відгуків
-- ⚙️ Налаштування доставки
+## Environment Variables
 
-## 🛠️ Технології
+All vars are configured in the Vercel dashboard. No `.env.local` file in the project.
 
-### Frontend:
-- **Next.js 16** - React framework
-- **React 19** - UI library
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **Radix UI** - UI components
-- **Framer Motion** - Animations
-- **Stripe Elements** - Payment UI
+### Public (prefix `NEXT_PUBLIC_`)
 
-### Backend:
-- **Next.js API Routes** - REST API
-- **Supabase** - Database & Auth
-- **PostgreSQL** - Database
-- **Stripe** - Payments
-- **Zod** - Validation
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key (RLS-enforced) |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key |
+| `NEXT_PUBLIC_BASE_PATH` | Base path for images (empty in prod) |
 
-### DevOps:
-- **Vercel** - Hosting
-- **GitHub** - Version control
-- **Stripe CLI** - Webhook testing
+### Server-only (never exposed to client)
 
-## 🚀 Швидкий старт
+| Variable | Description |
+|----------|-------------|
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (admin bypass RLS) |
+| `STRIPE_SECRET_KEY` | Stripe secret key (sk_live_...) |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL (rate limiting) |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST token |
+| `ALLOWED_ORIGINS` | Comma-separated allowed CORS origins |
+| `RESEND_API_KEY` | Resend API key (email — optional, not wired) |
 
-### Для розробників:
+## Getting Started
 
 ```bash
-# 1. Клонувати репозиторій
-git clone <your-repo-url>
-cd varennyky-website
-
-# 2. Встановити залежності
 npm install
-
-# 3. Налаштувати environment variables
-cp .env.example .env.local
-# Заповніть .env.local
-
-# 4. Запустити
 npm run dev
 ```
 
-**Детальні інструкції:** [`QUICK_START.md`](./QUICK_START.md)
+Open http://localhost:3000.
 
-### Для менеджерів проекту:
+**Note:** The app requires all environment variables above. Without Supabase/Stripe credentials it will throw on startup. If you only want to test the UI, mock the Supabase client or use a local Supabase instance.
 
-1. Перегляньте [`BACKEND_ARCHITECTURE.md`](./BACKEND_ARCHITECTURE.md) для розуміння структури
-2. Перевірте [`CHECKLIST.md`](./CHECKLIST.md) для статусу реалізації
-3. Використовуйте [`DEPLOYMENT.md`](./DEPLOYMENT.md) для production deployment
-
-## 📚 Документація
-
-| Файл | Опис |
-|------|------|
-| [`QUICK_START.md`](./QUICK_START.md) | Швидкий старт для нових розробників |
-| [`BACKEND_ARCHITECTURE.md`](./BACKEND_ARCHITECTURE.md) | Повна архітектура бекенду |
-| [`API_REFERENCE.md`](./API_REFERENCE.md) | Довідник по API endpoints |
-| [`API_EXAMPLES.md`](./API_EXAMPLES.md) | Приклади використання API |
-| [`REACT_HOOKS_EXAMPLES.tsx`](./REACT_HOOKS_EXAMPLES.tsx) | Готові React hooks |
-| [`DEPLOYMENT.md`](./DEPLOYMENT.md) | Інструкції для deployment |
-| [`CHECKLIST.md`](./CHECKLIST.md) | Checklist реалізації |
-
-## 🗄️ База даних
-
-### Схема:
-- `profiles` - Профілі користувачів з ролями
-- `products` - Каталог продуктів
-- `orders` - Замовлення клієнтів
-- `reviews` - Відгуки
-- `settings` - Налаштування системи
-- `stock_history` - Історія змін залишків
-- `promo_codes` - Промокоди
-- `order_payments` - Платежі
-
-**SQL схема:** [`supabase-schema.sql`](./supabase-schema.sql)  
-**Тестові дані:** [`supabase-test-data.sql`](./supabase-test-data.sql)
-
-## 🔌 API Endpoints
-
-### Публічні:
-- `GET /api/products` - Список продуктів
-- `GET /api/reviews` - Відгуки
-- `GET /api/settings` - Налаштування
-
-### Авторизовані:
-- `POST /api/auth/signup` - Реєстрація
-- `POST /api/auth/login` - Вхід
-- `POST /api/orders` - Створити замовлення
-- `POST /api/reviews` - Додати відгук
-
-### Тільки Admin:
-- `POST /api/products` - Створити продукт
-- `GET /api/admin/orders` - Всі замовлення
-- `GET /api/admin/stats` - Статистика
-- `PATCH /api/orders/[id]` - Оновити статус
-
-**Повний список:** [`API_REFERENCE.md`](./API_REFERENCE.md)
-
-## 🔐 Безпека
-
-- ✅ Row Level Security (RLS) в Supabase
-- ✅ Валідація через Zod
-- ✅ Rate limiting
-- ✅ Admin перевірки
-- ✅ Stripe webhook signature verification
-- ✅ HTTPS only в production
-- ✅ Secure cookies
-- ✅ Input sanitization
-
-## 🧪 Тестування
-
-### Локальне тестування:
+### Lint
 
 ```bash
-# Запустити dev server
-npm run dev
-
-# Тестувати API
-curl http://localhost:3000/api/products
-
-# Тестувати Stripe webhook (потрібен Stripe CLI)
-stripe listen --forward-to localhost:3000/api/webhooks/stripe
-stripe trigger payment_intent.succeeded
+npm run lint
 ```
 
-### Тестові картки Stripe:
-- **Успішна:** `4242 4242 4242 4242`
-- **Відхилена:** `4000 0000 0000 0002`
-- **3D Secure:** `4000 0027 6000 3184`
-
-## 📦 Deployment
-
-### Vercel (рекомендовано):
-
-1. Push код на GitHub
-2. Імпортувати проект на [vercel.com](https://vercel.com)
-3. Додати environment variables
-4. Deploy!
-
-**Детальні інструкції:** [`DEPLOYMENT.md`](./DEPLOYMENT.md)
-
-## 🗂️ Структура проекту
+## Project Structure
 
 ```
-varennyky-website/
-├── app/
-│   ├── api/              # API Routes
-│   ├── admin/            # Адмін панель
-│   ├── account/          # Особистий кабінет
-│   └── ...               # Інші сторінки
-├── components/           # React компоненти
-├── lib/
-│   ├── services/         # Бізнес-логіка
-│   ├── middleware/       # Auth, Admin, Rate limiting
-│   ├── validations/      # Zod схеми
-│   ├── types/           # TypeScript типи
-│   └── utils/           # Supabase, Stripe, Errors
-├── public/              # Статичні файли
-├── styles/              # CSS
-└── docs/                # Документація
+app/
+  page.tsx                     ← Home page (composes all sections)
+  layout.tsx                   ← Root layout (providers: Auth, Cart, Language, Theme)
+  account/page.tsx             ← User account page
+  admin/                       ← Admin panel (products, orders, reviews, settings, stats)
+  privacy/page.tsx             ← Privacy policy (static)
+  terms/page.tsx               ← Terms of service (static)
+  api/                         ← API routes (see API.md)
+
+components/
+  sections/                    ← Page section components (extracted from page.tsx)
+    Header.tsx                 ← Nav bar + mobile menu
+    HeroSection.tsx            ← Landing hero with parallax
+    ProductsSection.tsx        ← Product grid + modal
+    AboutSection.tsx           ← About us + image carousel
+    DeliverySection.tsx        ← Delivery info
+    ReviewsSection.tsx         ← Reviews + form + FloatingVarenyky
+    FAQSection.tsx             ← FAQ accordion
+    ContactSection.tsx         ← Contact info + social links
+    Footer.tsx                 ← Site footer
+    SignInModal.tsx            ← Google OAuth modal
+    ScrollButtons.tsx          ← Scroll to top/bottom
+  cart-context.tsx             ← Cart state (context + localStorage)
+  auth-context.tsx             ← Auth state (context + Supabase)
+  language-context.tsx         ← i18n (EN/UK toggle, context + localStorage)
+  checkout-modal.tsx           ← Checkout flow (address, payment)
+  cart-drawer.tsx              ← Slide-out cart
+  theme-provider.tsx           ← next-themes wrapper
+  image-carousel.tsx           ← Reusable carousel
+  image-compare.tsx            ← Before/after image slider
+
+lib/
+  supabase.ts                  ← Supabase anon client (proxied singleton)
+  stripe.ts                    ← Stripe client
+  constants.ts                 ← Constants + img() helper
+  use-delivery.ts              ← useDeliverySettings hook + calcDelivery
+  services/                    ← Business logic (products, orders, reviews, payments)
+  middleware/                   ← Auth, admin, CSRF middleware
+  validations/                  ← Zod schemas
+  utils/                       ← Supabase admin client, error handling, rate limiter
+
+supabase-schema.sql            ← Full DB schema (migration-ready)
 ```
 
-## 🤝 Contributing
+## Architecture Overview
 
-1. Fork проект
-2. Створіть feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit зміни (`git commit -m 'Add some AmazingFeature'`)
-4. Push в branch (`git push origin feature/AmazingFeature`)
-5. Відкрийте Pull Request
+### Data Flow
 
-## 📝 License
+```
+Browser → React Component → fetch('/api/...') → API Route → Service Layer → Supabase Admin
+                                                                              ↕
+                                                                         Database + RLS
+```
 
-MIT License - дивіться [LICENSE](LICENSE) для деталей
+- **Client components** never call `supabase.from()` directly
+- All DB reads go through **API routes** → **service layer** (in `lib/services/`)
+- API routes use **`getSupabaseAdmin()`** (service role) internally
+- RLS policies protect direct table access if someone gets the anon key
 
-## 👥 Команда
+### Key Decisions
 
-- **Frontend:** React, Next.js, TypeScript
-- **Backend:** Next.js API Routes, Supabase
-- **Design:** Tailwind CSS, Radix UI
-- **Payments:** Stripe
-
-## 🆘 Підтримка
-
-- 📖 Документація: Дивіться файли вище
-- 🐛 Issues: [GitHub Issues](https://github.com/your-repo/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/your-repo/discussions)
-
-## 🎯 Roadmap
-
-### Фаза 1: MVP ✅
-- [x] Каталог продуктів
-- [x] Кошик
-- [x] Оплата через Stripe
-- [x] Замовлення
-- [x] Адмін панель
-
-### Фаза 2: Розширення 🚧
-- [ ] Email нотифікації
-- [ ] Промокоди
-- [ ] Історія stock
-- [ ] Експорт замовлень
-
-### Фаза 3: Покращення 📋
-- [ ] Push notifications
-- [ ] Real-time tracking
-- [ ] Advanced analytics
-- [ ] Multi-language
-- [ ] Mobile app
-
-## 📊 Статистика
-
-- **Lines of Code:** ~10,000+
-- **API Endpoints:** 25+
-- **Database Tables:** 8
-- **React Components:** 50+
-
-## 🌟 Особливі подяки
-
-- [Next.js](https://nextjs.org/)
-- [Supabase](https://supabase.com/)
-- [Stripe](https://stripe.com/)
-- [Vercel](https://vercel.com/)
-- [Radix UI](https://www.radix-ui.com/)
-
----
-
-**Зроблено з ❤️ для любителів вареників**
+- **"use client" for page.tsx**: framer-motion scroll hooks and context providers require client-side rendering
+- **Server-side data fetching via API routes**: all pages fetch via `fetch('/api/...')` at mount, not directly from Supabase
+- **Cart persists in localStorage**: survives page refresh, synced with stock limits on load
+- **Delivery address persists in localStorage**: key `zhyto-address`
+- **Stock decremented on order creation**: PENDING status immediately reduces stock; cancel restores it

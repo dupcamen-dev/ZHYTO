@@ -74,14 +74,17 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [promoCodes, setPromoCodes] = useState<Record<string, { type: 'percentage' | 'free_delivery'; value: number }>>({})
 
   useEffect(() => {
-    supabase.from('settings').select('value').eq('key', 'promo_codes').single().then(({ data }) => {
-      if (data?.value) {
-        const codes = data.value as { code: string; type: 'percentage' | 'free_delivery'; value: number }[]
-        const map: Record<string, { type: 'percentage' | 'free_delivery'; value: number }> = {}
-        codes.forEach(c => { map[c.code.toUpperCase()] = { type: c.type, value: c.value } })
-        setPromoCodes(map)
-      }
-    })
+    fetch('/api/public-settings')
+      .then(res => res.json())
+      .then(data => {
+        const codes = data?.promo_codes as { code: string; type: 'percentage' | 'free_delivery'; value: number }[] | undefined
+        if (codes) {
+          const map: Record<string, { type: 'percentage' | 'free_delivery'; value: number }> = {}
+          codes.forEach(c => { map[c.code.toUpperCase()] = { type: c.type, value: c.value } })
+          setPromoCodes(map)
+        }
+      })
+      .catch(() => {})
   }, [])
 
   useEffect(() => {

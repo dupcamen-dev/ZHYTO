@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { supabase } from './supabase'
 
 export interface DeliverySettings {
   min_order: number
@@ -14,11 +13,13 @@ export function useDeliverySettings() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    if (!supabase) { setLoaded(true); return }
-    supabase.from('settings').select('value').eq('key', 'delivery').single().then(({ data }) => {
-      if (data?.value) setSettings(data.value as DeliverySettings)
-      setLoaded(true)
-    })
+    fetch('/api/public-settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.delivery) setSettings(data.delivery as DeliverySettings)
+        setLoaded(true)
+      })
+      .catch(() => setLoaded(true))
   }, [])
 
   return { settings, loaded }

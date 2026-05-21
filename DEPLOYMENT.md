@@ -1,289 +1,171 @@
-# 🚀 Deployment Guide
+# Deployment Guide
 
-## Vercel Deployment
+## Overview
 
-### 1. Підготовка
+The site runs on **Vercel** (production: `https://zhyto.vercel.app`).  
+Backed by **Supabase** (database, auth, storage) and **Stripe** (payments).
 
-```bash
-# Переконайтеся, що всі зміни закомічені
-git add .
-git commit -m "Backend implementation"
-git push origin main
+---
+
+## 1. Supabase Setup
+
+### Create Project
+
+1. Go to [supabase.com](https://supabase.com) → New project
+2. Note the **Project URL** and **anon key** from Settings → API
+3. Save the **Service Role Key** (Settings → API → `service_role` key)
+
+### Apply Schema
+
+```sql
+-- In Supabase SQL Editor, run the full schema:
+\i supabase-schema.sql
 ```
 
-### 2. Створення проекту на Vercel
+Or copy-paste `supabase-schema.sql` into the SQL Editor and run.
 
-1. Зайдіть на [vercel.com](https://vercel.com)
-2. Натисніть "Add New Project"
-3. Імпортуйте ваш GitHub репозиторій
-4. Framework Preset: Next.js (автоматично визначиться)
-5. Root Directory: `./` (або `./varennyky-website` якщо проект в підпапці)
+### Auth Configuration
 
-### 3. Environment Variables
+1. **Authentication → Settings → Site URL**: set to your Vercel domain
+2. **Authentication → Providers → Google**: enable, configure OAuth client ID/secret from Google Cloud Console
+3. **Authentication → Settings → Redirect URLs**: add `https://your-domain.vercel.app/**`
 
-Додайте в Vercel Dashboard → Settings → Environment Variables:
+### Storage
 
-```env
-# Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+1. **Storage → New bucket**: `product-images` (public)
+2. Enable RLS on the bucket or set it to public access for product images
 
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+---
 
-# App
-NEXT_PUBLIC_APP_URL=https://yourdomain.com
-```
+## 2. Stripe Setup
 
-⚠️ **ВАЖЛИВО:** Використовуйте LIVE keys для production!
+### Create Products & Prices (optional)
 
-### 4. Deploy
+Products are managed in the admin panel, not in Stripe Dashboard. Stripe is only used for payment intents.
 
-Натисніть "Deploy" - Vercel автоматично:
-- Встановить залежності
-- Збудує проект
-- Задеплоїть на CDN
+### Webhook
 
-### 5. Налаштування Stripe Webhook
-
-1. Зайдіть в Stripe Dashboard → Developers → Webhooks
-2. Натисніть "Add endpoint"
-3. URL: `https://yourdomain.com/api/webhooks/stripe`
-4. Виберіть події:
+1. [Stripe Dashboard → Developers → Webhooks](https://dashboard.stripe.com/webhooks)
+2. **Add endpoint**: `https://your-domain.vercel.app/api/webhooks/stripe`
+3. **Events to send**:
    - `payment_intent.succeeded`
    - `payment_intent.payment_failed`
-5. Скопіюйте Webhook Secret
-6. Додайте його в Vercel Environment Variables як `STRIPE_WEBHOOK_SECRET`
-7. Redeploy проект
+4. Copy the **Signing secret** (`whsec_...`)
 
-### 6. Перевірка
+### API Keys
 
-```bash
-# Тест API
-curl https://yourdomain.com/api/products
-
-# Тест webhook (через Stripe CLI)
-stripe trigger payment_intent.succeeded
-```
+- **Publishable key** (`pk_live_...`) — from Stripe Dashboard
+- **Secret key** (`sk_live_...`) — from Stripe Dashboard
 
 ---
 
-## Supabase Production Setup
+## 3. Vercel Deployment
 
-### 1. Database
+### Prerequisites
 
-Ваша база даних вже в production на Supabase.
+- GitHub repo connected to Vercel
+- All env vars ready (see below)
 
-### 2. Row Level Security
+### Environment Variables
 
-Переконайтеся, що всі RLS policies активні:
+Set in **Vercel Dashboard → Project → Settings → Environment Variables**:
+
+| Name | Value | Notes |
+|------|-------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxxx.supabase.co` | From Supabase Settings |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJ...` | Supabase anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` | Supabase service_role key |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | `pk_live_...` | Stripe publishable |
+| `STRIPE_SECRET_KEY` | `sk_live_...` | Stripe secret |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_...` | Stripe webhook signing secret |
+| `UPSTASH_REDIS_REST_URL` | `https://xxxx.upstash.io` | Upstash Redis URL |
+| `UPSTASH_REDIS_REST_TOKEN` | `...` | Upstash Redis token |
+| `ALLOWED_ORIGINS` | `https://your-domain.vercel.app` | CORS allowed origins |
+| `NEXT_PUBLIC_BASE_PATH` | *(leave empty)* | Only for development |
+| `RESEND_API_KEY` | *(optional)* | Email API key |
+
+### Deploy
+
+1. Push to `main` branch → Vercel auto-deploys
+2. Or manual: Vercel Dashboard → Deploy → Import Git Repo
+
+### Domain
+
+Configure custom domain in Vercel Dashboard → Project → Domains.  
+Update Supabase Auth redirect URLs and Stripe webhook URL to match.
+
+---
+
+## 4. Post-Deployment Checks
+
+### Verify
+
+- [ ] Home page loads without errors
+- [ ] Products display from database
+- [ ] Google Auth sign-in works
+- [ ] Add to cart → Cart drawer shows items
+- [ ] Checkout → Stripe payment form loads
+- [ ] Admin panel accessible (login with admin account)
+- [ ] Test Stripe webhook: `https://dashboard.stripe.com/webhooks` → "Send test webhook"
+
+### Set Admin Role
+
+After first login, promote user to admin in Supabase SQL Editor:
 
 ```sql
--- Перевірка
-SELECT schemaname, tablename, policyname 
-FROM pg_policies 
-WHERE schemaname = 'public';
+UPDATE profiles SET role = 'admin' WHERE id = '<user-uuid>';
 ```
 
-### 3. API Rate Limiting
+The user's UUID is in `auth.users` table (Supabase → Authentication → Users).
 
-В Supabase Dashboard → Settings → API:
-- Встановіть rate limits
-- Налаштуйте CORS для вашого домену
-
-### 4. Backups
-
-Supabase автоматично робить backups, але можна налаштувати додаткові:
-- Dashboard → Database → Backups
-- Встановіть розклад
-
----
-
-## Custom Domain
-
-### 1. Додати домен в Vercel
-
-1. Vercel Dashboard → Settings → Domains
-2. Додайте ваш домен
-3. Налаштуйте DNS записи (Vercel покаже інструкції)
-
-### 2. SSL Certificate
-
-Vercel автоматично налаштує Let's Encrypt SSL.
-
----
-
-## Monitoring
-
-### 1. Vercel Analytics
-
-```typescript
-// app/layout.tsx
-import { Analytics } from '@vercel/analytics/react';
-
-export default function RootLayout({ children }) {
-  return (
-    <html>
-      <body>
-        {children}
-        <Analytics />
-      </body>
-    </html>
-  );
-}
-```
-
-### 2. Error Tracking (Sentry)
-
-```bash
-npm install @sentry/nextjs
-npx @sentry/wizard@latest -i nextjs
-```
-
-### 3. Logs
-
-- Vercel Dashboard → Deployments → [Your deployment] → Logs
-- Supabase Dashboard → Logs
-
----
-
-## Performance Optimization
-
-### 1. Next.js Config
-
-```javascript
-// next.config.mjs
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    domains: ['your-supabase-project.supabase.co'],
-    formats: ['image/avif', 'image/webp'],
-  },
-  compress: true,
-  poweredByHeader: false,
-};
-
-export default nextConfig;
-```
-
-### 2. Caching
-
-```typescript
-// app/api/products/route.ts
-export const revalidate = 60; // Revalidate every 60 seconds
-```
-
-### 3. Database Indexes
-
-Вже створені в `supabase-schema.sql`:
-- `idx_orders_user_id`
-- `idx_orders_created_at`
-- `idx_orders_status`
-- `idx_products_category`
-
----
-
-## Security Checklist
-
-- [ ] Всі environment variables налаштовані
-- [ ] RLS policies активні на всіх таблицях
-- [ ] Stripe webhook signature перевіряється
-- [ ] Rate limiting налаштований
-- [ ] CORS налаштований правильно
-- [ ] HTTPS only (автоматично на Vercel)
-- [ ] Secure cookies (автоматично на Vercel)
-- [ ] Input validation через Zod
-- [ ] SQL injection захист (через Supabase client)
-
----
-
-## Post-Deployment
-
-### 1. Створити першого адміна
+### Seed Settings (if empty)
 
 ```sql
--- В Supabase SQL Editor
-UPDATE profiles 
-SET role = 'admin' 
-WHERE id = 'user-uuid-from-signup';
+INSERT INTO settings (key, value) VALUES
+  ('delivery', '{"min_order": 10, "free_threshold": 50, "fee": 5}'),
+  ('categories', '["varenyky", "syrnyky", "pelmeni"]'),
+  ('categories_desc', '{"varenyky": "", "syrnyky": "", "pelmeni": ""}'),
+  ('promo_codes', '[]')
+ON CONFLICT (key) DO NOTHING;
 ```
-
-### 2. Завантажити тестові дані (optional)
-
-```sql
--- Виконати supabase-test-data.sql
-```
-
-### 3. Тестування
-
-- [ ] Реєстрація/вхід працює
-- [ ] Створення замовлення працює
-- [ ] Stripe платіж працює
-- [ ] Webhook обробляється
-- [ ] Email відправляються (якщо налаштовано)
-- [ ] Адмін панель доступна
-- [ ] Статистика відображається
 
 ---
 
-## Rollback
+## 5. Maintenance
 
-Якщо щось пішло не так:
+### Database Migrations
 
-1. Vercel Dashboard → Deployments
-2. Знайдіть попередній успішний deployment
-3. Натисніть "..." → "Promote to Production"
+For schema changes:
+1. Write SQL migration file (e.g. `sql/001-add-column.sql`)
+2. Run in Supabase SQL Editor
+3. Update `supabase-schema.sql` to reflect the change
+
+### Monitoring
+
+- **Vercel**: Dashboard → Project → Analytics
+- **Supabase**: Dashboard → Project → Database → Query performance
+- **Stripe**: Dashboard → Payments → Events
+
+### Rollbacks
+
+Vercel instant rollback: Deployment → ⋮ → Promote to Production.
 
 ---
 
-## Continuous Deployment
-
-Vercel автоматично деплоїть при push в main:
+## 6. Local Development (for reference)
 
 ```bash
-git add .
-git commit -m "Update feature"
-git push origin main
-# Vercel автоматично задеплоїть
-```
-
-Preview deployments для PR:
-- Створіть PR
-- Vercel створить preview URL
-- Тестуйте перед merge
-
----
-
-## Troubleshooting
-
-### Помилка: "Module not found"
-
-```bash
-# Очистити cache
-rm -rf .next
+# Install
 npm install
-npm run build
+
+# Run
+npm run dev          # http://localhost:3000
+
+# Build
+npm run build        # Verify production build locally
+
+# Lint
+npm run lint
 ```
 
-### Помилка: "Stripe webhook failed"
-
-1. Перевірте STRIPE_WEBHOOK_SECRET
-2. Перевірте URL webhook в Stripe Dashboard
-3. Перевірте logs в Vercel
-
-### Помилка: "Supabase RLS"
-
-1. Перевірте policies в Supabase Dashboard
-2. Перевірте чи використовується правильний API key
-3. Перевірте auth.uid() в policies
-
----
-
-## Support
-
-- Vercel: [vercel.com/support](https://vercel.com/support)
-- Supabase: [supabase.com/support](https://supabase.com/support)
-- Stripe: [stripe.com/support](https://stripe.com/support)
+For local Supabase, use `supabase start` (CLI) or point to the production Supabase instance via `.env.local` (not committed). Note that local development with production Supabase will use real data — use caution.
