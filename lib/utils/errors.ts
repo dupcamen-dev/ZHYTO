@@ -17,21 +17,21 @@ export class ValidationError extends AppError {
 }
 
 export class AuthenticationError extends AppError {
-  constructor(message: string = 'Не авторизовано') {
+  constructor(message: string = 'Not authenticated') {
     super(message, 401, 'AUTHENTICATION_ERROR');
     this.name = 'AuthenticationError';
   }
 }
 
 export class AuthorizationError extends AppError {
-  constructor(message: string = 'Доступ заборонено') {
+  constructor(message: string = 'Access denied') {
     super(message, 403, 'AUTHORIZATION_ERROR');
     this.name = 'AuthorizationError';
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(message: string = 'Не знайдено') {
+  constructor(message: string = 'Not found') {
     super(message, 404, 'NOT_FOUND_ERROR');
     this.name = 'NotFoundError';
   }
@@ -47,7 +47,7 @@ export function handleError(error: unknown) {
 
   console.error('Unexpected error:', error);
   return Response.json(
-    { error: 'Внутрішня помилка сервера' },
+    { error: 'Internal server error' },
     { status: 500 }
   );
 }

@@ -19,7 +19,7 @@ export async function GET(
     // Перевірка доступу
     const userIsAdmin = await isAdmin(user.id);
     if (order.user_id !== user.id && !userIsAdmin) {
-      throw new AuthorizationError('Доступ заборонено');
+      throw new AuthorizationError('Access denied');
     }
 
     return Response.json(order);

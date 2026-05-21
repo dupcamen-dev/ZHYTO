@@ -31,5 +31,5 @@ export function validateCsrf(request: Request): void {
 
   if (ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed))) return;
 
-  throw new ValidationError('CSRF: недозволене джерело запиту');
+  throw new ValidationError('CSRF: forbidden request origin');
 }

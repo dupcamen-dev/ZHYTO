@@ -23,7 +23,7 @@ function checkCsrf(request: Request): void {
     if (source === reqOrigin) return;
   } catch { /* ignore */ }
   if (ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed))) return;
-  throw new AuthenticationError('CSRF: недозволене джерело запиту');
+  throw new AuthenticationError('CSRF: forbidden request origin');
 }
 
 function decodeToken(token: string): { id: string; email: string } {
@@ -32,14 +32,14 @@ function decodeToken(token: string): { id: string; email: string } {
   const payload = JSON.parse(Buffer.from(b64, 'base64').toString());
 
   if (!payload.sub || !payload.email) {
-    throw new AuthenticationError('Невірний токен');
+    throw new AuthenticationError('Invalid token');
   }
 
   // Reject tokens expired beyond grace period
   if (payload.exp) {
     const expiredMs = Date.now() - payload.exp * 1000;
     if (expiredMs > TOKEN_EXP_GRACE_MS) {
-      throw new AuthenticationError('Токен прострочений, увійдіть знову');
+      throw new AuthenticationError('Token expired, please sign in again');
     }
   }
 
@@ -51,7 +51,7 @@ export async function requireAuth(request: Request): Promise<User> {
 
   const authHeader = request.headers.get('authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new AuthenticationError('Токен не надано');
+    throw new AuthenticationError('Token not provided');
   }
 
   const token = authHeader.split(' ')[1];

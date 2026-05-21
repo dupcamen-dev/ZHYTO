@@ -15,7 +15,7 @@ export const authService = {
     });
 
     if (error) throw new AuthenticationError(error.message);
-    if (!data.user) throw new AuthenticationError('Помилка реєстрації');
+    if (!data.user) throw new AuthenticationError('Registration error');
 
     return {
       user: { id: data.user.id, email: data.user.email! },
@@ -30,7 +30,7 @@ export const authService = {
     });
 
     if (error) throw new AuthenticationError(error.message);
-    if (!data.user) throw new AuthenticationError('Помилка входу');
+    if (!data.user) throw new AuthenticationError('Sign in error');
 
     return {
       user: { id: data.user.id, email: data.user.email! },

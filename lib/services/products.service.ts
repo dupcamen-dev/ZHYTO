@@ -28,7 +28,7 @@ export const productsService = {
       .single();
 
     if (error || !data) {
-      throw new NotFoundError('Продукт не знайдено');
+      throw new NotFoundError('Product not found');
     }
 
     return data;
@@ -54,7 +54,7 @@ export const productsService = {
       .single();
 
     if (error || !data) {
-      throw new NotFoundError('Продукт не знайдено');
+      throw new NotFoundError('Product not found');
     }
 
     return data;
@@ -74,7 +74,7 @@ export const productsService = {
     const newStock = product.stock + change;
 
     if (newStock < 0) {
-      throw new ValidationError('Недостатньо товару на складі');
+      throw new ValidationError('Insufficient stock');
     }
 
     return this.updateProduct(id, {
@@ -90,9 +90,9 @@ export const productsService = {
       const product = await this.getProductById(item.product_id);
 
       if (!product.available) {
-        errors.push(`${product.name} недоступний`);
+        errors.push(`${product.name} is unavailable`);
       } else if (product.stock < item.quantity) {
-        errors.push(`${product.name}: недостатньо на складі (доступно: ${product.stock})`);
+        errors.push(`${product.name}: insufficient stock (available: ${product.stock})`);
       }
     }
 

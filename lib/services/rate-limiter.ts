@@ -36,7 +36,7 @@ export function rateLimit(key: string, maxAttempts: number, windowMs: number): b
 export function rateLimitMiddleware(key: string, maxAttempts = 5, windowMs = 60_000) {
   if (!rateLimit(key, maxAttempts, windowMs)) {
     return Response.json(
-      { error: 'Забагато запитів. Спробуйте пізніше.' },
+      { error: 'Too many requests. Try again later.' },
       { status: 429 }
     );
   }

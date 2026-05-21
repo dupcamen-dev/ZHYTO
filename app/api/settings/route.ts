@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     
     if (!body.key || !body.value) {
-      throw new ValidationError('key та value обов\'язкові');
+      throw new ValidationError('key and value are required');
     }
 
     const { data, error } = await adminDb()

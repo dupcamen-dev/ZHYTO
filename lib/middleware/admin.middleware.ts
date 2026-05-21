@@ -14,7 +14,7 @@ export async function requireAdmin(request: Request): Promise<User> {
     .maybeSingle();
 
   if (error || !profile || profile.role !== 'admin') {
-    throw new AuthorizationError('Потрібні права адміністратора');
+    throw new AuthorizationError('Admin access required');
   }
 
   return user;

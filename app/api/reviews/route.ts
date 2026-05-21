@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       .maybeSingle();
 
     if (!existingOrder) {
-      throw new ValidationError('Ви повинні мати хоча б одне замовлення, щоб залишити відгук');
+      throw new ValidationError('You must have at least one order to leave a review');
     }
 
     const userName = body.user_name || user.email;

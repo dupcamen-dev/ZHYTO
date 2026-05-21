@@ -25,7 +25,7 @@ export const ordersService = {
       .maybeSingle();
 
     if (error || !data) {
-      throw new NotFoundError('Замовлення не знайдено');
+      throw new NotFoundError('Order not found');
     }
 
     return data;
@@ -67,7 +67,7 @@ export const ordersService = {
       .maybeSingle();
 
     if (!oldOrder) {
-      throw new NotFoundError('Замовлення не знайдено');
+      throw new NotFoundError('Order not found');
     }
 
     const oldStatus = oldOrder.status;
@@ -80,7 +80,7 @@ export const ordersService = {
       .maybeSingle();
 
     if (error || !data) {
-      throw new NotFoundError('Замовлення не знайдено');
+      throw new NotFoundError('Order not found');
     }
 
     const shouldDecrement = (status === 'confirmed' || status === 'completed')

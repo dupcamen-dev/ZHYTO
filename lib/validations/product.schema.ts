@@ -19,15 +19,15 @@ export const ProductSchema = z.object({
 });
 
 export const CreateProductSchema = z.object({
-  name: z.string().min(1, 'Назва обов\'язкова'),
-  description: z.string().min(10, 'Опис має бути мінімум 10 символів'),
-  price: z.number().positive('Ціна має бути позитивною'),
+  name: z.string().min(1, 'Name is required'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  price: z.number().positive('Price must be positive'),
   unit: z.string().default('/ kg'),
-  image: z.string().url('Невірний URL зображення').default('/images/hero-varenyky.jpg'),
+  image: z.string().url('Invalid image URL').default('/images/hero-varenyky.jpg'),
   badge: z.string().nullable().optional(),
   category: ProductCategorySchema,
   available: z.boolean().default(true),
-  stock: z.number().int().min(0, 'Залишок не може бути негативним').default(10),
+  stock: z.number().int().min(0, 'Stock cannot be negative').default(10),
   sort_order: z.number().int().default(0),
 });
 
@@ -37,5 +37,5 @@ export const CartItemSchema = z.object({
   product_id: z.number().int().positive(),
   name: z.string(),
   price: z.number().positive(),
-  quantity: z.number().int().positive('Кількість має бути більше 0'),
+  quantity: z.number().int().positive('Quantity must be greater than 0'),
 });

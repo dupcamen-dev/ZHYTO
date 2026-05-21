@@ -50,7 +50,7 @@ export const reviewsService = {
       .single();
 
     if (error || !data) {
-      throw new NotFoundError('Відгук не знайдено');
+      throw new NotFoundError('Review not found');
     }
 
     return data;
@@ -65,7 +65,7 @@ export const reviewsService = {
       .select();
 
     if (error || !data || data.length === 0) {
-      throw new NotFoundError('Відгук не знайдено');
+      throw new NotFoundError('Review not found');
     }
   },
 
