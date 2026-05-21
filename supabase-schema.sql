@@ -20,7 +20,7 @@ CREATE POLICY "Users can view own profile"
 DROP POLICY IF EXISTS "Admins can view all profiles" ON profiles;
 CREATE POLICY "Admins can view all profiles"
   ON profiles FOR SELECT
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
 CREATE POLICY "Users can insert own profile"
@@ -56,22 +56,22 @@ ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Anyone can view available products" ON products;
 CREATE POLICY "Anyone can view available products"
   ON products FOR SELECT
-  USING (available = true OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (available = true OR is_admin());
 
 DROP POLICY IF EXISTS "Admins can insert products" ON products;
 CREATE POLICY "Admins can insert products"
   ON products FOR INSERT
-  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  WITH CHECK (is_admin());
 
 DROP POLICY IF EXISTS "Admins can update products" ON products;
 CREATE POLICY "Admins can update products"
   ON products FOR UPDATE
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 DROP POLICY IF EXISTS "Admins can delete products" ON products;
 CREATE POLICY "Admins can delete products"
   ON products FOR DELETE
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 -- Seed products (only if table is empty)
 DO $$
@@ -114,7 +114,7 @@ ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own orders" ON orders;
 CREATE POLICY "Users can view own orders"
   ON orders FOR SELECT
-  USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (auth.uid() = user_id OR is_admin());
 
 DROP POLICY IF EXISTS "Users can insert own orders" ON orders;
 CREATE POLICY "Users can insert own orders"
@@ -124,7 +124,7 @@ CREATE POLICY "Users can insert own orders"
 DROP POLICY IF EXISTS "Admins can update any order" ON orders;
 CREATE POLICY "Admins can update any order"
   ON orders FOR UPDATE
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at DESC);
@@ -151,17 +151,17 @@ CREATE POLICY "Public can read non-sensitive settings"
 DROP POLICY IF EXISTS "Admins can read all settings" ON settings;
 CREATE POLICY "Admins can read all settings"
   ON settings FOR SELECT
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 DROP POLICY IF EXISTS "Admins can upsert settings" ON settings;
 CREATE POLICY "Admins can upsert settings"
   ON settings FOR INSERT
-  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  WITH CHECK (is_admin());
 
 DROP POLICY IF EXISTS "Admins can update settings" ON settings;
 CREATE POLICY "Admins can update settings"
   ON settings FOR UPDATE
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 INSERT INTO settings (key, value) VALUES ('delivery', '{"min_order": 10, "free_threshold": 50, "fee": 5}')
 ON CONFLICT (key) DO NOTHING;
@@ -203,7 +203,7 @@ CREATE POLICY "Users can update own reviews"
 DROP POLICY IF EXISTS "Admins can delete any review" ON reviews;
 CREATE POLICY "Admins can delete any review"
   ON reviews FOR DELETE
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 CREATE INDEX IF NOT EXISTS idx_reviews_created_at ON reviews(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_reviews_approved ON reviews(approved);
@@ -225,12 +225,12 @@ ALTER TABLE stock_history ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Admins can view stock history" ON stock_history;
 CREATE POLICY "Admins can view stock history"
   ON stock_history FOR SELECT
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 DROP POLICY IF EXISTS "Admins can insert stock history" ON stock_history;
 CREATE POLICY "Admins can insert stock history"
   ON stock_history FOR INSERT
-  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  WITH CHECK (is_admin());
 
 CREATE INDEX IF NOT EXISTS idx_stock_history_product_id ON stock_history(product_id);
 CREATE INDEX IF NOT EXISTS idx_stock_history_created_at ON stock_history(created_at DESC);
@@ -263,7 +263,7 @@ CREATE POLICY "Anyone can view active promo codes"
 DROP POLICY IF EXISTS "Admins can manage promo codes" ON promo_codes;
 CREATE POLICY "Admins can manage promo codes"
   ON promo_codes FOR ALL
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  USING (is_admin());
 
 CREATE INDEX IF NOT EXISTS idx_promo_codes_code ON promo_codes(code);
 CREATE INDEX IF NOT EXISTS idx_promo_codes_active ON promo_codes(active);
@@ -292,7 +292,7 @@ CREATE POLICY "Users can view own order payments"
       WHERE orders.id = order_payments.order_id
       AND orders.user_id = auth.uid()
     )
-    OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+    OR is_admin()
   );
 
 DROP POLICY IF EXISTS "System can insert order payments" ON order_payments;
