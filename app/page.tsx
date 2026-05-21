@@ -1125,6 +1125,9 @@ export default function Home() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ delay: 0.15 + navLinks.length * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     >
+                      <span className="text-sm tracking-[0.15em] text-foreground/40 -mb-4">
+                        {user.email?.split('@')[0]}
+                      </span>
                       <Link
                         href="/account"
                         onClick={() => setMobileMenuOpen(false)}
