@@ -16,9 +16,11 @@ export function validateCsrf(request: Request): void {
 
   const source = origin || referer || '';
 
-  // Allow same-origin requests
-  const host = request.headers.get('host');
-  if (host && (source === `https://${host}` || source === `http://${host}`)) return;
+  // Allow same-origin requests — use request.url (reliable in Next.js serverless)
+  try {
+    const reqOrigin = new URL(request.url).origin;
+    if (source === reqOrigin) return;
+  } catch { /* ignore invalid url */ }
 
   if (ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed))) return;
 

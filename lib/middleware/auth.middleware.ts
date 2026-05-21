@@ -9,10 +9,12 @@ function checkCsrf(request: Request): void {
   const referer = request.headers.get('referer');
   if (!origin && !referer) return;
   const source = origin || referer || '';
-  // Allow same-origin requests
-  const host = request.headers.get('host');
-  if (host && (source === `https://${host}` || source === `http://${host}`)) return;
-  // Check explicit whitelist
+  // Allow same-origin requests — use request.url (reliable in Next.js serverless)
+  try {
+    const reqOrigin = new URL(request.url).origin;
+    if (source === reqOrigin) return;
+  } catch { /* ignore invalid url */ }
+  // Check explicit whitelist (set ALLOWED_ORIGINS env var)
   if (ALLOWED_ORIGINS.some(allowed => source.startsWith(allowed))) return;
   throw new AuthenticationError('CSRF: недозволене джерело запиту');
 }
