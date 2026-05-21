@@ -1,0 +1,9 @@
+name: Keep Supabase alive
+on:
+  schedule:
+    - cron: '0 0 */3 * *'
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -sS --retry 3 https://zhyto-tbag.vercel.app/api/ping
