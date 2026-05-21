@@ -64,7 +64,7 @@ export default function Home() {
   const { settings: delivery } = useDeliverySettings()
   const aboutRef = useRef<HTMLElement>(null)
   const reviewsRef = useRef<HTMLElement>(null)
-  const [progress, setProgress] = useState(0)
+  const progressRef = useRef(0)
   const [isMobile, setIsMobile] = useState(false)
   const [categoryOrder, setCategoryOrder] = useState<string[] | null>(null)
   const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
@@ -226,7 +226,7 @@ export default function Home() {
             const total = rect.height + wh
             const p = Math.max(0, Math.min(1, (wh - rect.top) / total))
             if (Math.round(p * 100) !== Math.round(lastProgress * 100)) {
-              setProgress(p)
+              progressRef.current = p
               lastProgress = p
             }
           }
@@ -908,7 +908,7 @@ export default function Home() {
       {/* Reviews Section */}
       <section id="reviews" ref={reviewsRef} className="py-28 lg:py-36 relative bg-black overflow-hidden">
         
-        <FloatingVarenyky progress={progress} isMobile={isMobile} />
+        <FloatingVarenyky progressRef={progressRef} isMobile={isMobile} />
 
         <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
           <motion.div
@@ -1373,7 +1373,22 @@ export default function Home() {
   )
 }
 
-const FloatingVarenyky = React.memo(function FloatingVarenyky({ progress, isMobile }: { progress: number; isMobile: boolean }) {
+const FloatingVarenyky = React.memo(function FloatingVarenyky({ progressRef, isMobile }: { progressRef: React.RefObject<number | null>; isMobile: boolean }) {
+  const [progress, setProgress] = React.useState(0)
+  const lastRef = React.useRef(0)
+  React.useEffect(() => {
+    let raf: number
+    const loop = () => {
+      raf = requestAnimationFrame(loop)
+      const p = progressRef.current ?? 0
+      if (Math.abs(p - lastRef.current) > 0.001) {
+        lastRef.current = p
+        setProgress(p)
+      }
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [progressRef])
   const data = [
     { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -5, finalMob: -45 },
     { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 40, finalMob: 0, hideMob: true },
