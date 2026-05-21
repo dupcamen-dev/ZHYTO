@@ -42,7 +42,7 @@ export default function Home() {
       unit: p.unit === '/ 600g' ? t.products.item : t.products.per,
     })),
   [lang])
-  const { cart, addToCart, removeFromCart, totalItems } = useCart()
+  const { cart, addToCart, removeFromCart, totalItems, keepOnly } = useCart()
   const { user, loading, signOut, signInWithGoogle } = useAuth()
   const [isAdmin, setIsAdmin] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -77,7 +77,7 @@ export default function Home() {
   useEffect(() => {
     supabase.from('products').select('*').order('sort_order').then(({ data, error }) => {
       if (!error && data && data.length > 0) {
-        setDbProducts(data.map(p => ({
+        const mapped = data.map(p => ({
           id: p.id,
           name: p.name,
           description: p.description,
@@ -95,10 +95,12 @@ export default function Home() {
           ingredients_en: p.ingredients_en,
           recipe_uk: p.recipe_uk,
           recipe_en: p.recipe_en,
-        })))
+        }))
+        setDbProducts(mapped)
+        keepOnly(mapped.map(p => p.id))
       }
     })
-  }, [])
+  }, [keepOnly])
 
   useEffect(() => {
     supabase.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).then(({ data }) => {

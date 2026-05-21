@@ -15,6 +15,7 @@ interface CartContextType {
   removeFromCart: (id: number) => void
   updateQuantity: (id: number, qty: number, maxQty?: number) => void
   clearCart: () => void
+  keepOnly: (validIds: number[]) => void
   totalItems: number
 }
 
@@ -96,10 +97,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('zhyto-cart')
   }, [])
 
+  const keepOnly = useCallback((validIds: number[]) => {
+    setCart(prev => {
+      const next: Cart = {}
+      for (const [id, item] of Object.entries(prev)) {
+        if (validIds.includes(Number(id))) {
+          next[Number(id)] = item
+        }
+      }
+      return next
+    })
+  }, [])
+
   const totalItems = Object.values(cart).reduce((a, b) => a + b.qty, 0)
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, keepOnly, totalItems }}>
       {children}
     </CartContext.Provider>
   )
