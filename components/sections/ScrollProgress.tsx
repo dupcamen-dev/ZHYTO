@@ -23,11 +23,11 @@ export default function ScrollProgress() {
   }, [])
 
   return (
-    <div className="fixed bottom-8 left-5 z-0 pointer-events-none hidden lg:block">
-      <div className="relative w-[1px] h-16 bg-foreground/10">
+    <div className="fixed bottom-8 left-5 z-10 pointer-events-none hidden lg:block">
+      <div className="relative w-[2px] h-16 bg-foreground/10 rounded-full">
         <div
           ref={barRef}
-          className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#c2a57b] to-transparent transition-none"
+          className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#c2a57b] to-[#c2a57b]/40 rounded-full transition-none shadow-[0_0_4px_#c2a57b60]"
           style={{ height: '0%' }}
         />
       </div>
