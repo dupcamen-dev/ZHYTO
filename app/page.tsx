@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { CartDrawer } from '@/components/cart-drawer'
 import { CheckoutModal } from '@/components/checkout-modal'
 import Header from '@/components/sections/Header'
+import ScrollProgress from '@/components/sections/ScrollProgress'
 import HeroSection from '@/components/sections/HeroSection'
 import ProductsSection from '@/components/sections/ProductsSection'
 import AboutSection from '@/components/sections/AboutSection'
@@ -105,6 +106,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
+      <ScrollProgress />
       <Header setCartOpen={setCartOpen} setSignInModalOpen={setSignInModalOpen} headerMode={headerMode} />
       <HeroSection />
       <ProductsSection onProductsChange={setActiveProducts} setCartOpen={setCartOpen} />
