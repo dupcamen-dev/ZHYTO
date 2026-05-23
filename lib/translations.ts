@@ -49,7 +49,8 @@ export const translations = {
       getInTouch: 'GET IN TOUCH',
     },
     delivery: {
-      heading: 'Delivery Info',
+      headingPrefix: 'Delivery ',
+      headingSuffix: 'Info',
       sameDay: 'Same Day Delivery',
       zones1to3: 'London Zones 1-3',
       nextDay: 'Next Day Delivery',
@@ -305,7 +306,8 @@ export const translations = {
       getInTouch: 'ЗВ\'ЯЖІТЬСЯ',
     },
     delivery: {
-      heading: 'Доставка',
+      headingPrefix: 'Доставка',
+      headingSuffix: '',
       sameDay: 'Доставка сьогодні',
       zones1to3: 'Лондон Зони 1-3',
       nextDay: 'Доставка завтра',

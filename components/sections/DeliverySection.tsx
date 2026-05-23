@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { img as imgPath } from '@/lib/constants'
 const img = imgPath
 import { useLanguage } from '@/components/language-context'
@@ -23,15 +24,20 @@ export default function DeliverySection() {
           >
             <div className="sm:px-12 py-16 relative">
               <h3 className="font-script text-5xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
-                {t.delivery.heading}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] w-[500px] aspect-[661/252] -z-10">
-                  <img
-                    src={img("/images/about-card.webp")}
-                    alt=""
-                    className="w-full h-full object-contain"
-                    draggable={false}
-                  />
-                </div>
+                {t.delivery.headingPrefix}
+                <span className="relative">
+                  {t.delivery.headingSuffix}
+                  {t.delivery.headingSuffix && (
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[calc(-50%+5px)] w-[300px] aspect-[661/252] -z-10">
+                      <Image
+                        src={img("/images/about-card.webp")}
+                        alt=""
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
+                </span>
               </h3>
               <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-24 lg:mt-32 max-w-[500px] mx-auto lg:mx-0 lg:ml-8">
                 <span className="text-foreground font-medium">{t.delivery.sameDay}</span>
