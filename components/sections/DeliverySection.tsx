@@ -26,7 +26,7 @@ export default function DeliverySection() {
                 {t.delivery.heading}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] w-[500px] aspect-[661/252] -z-10">
                   <img
-                    src={img("/images/delivery-art.webp")}
+                    src={img("/images/about-card.webp")}
                     alt=""
                     className="w-full h-full object-contain"
                     draggable={false}
