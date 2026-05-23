@@ -26,7 +26,7 @@ export default function ContactSection() {
               <span
                 className="font-script text-[1.15em] inline-block bg-no-repeat px-16 py-8 order-bg"
                 style={{
-                  backgroundImage: `url(${img("/images/contact-photo.png")})`,
+                  backgroundImage: `url(${img("/images/about-card.webp")})`,
                   backgroundSize: '115%',
                   color: '#1a1613',
                 }}

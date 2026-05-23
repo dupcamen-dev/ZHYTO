@@ -30,7 +30,7 @@ export default function HeroSection() {
             {t.hero.withSoul}
             <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[46%] w-[500%] h-[500%] -z-10">
               <Image
-                src={img("/images/hero-soul-bg.png")}
+                src={img("/images/about-card.webp")}
                 alt=""
                 fill
                 className="object-contain rotate-[5deg]"
