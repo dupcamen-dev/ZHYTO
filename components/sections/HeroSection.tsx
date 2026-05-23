@@ -26,14 +26,14 @@ export default function HeroSection() {
           className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-serif font-light leading-[1.1] mb-10 relative tracking-[0.05em]"
         >
           <span className="text-white block tracking-[0.2em] font-konstrukt">{t.hero.dumplings}</span>
-          <span className="font-script text-foreground text-[0.6em] uppercase relative inline-block tracking-[0.15em]">
+          <span className="font-script text-foreground text-[0.55em] uppercase relative inline-block tracking-[0.15em]">
             {t.hero.withSoul}
             <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[46%] w-[500%] h-[500%] -z-10">
               <Image
                 src={img("/images/about-card.webp")}
                 alt=""
                 fill
-                className="object-contain rotate-[5deg]"
+                className="object-contain"
                 priority
               />
             </div>
