@@ -418,8 +418,9 @@ export default function AdminProducts() {
 
       {/* Edit/Create modal */}
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm" onClick={() => setEditing(null)}>
-          <div className="bg-card border border-border/30 p-6 w-full max-w-lg mx-4 space-y-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-background/80 backdrop-blur-sm" onClick={() => setEditing(null)}>
+          <div className="min-h-full sm:min-h-screen flex items-center justify-center p-3 sm:p-4">
+            <div className="bg-card border border-border/30 p-6 w-full max-w-lg space-y-4" onClick={e => e.stopPropagation()}>
             <h2 className="font-serif text-xl text-foreground">{editing.id ? 'Edit Product' : 'Add Product'}</h2>
 
             {error && (
@@ -619,6 +620,7 @@ export default function AdminProducts() {
                 {saving ? 'SAVING...' : 'SAVE'}
               </button>
             </div>
+          </div>
           </div>
         </div>
       )}
