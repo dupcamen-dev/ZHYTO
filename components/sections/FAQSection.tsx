@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Minus, HelpCircle } from 'lucide-react'
+import Image from 'next/image'
+import { img as imgPath } from '@/lib/constants'
+const img = imgPath
 import { useLanguage } from '@/components/language-context'
 
 export default function FAQSection() {
@@ -19,7 +22,14 @@ export default function FAQSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-[14px] tracking-[0.35em] text-primary mb-5">{t.faq.heading}</p>
+          <p className="text-[14px] tracking-[0.35em] text-primary mb-5">
+            <span className="relative inline-block">
+              {t.faq.heading}
+              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[400%] -z-10">
+                <Image src={img("/images/about-card.webp")} alt="" fill className="object-contain" />
+              </div>
+            </span>
+          </p>
           <h2 className="text-5xl md:text-6xl font-serif font-light">
             <span className="font-script text-primary text-[1.15em]">{t.faq.got}</span>{" "}
             <span className="text-black">{t.faq.questions}</span>

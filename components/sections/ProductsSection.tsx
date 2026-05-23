@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Minus, Plus, X } from 'lucide-react'
-import { img } from '@/lib/constants'
+import Image from 'next/image'
+import { img as imgPath } from '@/lib/constants'
+const img = imgPath
 import { ImageCompare } from '@/components/image-compare'
 import { useCart } from '@/components/cart-context'
 import { useLanguage } from '@/components/language-context'
@@ -110,7 +112,14 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">{t.products.ourMenu}</p>
+            <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">
+              <span className="relative inline-block">
+                {t.products.ourMenu}
+                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[300%] -z-10">
+                  <Image src={img("/images/about-card.webp")} alt="" fill className="object-contain" />
+                </div>
+              </span>
+            </p>
 
           </motion.div>
 
