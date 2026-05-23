@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Truck, Save, Loader, Percent, X, Tag, FolderOpen } from 'lucide-react'
+import { Truck, Save, Loader, Percent, X, Tag, FolderOpen, Languages, RotateCcw } from 'lucide-react'
 import { toast } from 'sonner'
+import TextEditor from '@/components/text-editor'
+import { translations } from '@/lib/translations'
 
 const CATEGORY_KEYS = ['varenyky', 'syrnyky', 'pelmeni']
 
@@ -20,6 +22,9 @@ export default function AdminSettings() {
   const [promoLoaded, setPromoLoaded] = useState(false)
   const [categoryNames, setCategoryNames] = useState<Record<string, string>>({})
   const [categoryNamesLoaded, setCategoryNamesLoaded] = useState(false)
+  const [siteTexts, setSiteTexts] = useState<{ en: Record<string, unknown>; uk: Record<string, unknown> } | null>(null)
+  const [siteTextsLoaded, setSiteTextsLoaded] = useState(false)
+  const [siteTextsFromCode, setSiteTextsFromCode] = useState(false)
 
   useEffect(() => {
     if (!supabase) { setLoaded(true); return }
@@ -34,6 +39,18 @@ export default function AdminSettings() {
     supabase.from('settings').select('value').eq('key', 'categories_names').single().then(({ data }) => {
       if (data?.value) setCategoryNames(data.value as Record<string, string>)
       setCategoryNamesLoaded(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) { setSiteTextsLoaded(true); return }
+    supabase.from('settings').select('value').eq('key', 'site_texts').single().then(({ data }) => {
+      if (data?.value?.en && data?.value?.uk) {
+        setSiteTexts(data.value as { en: Record<string, unknown>; uk: Record<string, unknown> })
+      } else {
+        setSiteTexts(null)
+      }
+      setSiteTextsLoaded(true)
     })
   }, [])
 
@@ -282,6 +299,94 @@ export default function AdminSettings() {
                 ADD
               </button>
             </div>
+          </>
+        )}
+      </div>
+
+      {/* Site Texts */}
+      <div className="glass-card rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Languages className="w-6 h-6 text-primary" />
+          <h2 className="font-serif text-xl text-foreground">Site Texts</h2>
+        </div>
+
+        {!siteTextsLoaded ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader className="w-5 h-5 text-primary animate-spin" />
+          </div>
+        ) : (
+          <>
+            {!siteTexts || siteTextsFromCode ? (
+              <div className="prose prose-sm max-w-none mb-6">
+                <p className="text-muted-foreground">
+                  {siteTextsFromCode
+                    ? 'Editing from code defaults. Make your changes below and save to publish.'
+                    : 'No custom texts saved yet. Load from code to start editing.'}
+                </p>
+              </div>
+            ) : (
+              <div className="prose prose-sm max-w-none mb-6">
+                <p className="text-muted-foreground">
+                  Editing saved custom texts. Make your changes below and save to publish.
+                </p>
+              </div>
+            )}
+
+            {!siteTexts && !siteTextsFromCode && (
+              <button
+                onClick={() => {
+                  setSiteTexts({
+                    en: JSON.parse(JSON.stringify(translations.en)) as Record<string, unknown>,
+                    uk: JSON.parse(JSON.stringify(translations.uk)) as Record<string, unknown>,
+                  })
+                  setSiteTextsFromCode(true)
+                }}
+                className="flex items-center gap-2 px-6 py-3 bg-primary/10 text-primary rounded-lg text-sm tracking-[0.15em] hover:bg-primary/20 transition-colors cursor-pointer mb-6"
+              >
+                <RotateCcw className="w-4 h-4" />
+                LOAD FROM CODE
+              </button>
+            )}
+
+            {siteTexts && (
+              <>
+                <div className="max-h-[600px] overflow-y-auto border border-border/30 rounded-lg p-4 bg-background/50">
+                  <TextEditor
+                    en={siteTexts.en}
+                    uk={siteTexts.uk}
+                    onChange={(newEn, newUk) => setSiteTexts({ en: newEn, uk: newUk })}
+                  />
+                </div>
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={async () => {
+                      try {
+                        await upsertSetting('site_texts', siteTexts)
+                        setSiteTextsFromCode(false)
+                        toast.success('Site texts saved')
+                      } catch (e) {
+                        toast.error(e instanceof Error ? e.message : 'Failed to save')
+                      }
+                    }}
+                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    <Save className="w-4 h-4" />
+                    SAVE SITE TEXTS
+                  </button>
+                  {(siteTextsFromCode || !siteTexts) && (
+                    <button
+                      onClick={() => {
+                        setSiteTexts(null)
+                        setSiteTextsFromCode(false)
+                      }}
+                      className="flex items-center gap-2 px-6 py-3 border border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-border/20 transition-colors cursor-pointer"
+                    >
+                      CANCEL
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
