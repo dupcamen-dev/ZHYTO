@@ -18,8 +18,6 @@ export const translations = {
     },
     products: {
       ourMenu: 'OUR MENU',
-      crafted: 'Crafted',
-      withTradition: 'with tradition',
       categories: {
         varenyky: 'Varenyky',
         varenykyDesc: 'Classic Ukrainian dumplings',
@@ -46,8 +44,6 @@ export const translations = {
     },
     about: {
       ourStory: 'OUR STORY',
-      tasteOf: 'A taste of',
-      home: 'home',
       para1: 'Every dumpling we create carries generations of tradition. Using recipes passed down through my family, I bring authentic Ukrainian flavours to London, one handcrafted piece at a time.',
       para2: 'Each batch is made with locally sourced ingredients and the same love my grandmother put into every meal. No shortcuts, no compromises \u2014 just pure, honest food.',
       getInTouch: 'GET IN TOUCH',
@@ -61,10 +57,6 @@ export const translations = {
       minOrder: 'Minimum Order',
       freeDelivery: 'Free Delivery',
       ordersOver: 'Orders over',
-      fresh: 'Fresh',
-      toYourDoor: 'to your door',
-      para1: 'Our dumplings are flash-frozen to preserve freshness and delivered in insulated packaging. Simply cook from frozen in 5-7 minutes.',
-      para2: 'We deliver across London, bringing the taste of authentic Ukrainian cuisine directly to your kitchen.',
     },
     faq: {
       heading: 'FAQ',
@@ -282,8 +274,6 @@ export const translations = {
     },
     products: {
       ourMenu: 'МЕНЮ',
-      crafted: 'Творіння',
-      withTradition: 'з традицією',
       categories: {
         varenyky: 'Вареники',
         varenykyDesc: 'Класичні українські вареники',
@@ -310,8 +300,6 @@ export const translations = {
     },
     about: {
       ourStory: 'НАША ІСТОРІЯ',
-      tasteOf: 'Смак',
-      home: 'дому',
       para1: 'Кожен вареник, який ми створюємо, несе в собі покоління традицій. Використовуючи рецепти, передані в моїй родині, я приношу автентичні українські смаки до Лондону, один шматочок за раз.',
       para2: 'Кожна партія готується з місцевих інгредієнтів і з тією ж любов\'ю, яку моя бабуся вкладала в кожну страву. Жодних скорочень, жодних компромісів — просто чиста, чесна їжа.',
       getInTouch: 'ЗВ\'ЯЖІТЬСЯ',
@@ -325,10 +313,6 @@ export const translations = {
       minOrder: 'Мінімальне замовлення',
       freeDelivery: 'Безкоштовна доставка',
       ordersOver: 'Замовлення від',
-      fresh: 'Свіже',
-      toYourDoor: 'до ваших дверей',
-      para1: 'Наші вареники швидко заморожуються для збереження свіжості та доставляються в ізольованій упаковці. Просто приготуйте замороженими за 5-7 хвилин.',
-      para2: 'Ми доставляємо по всьому Лондону, приносячи смак автентичної української кухні просто на вашу кухню.',
     },
     faq: {
       heading: 'ПИТАННЯ',

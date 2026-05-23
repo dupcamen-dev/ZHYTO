@@ -111,10 +111,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
             className="text-center mb-20"
           >
             <p className="text-[14px] tracking-[0.35em] text-foreground mb-5">{t.products.ourMenu}</p>
-            <h2 className="text-5xl md:text-6xl font-serif font-light">
-              <span className="font-script text-[1.15em] text-primary uppercase">{t.products.crafted}</span>{" "}
-              <span className="text-black">{t.products.withTradition}</span>
-            </h2>
+
           </motion.div>
 
           {(categoryOrder || ['varenyky', 'syrnyky', 'pelmeni']).map((key: string, catIndex: number) => {

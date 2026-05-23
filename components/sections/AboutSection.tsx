@@ -32,11 +32,6 @@ export default function AboutSection() {
             className="order-1 lg:order-1"
           >
             <p className="text-[13px] tracking-[0.35em] text-primary mb-5">{t.about.ourStory}</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
-              <span className="text-foreground">{t.about.tasteOf}</span>
-              <br />
-              <span className="font-script text-primary text-[1.15em]">{t.about.home}</span>
-            </h2>
             <div className="w-10 h-px bg-primary/60 mb-10" />
             <p className="text-muted-foreground leading-[1.9] mb-6 text-xl">
               {t.about.para1}

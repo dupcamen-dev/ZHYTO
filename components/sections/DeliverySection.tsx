@@ -13,7 +13,7 @@ export default function DeliverySection() {
   return (
     <section id="delivery" className="py-28 lg:py-36 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 lg:px-10">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="flex justify-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -44,26 +44,6 @@ export default function DeliverySection() {
                 <span className="text-foreground text-right">{t.delivery.ordersOver} &pound;{delivery.free_threshold}</span>
               </div>
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8 }}
-            className="order-1 lg:order-2 px-5 lg:px-0"
-          >
-            <h2 className="text-4xl md:text-5xl font-serif font-light mb-10">
-              <span className="font-script text-primary text-[1.15em]">{t.delivery.fresh}</span>{" "}
-              <span className="text-foreground">{t.delivery.toYourDoor}</span>
-            </h2>
-            <div className="w-10 h-px bg-primary/60 mb-10" />
-            <p className="text-muted-foreground leading-[1.9] mb-6 text-xl">
-              {t.delivery.para1}
-            </p>
-            <p className="text-muted-foreground leading-[1.9] text-xl">
-              {t.delivery.para2}
-            </p>
           </motion.div>
         </div>
       </div>
