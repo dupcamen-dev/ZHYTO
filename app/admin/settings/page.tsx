@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Truck, Save, Loader, Percent, X, Tag } from 'lucide-react'
+import { Truck, Save, Loader, Percent, X, Tag, FolderOpen } from 'lucide-react'
 import { toast } from 'sonner'
+
+const CATEGORY_KEYS = ['varenyky', 'syrnyky', 'pelmeni']
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState({ min_order: 10, free_threshold: 50, fee: 5 })
@@ -16,12 +18,22 @@ export default function AdminSettings() {
   const [newPromoType, setNewPromoType] = useState<'percentage' | 'free_delivery'>('percentage')
   const [newPromoValue, setNewPromoValue] = useState(10)
   const [promoLoaded, setPromoLoaded] = useState(false)
+  const [categoryNames, setCategoryNames] = useState<Record<string, string>>({})
+  const [categoryNamesLoaded, setCategoryNamesLoaded] = useState(false)
 
   useEffect(() => {
     if (!supabase) { setLoaded(true); return }
     supabase.from('settings').select('value').eq('key', 'delivery').single().then(({ data }) => {
       if (data?.value) setSettings(data.value as typeof settings)
       setLoaded(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) { setCategoryNamesLoaded(true); return }
+    supabase.from('settings').select('value').eq('key', 'categories_names').single().then(({ data }) => {
+      if (data?.value) setCategoryNames(data.value as Record<string, string>)
+      setCategoryNamesLoaded(true)
     })
   }, [])
 
@@ -143,6 +155,50 @@ export default function AdminSettings() {
             >
               <Save className="w-4 h-4" />
               {saving ? 'SAVING...' : saved ? 'SAVED ✓' : 'SAVE SETTINGS'}
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Category Names */}
+      <div className="glass-card rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <FolderOpen className="w-6 h-6 text-primary" />
+          <h2 className="font-serif text-xl text-foreground">Category Names (Ukrainian)</h2>
+        </div>
+
+        {!categoryNamesLoaded ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader className="w-5 h-5 text-primary animate-spin" />
+          </div>
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {CATEGORY_KEYS.map(key => (
+                <div key={key}>
+                  <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-2 capitalize">{key}</label>
+                  <input
+                    value={categoryNames[key] || ''}
+                    onChange={e => setCategoryNames(f => ({ ...f, [key]: e.target.value }))}
+                    className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-3 text-base text-foreground focus:border-primary outline-none"
+                    placeholder={`Enter Ukrainian name for ${key}`}
+                  />
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  await upsertSetting('categories_names', categoryNames)
+                  toast.success('Category names saved')
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : 'Failed to save')
+                }
+              }}
+              className="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors cursor-pointer"
+            >
+              <Save className="w-4 h-4" />
+              SAVE CATEGORY NAMES
             </button>
           </>
         )}

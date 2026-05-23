@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const db = getSupabaseAdmin();
-    const keys = ['delivery', 'categories', 'categories_desc', 'promo_codes'];
+    const keys = ['delivery', 'categories', 'categories_desc', 'categories_names', 'promo_codes'];
 
     const { data, error } = await db
       .from('settings')
