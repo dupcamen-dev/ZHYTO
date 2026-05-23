@@ -53,7 +53,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-xl sm:text-2xl md:text-3xl text-[#f5ead6] leading-[1.8] mb-12 max-w-2xl mx-auto"
         >
-          {t.hero.description}
+          {t.hero.description}<br />{t.hero.description2}
         </motion.p>
 
         <motion.div

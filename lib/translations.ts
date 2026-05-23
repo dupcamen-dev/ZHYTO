@@ -11,7 +11,8 @@ export const translations = {
     hero: {
       dumplings: 'Dumplings',
       withSoul: 'with soul',
-      description: 'artisian homemade varenyky [ukrainian dumplings] delivered across London',
+      description: 'artisian homemade varenyky [ukrainian dumplings]',
+      description2: 'delivered across London',
       orderNow: 'ORDER NOW',
       scroll: 'SCROLL',
     },
@@ -274,7 +275,8 @@ export const translations = {
     hero: {
       dumplings: 'Вареники',
       withSoul: 'з душею',
-      description: 'домашні вареники ручної роботи з доставкою по всьому Лондону',
+      description: 'домашні вареники ручної роботи',
+      description2: 'з доставкою по всьому Лондону',
       orderNow: 'ЗАМОВИТИ',
       scroll: 'ГОРТАЙТЕ',
     },
