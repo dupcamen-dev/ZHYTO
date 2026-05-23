@@ -11,7 +11,7 @@ export const translations = {
     hero: {
       dumplings: 'Dumplings',
       withSoul: 'with soul',
-      description: 'We create premium dumplings using natural ingredients and traditional recipes. Taste the heritage in every bite.',
+      description: 'artisian homemade varenyky [ukrainian dumplings] delivered across London',
       orderNow: 'ORDER NOW',
       scroll: 'SCROLL',
     },
@@ -274,7 +274,7 @@ export const translations = {
     hero: {
       dumplings: 'Вареники',
       withSoul: 'з душею',
-      description: 'Ми створюємо преміальні вареники з натуральних інгредієнтів за традиційними рецептами. Відчуйте спадщину в кожному шматочку.',
+      description: 'домашні вареники ручної роботи з доставкою по всьому Лондону',
       orderNow: 'ЗАМОВИТИ',
       scroll: 'ГОРТАЙТЕ',
     },
