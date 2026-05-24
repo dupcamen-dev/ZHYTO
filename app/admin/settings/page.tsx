@@ -503,7 +503,9 @@ export default function AdminSettings() {
                   if (!file) return
                   const url = await uploadImage(file)
                   if (url) {
-                    setAboutImages([...(aboutImages || []), { src: url, name: '' }])
+                    setAboutImages(prev => [...(prev || []), { src: url, name: '' }])
+                  } else {
+                    toast.error('Failed to upload image')
                   }
                   e.target.value = ''
                 }}
@@ -523,6 +525,8 @@ export default function AdminSettings() {
                   const newImages = [...aboutImages]
                   newImages[carouselEditIndex] = { ...newImages[carouselEditIndex], src: url }
                   setAboutImages(newImages)
+                } else {
+                  toast.error('Failed to upload image')
                 }
                 setCarouselEditIndex(null)
                 e.target.value = ''
