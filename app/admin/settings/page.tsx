@@ -30,6 +30,8 @@ export default function AdminSettings() {
   const [aboutImagesLoaded, setAboutImagesLoaded] = useState(false)
   const cardInputRef = useRef<HTMLInputElement>(null)
   const carouselInputRef = useRef<HTMLInputElement>(null)
+  const addPhotoInputRef = useRef<HTMLInputElement>(null)
+  const [carouselEditIndex, setCarouselEditIndex] = useState<number | null>(null)
 
   useEffect(() => {
     if (!supabase) { setLoaded(true); return }
@@ -490,28 +492,14 @@ export default function AdminSettings() {
                       />
                       <div className="flex gap-2">
                         <button
-                          onClick={() => carouselInputRef.current?.click()}
+                          onClick={() => {
+                            setCarouselEditIndex(i)
+                            carouselInputRef.current?.click()
+                          }}
                           className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors cursor-pointer"
                         >
                           <Upload className="w-3 h-3" /> Change photo
                         </button>
-                        <input
-                          ref={i === 0 ? carouselInputRef : undefined}
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={async e => {
-                            const file = e.target.files?.[0]
-                            if (!file) return
-                            const url = await uploadImage(file)
-                            if (url) {
-                              const newImages = [...(aboutImages?.images || [])]
-                              newImages[i] = { ...newImages[i], src: url }
-                              setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
-                            }
-                            e.target.value = ''
-                          }}
-                        />
                         <button
                           onClick={() => {
                             const newImages = (aboutImages?.images || []).filter((_, j) => j !== i)
@@ -528,15 +516,47 @@ export default function AdminSettings() {
               </div>
 
               <button
-                onClick={() => {
-                  const newImages = [...(aboutImages?.images || []), { src: '', name: '' }]
-                  setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
-                }}
+                onClick={() => addPhotoInputRef.current?.click()}
                 className="mt-3 flex items-center gap-2 px-4 py-2 border border-dashed border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-border/20 transition-colors w-full justify-center cursor-pointer"
               >
                 <Plus className="w-4 h-4" /> ADD PHOTO
               </button>
+              <input
+                ref={addPhotoInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async e => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  const url = await uploadImage(file)
+                  if (url) {
+                    const newImages = [...(aboutImages?.images || []), { src: url, name: '' }]
+                    setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                  }
+                  e.target.value = ''
+                }}
+              />
             </div>
+
+            <input
+              ref={carouselInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={async e => {
+                const file = e.target.files?.[0]
+                if (!file || carouselEditIndex === null) return
+                const url = await uploadImage(file)
+                if (url && aboutImages) {
+                  const newImages = [...aboutImages.images]
+                  newImages[carouselEditIndex] = { ...newImages[carouselEditIndex], src: url }
+                  setAboutImages({ ...aboutImages, images: newImages })
+                }
+                setCarouselEditIndex(null)
+                e.target.value = ''
+              }}
+            />
 
             <button
               onClick={async () => {
