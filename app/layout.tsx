@@ -47,6 +47,7 @@ export const metadata: Metadata = {
   icons: {
     icon: `${BASE_PATH}/favicon.svg`,
     shortcut: `${BASE_PATH}/favicon.svg`,
+    apple: `${BASE_PATH}/images/Gemini_Generated_Image_hmwm3ehmwm3ehmwm.png`,
   },
 }
 

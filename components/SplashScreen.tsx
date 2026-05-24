@@ -41,7 +41,7 @@ export default function SplashScreen({ onReady }: { onReady: () => void }) {
       <div className="text-center">
         <div className="relative w-40 h-40 md:w-52 md:h-52 mx-auto mb-6">
           <Image
-            src={img("/images/Gemini_Generated_Image_hmwm3ehmwm3ehmwm.png")}
+            src={img("/images/dsfsjfos.png")}
             alt="zhyto"
             fill
             className="object-contain"

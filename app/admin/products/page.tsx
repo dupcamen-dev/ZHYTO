@@ -517,7 +517,33 @@ export default function AdminProducts() {
                     setDraggedId(null)
                     setDragOverId(null)
                   }}
-                  className={`p-4 sm:p-5 transition-colors ${
+                  onTouchStart={e => {
+                    const touch = e.touches[0]
+                    const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+                    const card = el?.closest('[data-product-id]') as HTMLElement
+                    if (card) setDraggedId(Number(card.dataset.productId))
+                  }}
+                  onTouchMove={e => {
+                    e.preventDefault()
+                    const touch = e.touches[0]
+                    const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+                    const card = el?.closest('[data-product-id]') as HTMLElement
+                    if (card) setDragOverId(Number(card.dataset.productId))
+                  }}
+                  onTouchEnd={e => {
+                    const touch = e.changedTouches[0]
+                    const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+                    const card = el?.closest('[data-product-id]') as HTMLElement
+                    if (card && draggedId !== null) {
+                      const dragged = products.find(p => p.id === draggedId)
+                      const target = products.find(p => p.id === Number(card.dataset.productId))
+                      if (dragged && target) handleDrop(dragged, target)
+                    }
+                    setDraggedId(null)
+                    setDragOverId(null)
+                  }}
+                  data-product-id={product.id}
+                  className={`p-4 sm:p-5 transition-colors touch-none select-none ${
                     !product.available ? 'opacity-50' : ''
                   } ${
                     dragOverId === product.id && draggedId !== product.id ? 'bg-primary/5' : ''
