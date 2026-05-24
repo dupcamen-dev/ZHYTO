@@ -26,7 +26,7 @@ export default function FAQSection() {
           <p className="text-[18px] tracking-[0.35em] mb-5">
             <span className="relative inline-block font-script text-black">
               {t.faq.heading}
-              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[400%] -z-10">
+              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[55%] w-[200%] h-[300%] -z-10">
                 <Image src={img("/images/about-card.webp")} alt="" fill className="object-fill" />
               </div>
             </span>
