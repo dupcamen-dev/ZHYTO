@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Dialog,
@@ -74,69 +74,32 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [promoCodes, setPromoCodes] = useState<Record<string, { type: 'percentage' | 'free_delivery'; value: number }>>({})
 
   const [postcodeInput, setPostcodeInput] = useState('')
-  const [addressResults, setAddressResults] = useState<{ line_1: string; line_2: string; postcode: string; city: string }[]>([])
-  const [lookingUp, setLookingUp] = useState(false)
-  const [lookupError, setLookupError] = useState('')
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [selectedIdx, setSelectedIdx] = useState(-1)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [postcodeInfo, setPostcodeInfo] = useState<{ district: string; region: string } | null>(null)
+  const [postcodeStatus, setPostcodeStatus] = useState<'idle' | 'looking_up' | 'valid' | 'invalid'>('idle')
 
   useEffect(() => {
-    if (postcodeInput.trim().length < 5) { setAddressResults([]); setShowDropdown(false); setLookupError(''); return }
+    if (postcodeInput.trim().length < 5) { setPostcodeStatus('idle'); setPostcodeInfo(null); return }
     const timer = setTimeout(async () => {
-      setLookingUp(true)
-      setLookupError('')
+      setPostcodeStatus('looking_up')
       try {
-        const res = await fetch(`/api/postcode-lookup?postcode=${encodeURIComponent(postcodeInput.trim())}`)
-        if (!res.ok) { setAddressResults([]); setShowDropdown(false); setLookupError(t.checkout.addressLookupError || 'Lookup failed'); return }
+        const clean = postcodeInput.trim().toUpperCase().replace(/\s+/g, '')
+        const res = await fetch(`https://api.postcodes.io/postcodes/${clean}`)
+        if (!res.ok) { setPostcodeStatus('invalid'); setPostcodeInfo(null); return }
         const data = await res.json()
-        setAddressResults(data.addresses || [])
-        const hasResults = data.addresses?.length > 0
-        setShowDropdown(hasResults)
-        if (!hasResults) setLookupError(t.checkout.noAddressesFound || 'No addresses found')
-        setSelectedIdx(-1)
-      } catch {
-        setAddressResults([])
-        setShowDropdown(false)
-        setLookupError(t.checkout.addressLookupError || 'Lookup failed')
-      }
-      finally { setLookingUp(false) }
-    }, 300)
+        setPostcodeInfo({
+          district: data.result.admin_district || data.result.region || '',
+          region: data.result.region || '',
+        })
+        setPostcodeStatus('valid')
+      } catch { setPostcodeStatus('invalid'); setPostcodeInfo(null) }
+    }, 400)
     return () => clearTimeout(timer)
   }, [postcodeInput])
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowDropdown(false)
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
 
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
     setPostcodeInput(val)
-    setLookupError('')
-    if (!val) { setShowDropdown(false); setAddressResults([]) }
-  }
-
-  const selectAddress = (addr: typeof addressResults[0]) => {
-    const parts = [addr.line_1]
-    if (addr.line_2) parts.push(addr.line_2)
-    parts.push(addr.city, addr.postcode)
-    setDeliveryAddress(parts.join(', '))
-    setShowDropdown(false)
-    setAddressResults([])
-    setPostcodeInput('')
-    setLookupError('')
-  }
-
-  const handlePostcodeKeyDown = (e: React.KeyboardEvent) => {
-    if (!showDropdown || addressResults.length === 0) return
-    if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIdx(i => Math.min(i + 1, addressResults.length - 1)) }
-    if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIdx(i => Math.max(i - 1, 0)) }
-    if (e.key === 'Enter' && selectedIdx >= 0) { e.preventDefault(); selectAddress(addressResults[selectedIdx]) }
-    if (e.key === 'Escape') { setShowDropdown(false) }
+    if (!val) { setPostcodeStatus('idle'); setPostcodeInfo(null) }
   }
 
   useEffect(() => {
@@ -342,7 +305,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       )}
 
       {/* Delivery address */}
-      <div className="space-y-1.5" ref={dropdownRef}>
+      <div className="space-y-1.5">
         <div className="relative">
           <Label className="text-[18px] text-foreground/60 tracking-[0.1em]">
             {t.checkout.postcodeLabel}
@@ -351,34 +314,38 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
             <input
               value={postcodeInput}
               onChange={handlePostcodeChange}
-              onKeyDown={handlePostcodeKeyDown}
-              onFocus={() => { if (addressResults.length > 0) setShowDropdown(true) }}
-              className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-[16px] text-foreground focus:border-primary outline-none pr-10"
+              className={`w-full bg-transparent border rounded-lg px-4 py-2.5 text-[16px] text-foreground focus:border-primary outline-none pr-10 ${
+                postcodeStatus === 'valid' ? 'border-green-500/50' : postcodeStatus === 'invalid' ? 'border-destructive/50' : 'border-border/50'
+              }`}
               placeholder={t.checkout.postcodePlaceholder}
             />
-            {lookingUp && (
+            {postcodeStatus === 'looking_up' && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
                 <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
               </div>
             )}
+            {postcodeStatus === 'valid' && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            )}
+            {postcodeStatus === 'invalid' && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-destructive">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+            )}
           </div>
-          {lookupError && !lookingUp && (
-            <p className="text-[14px] text-destructive mt-1">{lookupError}</p>
+          {postcodeStatus === 'valid' && postcodeInfo && (
+            <p className="text-[14px] text-green-500 mt-1">
+              {postcodeInfo.district}{postcodeInfo.region ? `, ${postcodeInfo.region}` : ''}
+            </p>
           )}
-          {showDropdown && addressResults.length > 0 && (
-            <div className="absolute z-50 left-0 right-0 top-full mt-1 max-h-48 overflow-y-auto bg-background border border-border/50 rounded-lg shadow-xl">
-              {addressResults.map((addr, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => selectAddress(addr)}
-                  onMouseEnter={() => setSelectedIdx(i)}
-                  className={`w-full text-left px-4 py-2.5 text-[14px] text-foreground hover:bg-primary/10 transition-colors cursor-pointer border-b border-border/10 last:border-0 ${i === selectedIdx ? 'bg-primary/10' : ''}`}
-                >
-                  {addr.line_1}{addr.line_2 ? `, ${addr.line_2}` : ''}, {addr.city}, {addr.postcode}
-                </button>
-              ))}
-            </div>
+          {postcodeStatus === 'invalid' && (
+            <p className="text-[14px] text-destructive mt-1">{t.checkout.postcodeInvalid || 'Invalid postcode'}</p>
           )}
         </div>
         <Label htmlFor="delivery-address" className="text-[18px] text-foreground/60 tracking-[0.1em]">

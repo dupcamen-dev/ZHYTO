@@ -18,7 +18,7 @@ interface HeaderProps {
 
 export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: HeaderProps) {
   const router = useRouter()
-  const { t, lang, toggleLang, setLang } = useLanguage()
+  const { t, lang, setLang } = useLanguage()
   const { totalItems } = useCart()
   const { user, loading, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -289,25 +289,6 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
                   </motion.button>
                 )
               )}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: 0.15 + (navLinks.length + 3) * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="flex items-center gap-1 border-2 border-foreground/20 rounded-full px-2 py-1"
-              >
-                {(['en', 'uk', 'pl'] as const).map(l => (
-                  <button
-                    key={l}
-                    onClick={() => { setLang(l); setMobileMenuOpen(false) }}
-                    className={`text-sm tracking-[0.15em] font-medium rounded-full px-3 py-1.5 transition-all cursor-pointer ${
-                      lang === l ? 'bg-primary text-primary-foreground' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'
-                    }`}
-                  >
-                    {l === 'uk' ? 'UA' : l.toUpperCase()}
-                  </button>
-                ))}
-              </motion.div>
             </motion.nav>
           </motion.div>
         )}

@@ -189,8 +189,7 @@ export const translations = {
       postcodeLabel: 'Postcode',
       postcodePlaceholder: 'e.g. SW1A 1AA',
       lookingUp: 'Looking up...',
-      noAddressesFound: 'No addresses found for this postcode',
-      addressLookupError: 'Could not look up address. Please type it manually.',
+      postcodeInvalid: 'Invalid postcode',
     },
     privacy: {
       title: 'Privacy Policy',
@@ -444,8 +443,7 @@ export const translations = {
       postcodeLabel: 'Поштовий індекс',
       postcodePlaceholder: 'напр. SW1A 1AA',
       lookingUp: 'Пошук...',
-      noAddressesFound: 'Адрес не знайдено для цього індексу',
-      addressLookupError: 'Не вдалося знайти адресу. Введіть вручну.',
+      postcodeInvalid: 'Невірний індекс',
     },
     privacy: {
       title: 'Політика конфіденційності',
@@ -699,8 +697,7 @@ export const translations = {
       postcodeLabel: 'Kod pocztowy',
       postcodePlaceholder: 'np. SW1A 1AA',
       lookingUp: 'Szukanie...',
-      noAddressesFound: 'Nie znaleziono adresów dla tego kodu',
-      addressLookupError: 'Nie udało się znaleźć adresu. Wpisz ręcznie.',
+      postcodeInvalid: 'Nieprawidłowy kod pocztowy',
     },
     privacy: {
       title: 'Polityka prywatności',
