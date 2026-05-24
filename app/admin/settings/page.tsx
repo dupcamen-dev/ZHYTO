@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { toast } from 'sonner'
 import TextEditor from '@/components/text-editor'
 import { translations } from '@/lib/translations'
+import { img } from '@/lib/constants'
 
 const CATEGORY_KEYS = ['varenyky', 'syrnyky', 'pelmeni']
 
