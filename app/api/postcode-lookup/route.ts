@@ -30,11 +30,18 @@ export async function GET(request: NextRequest) {
 
     const body = await res.json();
 
-    if (!body.result || !body.result.hits || body.result.hits.length === 0) {
+    let hits: any[] = []
+    if (Array.isArray(body.result)) {
+      hits = body.result
+    } else if (body.result?.hits) {
+      hits = body.result.hits
+    }
+
+    if (hits.length === 0) {
       return Response.json({ addresses: [] });
     }
 
-    const addresses = body.result.hits.map((h: any) => ({
+    const addresses = hits.map((h: any) => ({
       line_1: h.line_1 || '',
       line_2: h.line_2 || '',
       postcode: h.postcode || clean,
