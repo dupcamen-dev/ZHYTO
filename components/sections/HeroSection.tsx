@@ -18,7 +18,7 @@ export default function HeroSection() {
       style={{ opacity: heroOpacity, scale: heroScale }}
       className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
     >
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-20 sm:pt-24 md:pt-36 lg:pt-36">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-20 sm:pt-24 md:pt-28 lg:pt-28">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

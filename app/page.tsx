@@ -22,7 +22,7 @@ export default function Home() {
   const [activeProducts, setActiveProducts] = useState<any[]>([])
 
   const progressRef = useRef(0)
-  const [headerMode, setHeaderMode] = useState<'tall' | 'normal' | 'hidden'>('normal')
+  const [headerMode, setHeaderMode] = useState<'visible' | 'hidden'>('visible')
   const [isOnProducts, setIsOnProducts] = useState(false)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showScrollBottom, setShowScrollBottom] = useState(true)
@@ -72,10 +72,8 @@ export default function Home() {
             isOnProductsRef.current = false; setIsOnProducts(false)
           }
 
-          if (atTop && window.innerWidth >= 1024) {
-            if (headerModeRef.current !== 'tall') setHeaderMode('tall')
-          } else if (!goingDown || atBottom) {
-            if (headerModeRef.current !== 'normal') setHeaderMode('normal')
+          if (atTop || !goingDown || atBottom) {
+            if (headerModeRef.current !== 'visible') setHeaderMode('visible')
           } else if (goingDown && y >= productsTopRef.current - 100) {
             if (headerModeRef.current !== 'hidden') setHeaderMode('hidden')
           }
