@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Plus, Pencil, X, Check, Package, AlertCircle, Upload, FolderKanban, ChevronUp, ChevronDown } from 'lucide-react'
+import { Plus, Pencil, X, Package, AlertCircle, Upload, FolderKanban, ChevronUp, ChevronDown } from 'lucide-react'
 import { img } from '@/lib/constants'
 import { toast } from 'sonner'
 
@@ -319,6 +319,46 @@ export default function AdminProducts() {
     }
   }
 
+  const moveProduct = async (index: number, direction: -1 | 1) => {
+    const current = products[index]
+    const targetIndex = index + direction
+    if (targetIndex < 0 || targetIndex >= products.length) return
+    const target = products[targetIndex]
+    // only swap if same category
+    if (current.category !== target.category) return
+    if (!supabase) {
+      setProducts(prev => {
+        const next = [...prev]
+        const tmp = next[index].sort_order
+        next[index] = { ...next[index], sort_order: next[targetIndex].sort_order }
+        next[targetIndex] = { ...next[targetIndex], sort_order: tmp }
+        next.sort((a, b) => a.sort_order - b.sort_order)
+        return next
+      })
+      return
+    }
+    try {
+      const { data: { session } } = await supabase!.auth.getSession()
+      if (!session?.access_token) return
+      const tmp = current.sort_order
+      await Promise.all([
+        fetch('/api/admin/products', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+          body: JSON.stringify({ id: current.id, sort_order: target.sort_order }),
+        }),
+        fetch('/api/admin/products', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+          body: JSON.stringify({ id: target.id, sort_order: tmp }),
+        }),
+      ])
+      fetchProducts()
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to reorder')
+    }
+  }
+
   const deleteProduct = async (id: number) => {
     if (!confirm('Delete this product?')) return
     if (!supabase) {
@@ -491,16 +531,33 @@ export default function AdminProducts() {
                 </span>
               </div>
               <div className="flex items-center gap-2 justify-end sm:justify-start shrink-0 sm:ml-auto">
+                <div className="flex flex-col gap-0.5 mr-1">
+                  <button
+                    onClick={() => moveProduct(products.indexOf(product), -1)}
+                    disabled={products.indexOf(product) === 0 || products[products.indexOf(product) - 1]?.category !== product.category}
+                    className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-border/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default"
+                    title="Move up"
+                  >
+                    <ChevronUp className="w-3 h-3" />
+                  </button>
+                  <button
+                    onClick={() => moveProduct(products.indexOf(product), 1)}
+                    disabled={products.indexOf(product) === products.length - 1 || products[products.indexOf(product) + 1]?.category !== product.category}
+                    className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-border/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default"
+                    title="Move down"
+                  >
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
+                </div>
                 <button
                   onClick={() => toggleAvailable(product)}
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg border flex items-center justify-center transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border text-[11px] sm:text-xs tracking-[0.12em] font-medium transition-colors cursor-pointer whitespace-nowrap ${
                     product.available
-                      ? 'border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10'
-                      : 'border-border/50 text-muted-foreground hover:border-foreground/50'
+                      ? 'border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10'
+                      : 'border-border/50 text-muted-foreground hover:border-foreground/50 hover:text-foreground'
                   }`}
-                  title={product.available ? 'Disable' : 'Enable'}
                 >
-                  {product.available ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                  {product.available ? 'DISABLE' : 'ENABLE'}
                 </button>
                 <button
                   onClick={() => setEditing({ ...product })}
