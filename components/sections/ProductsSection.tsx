@@ -112,10 +112,10 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <p className="text-[14px] tracking-[0.35em] mb-5">
+            <p className="text-[28px] tracking-[0.35em] mb-5">
               <span className="relative inline-block font-script text-[#f5ead6]">
                 {t.products.ourMenu}
-                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[300%] -z-10">
+                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[600%] -z-10">
                   <Image src={img("/images/about-card.webp")} alt="" fill className="object-fill" />
                 </div>
               </span>
