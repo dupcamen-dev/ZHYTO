@@ -20,7 +20,7 @@ export default function AdminSettings() {
   const [newPromoType, setNewPromoType] = useState<'percentage' | 'free_delivery'>('percentage')
   const [newPromoValue, setNewPromoValue] = useState(10)
   const [promoLoaded, setPromoLoaded] = useState(false)
-  const [siteTexts, setSiteTexts] = useState<{ en: Record<string, unknown>; uk: Record<string, unknown> } | null>(null)
+  const [siteTexts, setSiteTexts] = useState<{ en: Record<string, unknown>; uk: Record<string, unknown>; pl: Record<string, unknown> } | null>(null)
   const [siteTextsLoaded, setSiteTextsLoaded] = useState(false)
   const [siteTextsFromCode, setSiteTextsFromCode] = useState(false)
   const [aboutImages, setAboutImages] = useState<{ src: string; name: string }[] | null>(null)
@@ -40,8 +40,8 @@ export default function AdminSettings() {
   useEffect(() => {
     if (!supabase) { setSiteTextsLoaded(true); return }
     supabase.from('settings').select('value').eq('key', 'site_texts').single().then(({ data }) => {
-      if (data?.value?.en && data?.value?.uk) {
-        setSiteTexts(data.value as { en: Record<string, unknown>; uk: Record<string, unknown> })
+      if (data?.value?.en && data?.value?.uk && data?.value?.pl) {
+        setSiteTexts(data.value as { en: Record<string, unknown>; uk: Record<string, unknown>; pl: Record<string, unknown> })
       } else {
         setSiteTexts(null)
       }
@@ -324,6 +324,7 @@ export default function AdminSettings() {
                   setSiteTexts({
                     en: JSON.parse(JSON.stringify(translations.en)) as Record<string, unknown>,
                     uk: JSON.parse(JSON.stringify(translations.uk)) as Record<string, unknown>,
+                    pl: JSON.parse(JSON.stringify((translations as any).pl)) as Record<string, unknown>,
                   })
                   setSiteTextsFromCode(true)
                 }}
@@ -340,7 +341,8 @@ export default function AdminSettings() {
                   <TextEditor
                     en={siteTexts.en}
                     uk={siteTexts.uk}
-                    onChange={(newEn, newUk) => setSiteTexts({ en: newEn, uk: newUk })}
+                    pl={siteTexts.pl}
+                    onChange={(newEn, newUk, newPl) => setSiteTexts({ en: newEn, uk: newUk, pl: newPl })}
                   />
                 </div>
                 <div className="flex gap-3 mt-6">

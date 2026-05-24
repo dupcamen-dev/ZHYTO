@@ -27,6 +27,10 @@ interface Product {
   recipe_en?: string | null
   ingredients_uk?: string | null
   ingredients_en?: string | null
+  name_pl?: string | null
+  description_pl?: string | null
+  recipe_pl?: string | null
+  ingredients_pl?: string | null
 }
 
 const defaultCategories = ['varenyky', 'syrnyky', 'pelmeni']
@@ -36,6 +40,7 @@ const emptyProduct = {
   image: '/images/syrnyky-new.webp', background_image: '', badge: null,
   category: 'varenyky', available: true, stock: 10, sort_order: 0,
   recipe_uk: '', recipe_en: '', ingredients_uk: '', ingredients_en: '',
+  name_pl: '', description_pl: '', recipe_pl: '', ingredients_pl: '',
 }
 
 export default function AdminProducts() {
@@ -49,6 +54,8 @@ export default function AdminProducts() {
   const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
   const [categoryNames, setCategoryNames] = useState<Record<string, string>>({})
   const [categoryDescUk, setCategoryDescUk] = useState<Record<string, string>>({})
+  const [categoryNamesPl, setCategoryNamesPl] = useState<Record<string, string>>({})
+  const [categoryDescPl, setCategoryDescPl] = useState<Record<string, string>>({})
   const [newCategory, setNewCategory] = useState('')
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -73,6 +80,12 @@ export default function AdminProducts() {
     })
     supabase.from('settings').select('value').eq('key', 'categories_desc_uk').single().then(({ data }) => {
       if (data?.value) setCategoryDescUk(data.value as Record<string, string>)
+    })
+    supabase.from('settings').select('value').eq('key', 'categories_names_pl').single().then(({ data }) => {
+      if (data?.value) setCategoryNamesPl(data.value as Record<string, string>)
+    })
+    supabase.from('settings').select('value').eq('key', 'categories_desc_pl').single().then(({ data }) => {
+      if (data?.value) setCategoryDescPl(data.value as Record<string, string>)
     })
   }
 
@@ -125,6 +138,32 @@ export default function AdminProducts() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
       body: JSON.stringify({ key: 'categories_desc_uk', value: next }),
+    })
+  }
+
+  const updateCategoryNamePl = async (cat: string, name: string) => {
+    const next = { ...categoryNamesPl, [cat]: name }
+    setCategoryNamesPl(next)
+    if (!supabase) return
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch('/api/admin/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ key: 'categories_names_pl', value: next }),
+    })
+  }
+
+  const updateCategoryDescPl = async (cat: string, desc: string) => {
+    const next = { ...categoryDescPl, [cat]: desc }
+    setCategoryDescPl(next)
+    if (!supabase) return
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch('/api/admin/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ key: 'categories_desc_pl', value: next }),
     })
   }
 
@@ -230,6 +269,8 @@ export default function AdminProducts() {
       available: editing.available ?? true, stock: editing.stock ?? 10,
       recipe_uk: editing.recipe_uk || null, recipe_en: editing.recipe_en || null,
       ingredients_uk: editing.ingredients_uk || null, ingredients_en: editing.ingredients_en || null,
+      name_pl: editing.name_pl || null, description_pl: editing.description_pl || null,
+      recipe_pl: editing.recipe_pl || null, ingredients_pl: editing.ingredients_pl || null,
     }
 
     if (!supabase) {
@@ -375,6 +416,18 @@ export default function AdminProducts() {
                     onChange={e => updateCategoryDescUk(cat, e.target.value)}
                     className="w-full sm:w-64 bg-transparent border border-border/20 rounded px-2 py-1 text-xs text-muted-foreground focus:border-primary outline-none"
                     placeholder="Ukrainian subtitle (e.g. Традиційні вареники з м'ясом)"
+                  />
+                  <input
+                    value={categoryNamesPl[cat] || ''}
+                    onChange={e => updateCategoryNamePl(cat, e.target.value)}
+                    className="w-full sm:w-64 bg-transparent border border-border/20 rounded px-2 py-1 text-xs text-muted-foreground focus:border-primary outline-none"
+                    placeholder="Polish name (e.g. Pierogi)"
+                  />
+                  <input
+                    value={categoryDescPl[cat] || ''}
+                    onChange={e => updateCategoryDescPl(cat, e.target.value)}
+                    className="w-full sm:w-64 bg-transparent border border-border/20 rounded px-2 py-1 text-xs text-muted-foreground focus:border-primary outline-none"
+                    placeholder="Polish subtitle (e.g. Tradycyjne pierogi z mięsem)"
                   />
                 </div>
               ))}
@@ -554,6 +607,42 @@ export default function AdminProducts() {
                   onChange={e => setEditing(f => ({ ...f, ingredients_en: e.target.value }))}
                   className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[80px]"
                   placeholder="Ingredients / composition in English"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Name (Polish)</label>
+                <input
+                  value={editing.name_pl || ''}
+                  onChange={e => setEditing(f => ({ ...f, name_pl: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none"
+                  placeholder="Nazwa produktu (po polsku)"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Description (Polish)</label>
+                <textarea
+                  value={editing.description_pl || ''}
+                  onChange={e => setEditing(f => ({ ...f, description_pl: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[60px]"
+                  placeholder="Opis produktu (po polsku)"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Recipe (Polish)</label>
+                <textarea
+                  value={editing.recipe_pl || ''}
+                  onChange={e => setEditing(f => ({ ...f, recipe_pl: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[80px]"
+                  placeholder="Instrukcje gotowania po polsku"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Ingredients (Polish)</label>
+                <textarea
+                  value={editing.ingredients_pl || ''}
+                  onChange={e => setEditing(f => ({ ...f, ingredients_pl: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[80px]"
+                  placeholder="Składniki / skład po polsku"
                 />
               </div>
               <div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, Menu, X, User, LogOut } from 'lucide-react'
+import { ShoppingCart, User, LogOut } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useCart } from '@/components/cart-context'
 import { useAuth } from '@/components/auth-context'
@@ -139,11 +139,22 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
               <motion.button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label={mobileMenuOpen ? t.header.closeMenu : t.header.openMenu}
-                className="flex w-11 h-11 rounded-full border-2 border-foreground/20 items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300"
+                className="relative w-11 h-11 rounded-full border-2 border-foreground/20 flex items-center justify-center hover:border-primary hover:bg-primary/5 transition-all duration-300"
                 whileHover={{ scale: 1.1 }}
-                whileTap={{ rotate: 90, scale: 0.95 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {mobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
+                <span className="flex flex-col items-center justify-center w-5 h-5 relative">
+                  <span
+                    className={`absolute block h-[2px] w-5 rounded-full bg-current transition-all duration-300 ${
+                      mobileMenuOpen ? 'top-1/2 -translate-y-1/2 rotate-45' : 'top-[3px]'
+                    }`}
+                  />
+                  <span
+                    className={`absolute block h-[2px] w-5 rounded-full bg-current transition-all duration-300 ${
+                      mobileMenuOpen ? 'top-1/2 -translate-y-1/2 -rotate-45' : 'bottom-[3px]'
+                    }`}
+                  />
+                </span>
               </motion.button>
             </div>
           </motion.div>
@@ -257,7 +268,7 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
                 onClick={toggleLang}
                 className="text-lg tracking-[0.25em] text-foreground/60 hover:text-primary transition-colors"
               >
-                {lang === 'en' ? 'UA' : 'EN'}
+                {lang === 'en' ? 'UK' : lang === 'uk' ? 'PL' : 'EN'}
               </motion.button>
             </motion.nav>
           </motion.div>

@@ -16,9 +16,11 @@ interface Product {
   name: string
   name_uk?: string | null
   name_en?: string | null
+  name_pl?: string | null
   description: string
   description_uk?: string | null
   description_en?: string | null
+  description_pl?: string | null
   price: number
   unit: string
   image: string
@@ -33,6 +35,8 @@ interface Product {
   ingredients_en: string
   recipe_uk: string
   recipe_en: string
+  recipe_pl: string
+  ingredients_pl: string
 }
 
 interface ProductsSectionProps {
@@ -48,6 +52,8 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
   const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
   const [categoryNames, setCategoryNames] = useState<Record<string, string>>({})
   const [categoryDescUk, setCategoryDescUk] = useState<Record<string, string>>({})
+  const [categoryNamesPl, setCategoryNamesPl] = useState<Record<string, string>>({})
+  const [categoryDescPl, setCategoryDescPl] = useState<Record<string, string>>({})
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   useEffect(() => {
@@ -61,9 +67,11 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
           name: p.name,
           name_uk: p.name_uk,
           name_en: p.name_en,
+          name_pl: p.name_pl,
           description: p.description,
           description_uk: p.description_uk,
           description_en: p.description_en,
+          description_pl: p.description_pl,
           price: Number(p.price),
           unit: p.unit,
           image: img(p.image),
@@ -78,6 +86,8 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
           ingredients_en: p.ingredients_en,
           recipe_uk: p.recipe_uk,
           recipe_en: p.recipe_en,
+          recipe_pl: p.recipe_pl,
+          ingredients_pl: p.ingredients_pl,
         }))
         setProducts(mapped)
         if (mapped.length > 0) keepOnly(mapped.map((p: Product) => p.id))
@@ -97,6 +107,8 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
         if (data.categories_desc) setCategoryDescriptions(data.categories_desc as Record<string, string>)
         if (data.categories_names) setCategoryNames(data.categories_names as Record<string, string>)
         if (data.categories_desc_uk) setCategoryDescUk(data.categories_desc_uk as Record<string, string>)
+        if (data.categories_names_pl) setCategoryNamesPl(data.categories_names_pl as Record<string, string>)
+        if (data.categories_desc_pl) setCategoryDescPl(data.categories_desc_pl as Record<string, string>)
       } catch {}
     }
     fetchSettings()
@@ -126,8 +138,8 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
           {(categoryOrder || ['varenyky', 'syrnyky', 'pelmeni']).map((key: string, catIndex: number) => {
             const catProducts = activeProducts.filter(p => p.category === key)
             if (catProducts.length === 0) return null
-            const label = (lang === 'uk' && categoryNames[key]) || (t.products.categories as any)[key] || key
-            const desc = (lang === 'uk' && categoryDescUk[key]) || categoryDescriptions[key] || ''
+            const label = (lang === 'uk' && categoryNames[key]) || (lang === 'pl' && categoryNamesPl[key]) || (t.products.categories as any)[key] || key
+            const desc = (lang === 'uk' && categoryDescUk[key]) || (lang === 'pl' && categoryDescPl[key]) || categoryDescriptions[key] || ''
             return (
               <div key={key} className={catIndex > 0 ? 'mt-16' : ''}>
                 <div className="animate-on-view mb-8">
@@ -168,7 +180,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
                         </div>
 
                         <button type="button" className="p-4 pt-5 w-full text-left group/btn transition-all duration-300 hover:bg-primary/5" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
-                          <h3 className="font-serif text-lg text-gray-900 leading-snug transition-colors duration-300 group-hover/btn:text-primary">{(product as any)[lang === 'uk' ? 'name_uk' : 'name_en'] || product.name}</h3>
+                          <h3 className="font-serif text-lg text-gray-900 leading-snug transition-colors duration-300 group-hover/btn:text-primary">{(product as any)[`name_${lang}`] || product.name}</h3>
                           <p className="text-sm text-gray-500 mt-1 transition-colors duration-300 group-hover/btn:text-primary/80">&pound;{product.price} {product.unit}</p>
                         </button>
                       </div>
@@ -216,8 +228,8 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
                 />
               </div>
 
-              <h3 className="font-serif text-2xl text-gray-900 mb-2">{(selectedProduct as any)[lang === 'uk' ? 'name_uk' : 'name_en'] || selectedProduct.name}</h3>
-              <p className="text-gray-600 text-[15px] leading-relaxed mb-4">{(selectedProduct as any)[lang === 'uk' ? 'description_uk' : 'description_en'] || selectedProduct.description}</p>
+              <h3 className="font-serif text-2xl text-gray-900 mb-2">{(selectedProduct as any)[`name_${lang}`] || selectedProduct.name}</h3>
+              <p className="text-gray-600 text-[15px] leading-relaxed mb-4">{(selectedProduct as any)[`description_${lang}`] || selectedProduct.description}</p>
 
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -226,17 +238,17 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
                 </div>
               </div>
 
-              {(selectedProduct as any)[lang === 'uk' ? 'ingredients_uk' : 'ingredients_en'] || selectedProduct.ingredients ? (
+              {(selectedProduct as any)[`ingredients_${lang}`] || selectedProduct.ingredients ? (
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">{t.productModal.ingredients}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{(selectedProduct as any)[lang === 'uk' ? 'ingredients_uk' : 'ingredients_en'] || selectedProduct.ingredients}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{(selectedProduct as any)[`ingredients_${lang}`] || selectedProduct.ingredients}</p>
                 </div>
               ) : null}
 
-              {(selectedProduct as any)[lang === 'uk' ? 'recipe_uk' : 'recipe_en'] || selectedProduct.cooking ? (
+              {(selectedProduct as any)[`recipe_${lang}`] || selectedProduct.cooking ? (
                 <div className="mb-6">
                   <h4 className="text-sm font-semibold text-gray-900 tracking-[0.15em] mb-1">{t.productModal.cookingInstructions}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{(selectedProduct as any)[lang === 'uk' ? 'recipe_uk' : 'recipe_en'] || selectedProduct.cooking}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{(selectedProduct as any)[`recipe_${lang}`] || selectedProduct.cooking}</p>
                 </div>
               ) : null}
 
