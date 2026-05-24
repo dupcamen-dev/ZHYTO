@@ -146,7 +146,7 @@ DROP POLICY IF EXISTS "Anyone can read settings" ON settings;
 DROP POLICY IF EXISTS "Public can read non-sensitive settings" ON settings;
 CREATE POLICY "Public can read non-sensitive settings"
   ON settings FOR SELECT
-  USING (key IN ('delivery', 'categories', 'categories_desc', 'categories_names', 'promo_codes', 'about_images'));
+  USING (key IN ('delivery', 'categories', 'categories_desc', 'categories_names', 'categories_desc_uk', 'promo_codes', 'about_images'));
 
 DROP POLICY IF EXISTS "Admins can read all settings" ON settings;
 CREATE POLICY "Admins can read all settings"

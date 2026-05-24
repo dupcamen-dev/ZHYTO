@@ -47,6 +47,8 @@ export default function AdminProducts() {
   const [successMsg, setSuccessMsg] = useState('')
   const [categories, setCategories] = useState<string[]>(defaultCategories)
   const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
+  const [categoryNames, setCategoryNames] = useState<Record<string, string>>({})
+  const [categoryDescUk, setCategoryDescUk] = useState<Record<string, string>>({})
   const [newCategory, setNewCategory] = useState('')
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -65,6 +67,12 @@ export default function AdminProducts() {
     })
     supabase.from('settings').select('value').eq('key', 'categories_desc').single().then(({ data }) => {
       if (data?.value) setCategoryDescriptions(data.value as Record<string, string>)
+    })
+    supabase.from('settings').select('value').eq('key', 'categories_names').single().then(({ data }) => {
+      if (data?.value) setCategoryNames(data.value as Record<string, string>)
+    })
+    supabase.from('settings').select('value').eq('key', 'categories_desc_uk').single().then(({ data }) => {
+      if (data?.value) setCategoryDescUk(data.value as Record<string, string>)
     })
   }
 
@@ -91,6 +99,32 @@ export default function AdminProducts() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
       body: JSON.stringify({ key: 'categories_desc', value: next }),
+    })
+  }
+
+  const updateCategoryName = async (cat: string, name: string) => {
+    const next = { ...categoryNames, [cat]: name }
+    setCategoryNames(next)
+    if (!supabase) return
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch('/api/admin/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ key: 'categories_names', value: next }),
+    })
+  }
+
+  const updateCategoryDescUk = async (cat: string, desc: string) => {
+    const next = { ...categoryDescUk, [cat]: desc }
+    setCategoryDescUk(next)
+    if (!supabase) return
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch('/api/admin/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ key: 'categories_desc_uk', value: next }),
     })
   }
 
@@ -329,6 +363,18 @@ export default function AdminProducts() {
                     onChange={e => updateCategoryDesc(cat, e.target.value)}
                     className="w-full sm:w-64 bg-transparent border border-border/20 rounded px-2 py-1 text-xs text-muted-foreground focus:border-primary outline-none"
                     placeholder="Subtitle (e.g. Traditional meat-filled dumplings)"
+                  />
+                  <input
+                    value={categoryNames[cat] || ''}
+                    onChange={e => updateCategoryName(cat, e.target.value)}
+                    className="w-full sm:w-64 bg-transparent border border-border/20 rounded px-2 py-1 text-xs text-muted-foreground focus:border-primary outline-none"
+                    placeholder="Ukrainian name (e.g. Вареники)"
+                  />
+                  <input
+                    value={categoryDescUk[cat] || ''}
+                    onChange={e => updateCategoryDescUk(cat, e.target.value)}
+                    className="w-full sm:w-64 bg-transparent border border-border/20 rounded px-2 py-1 text-xs text-muted-foreground focus:border-primary outline-none"
+                    placeholder="Ukrainian subtitle (e.g. Традиційні вареники з м'ясом)"
                   />
                 </div>
               ))}

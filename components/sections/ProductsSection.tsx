@@ -47,6 +47,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
   const [categoryOrder, setCategoryOrder] = useState<string[] | null>(null)
   const [categoryDescriptions, setCategoryDescriptions] = useState<Record<string, string>>({})
   const [categoryNames, setCategoryNames] = useState<Record<string, string>>({})
+  const [categoryDescUk, setCategoryDescUk] = useState<Record<string, string>>({})
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   useEffect(() => {
@@ -95,6 +96,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
         if (data.categories) setCategoryOrder(data.categories as string[])
         if (data.categories_desc) setCategoryDescriptions(data.categories_desc as Record<string, string>)
         if (data.categories_names) setCategoryNames(data.categories_names as Record<string, string>)
+        if (data.categories_desc_uk) setCategoryDescUk(data.categories_desc_uk as Record<string, string>)
       } catch {}
     }
     fetchSettings()
@@ -135,7 +137,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
             const catProducts = activeProducts.filter(p => p.category === key)
             if (catProducts.length === 0) return null
             const label = (lang === 'uk' && categoryNames[key]) || (t.products.categories as any)[key] || key
-            const desc = categoryDescriptions[key] || ''
+            const desc = (lang === 'uk' && categoryDescUk[key]) || categoryDescriptions[key] || ''
             return (
               <div key={key} className={catIndex > 0 ? 'mt-16' : ''}>
                 <motion.div
