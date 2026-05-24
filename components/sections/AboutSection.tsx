@@ -54,9 +54,14 @@ export default function AboutSection() {
             <p className="text-[39px] tracking-[0.35em] mb-0">
               <span className="relative inline-block font-script text-black">
                 {t.about.ourStory}
-                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[250%] h-[250%] -z-10">
-                  <Image src={img("/images/about-card.webp")} alt="" fill className="object-fill" />
-                </div>
+                <div 
+                  className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[600%] -z-10"
+                  style={{
+                    backgroundImage: `url(${img("/images/about-card.webp")})`,
+                    backgroundSize: '100% 100%',
+                    backgroundPosition: 'center',
+                  }}
+                />
               </span>
             </p>
             <div className="w-10 h-px bg-primary/60 mb-10" />
