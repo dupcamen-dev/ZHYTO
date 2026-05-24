@@ -87,7 +87,22 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
               </motion.button>
             </div>
 
-            {/* Right: User, Burger */}
+            {/* Language Selector - centered on mobile */}
+            <div className="flex sm:hidden items-center gap-0.5 border-2 border-foreground/20 rounded-full px-1 py-1">
+              {(['en', 'uk', 'pl'] as const).map(l => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  className={`text-[11px] tracking-[0.15em] font-medium rounded-full px-2.5 py-1 transition-all cursor-pointer ${
+                    lang === l ? 'bg-primary text-primary-foreground' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'
+                  }`}
+                >
+                  {l === 'uk' ? 'UA' : l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+
+            {/* Right: User, Language Desktop, Burger */}
             <div className="flex items-center gap-3">
               {/* User button */}
               {!loading && (
@@ -135,7 +150,7 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
                   </motion.button>
                 )
               )}
-              {/* Language Selector */}
+              {/* Language Selector - desktop */}
               <div className="hidden sm:flex items-center gap-0.5 border-2 border-foreground/20 rounded-full px-1 py-1">
                 {(['en', 'uk', 'pl'] as const).map(l => (
                   <button
@@ -274,16 +289,25 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
                   </motion.button>
                 )
               )}
-              <motion.button
+              <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: 0.15 + (navLinks.length + 3) * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                onClick={toggleLang}
-                className="text-lg tracking-[0.25em] text-foreground/60 hover:text-primary transition-colors"
+                className="flex items-center gap-1 border-2 border-foreground/20 rounded-full px-2 py-1"
               >
-                {lang === 'en' ? 'UA' : lang === 'uk' ? 'PL' : 'EN'}
-              </motion.button>
+                {(['en', 'uk', 'pl'] as const).map(l => (
+                  <button
+                    key={l}
+                    onClick={() => { setLang(l); setMobileMenuOpen(false) }}
+                    className={`text-sm tracking-[0.15em] font-medium rounded-full px-3 py-1.5 transition-all cursor-pointer ${
+                      lang === l ? 'bg-primary text-primary-foreground' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'
+                    }`}
+                  >
+                    {l === 'uk' ? 'UA' : l.toUpperCase()}
+                  </button>
+                ))}
+              </motion.div>
             </motion.nav>
           </motion.div>
         )}
