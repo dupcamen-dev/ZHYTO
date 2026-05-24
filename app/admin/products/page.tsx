@@ -517,33 +517,8 @@ export default function AdminProducts() {
                     setDraggedId(null)
                     setDragOverId(null)
                   }}
-                  onTouchStart={e => {
-                    const touch = e.touches[0]
-                    const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
-                    const card = el?.closest('[data-product-id]') as HTMLElement
-                    if (card) setDraggedId(Number(card.dataset.productId))
-                  }}
-                  onTouchMove={e => {
-                    e.preventDefault()
-                    const touch = e.touches[0]
-                    const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
-                    const card = el?.closest('[data-product-id]') as HTMLElement
-                    if (card) setDragOverId(Number(card.dataset.productId))
-                  }}
-                  onTouchEnd={e => {
-                    const touch = e.changedTouches[0]
-                    const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
-                    const card = el?.closest('[data-product-id]') as HTMLElement
-                    if (card && draggedId !== null) {
-                      const dragged = products.find(p => p.id === draggedId)
-                      const target = products.find(p => p.id === Number(card.dataset.productId))
-                      if (dragged && target) handleDrop(dragged, target)
-                    }
-                    setDraggedId(null)
-                    setDragOverId(null)
-                  }}
                   data-product-id={product.id}
-                  className={`p-4 sm:p-5 transition-colors touch-none select-none ${
+                  className={`p-4 sm:p-5 transition-colors ${
                     !product.available ? 'opacity-50' : ''
                   } ${
                     dragOverId === product.id && draggedId !== product.id ? 'bg-primary/5' : ''
@@ -553,7 +528,35 @@ export default function AdminProducts() {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
                     <div className="flex items-start gap-3 sm:gap-0 flex-1 min-w-0">
-                      <div className="flex items-center gap-2 text-muted-foreground/40 hover:text-muted-foreground/70 cursor-grab active:cursor-grabbing shrink-0 mt-1 mr-1 sm:mr-2">
+                      <div
+                        data-product-id={product.id}
+                        onTouchStart={e => {
+                          const touch = e.touches[0]
+                          const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+                          const card = el?.closest('[data-product-id]') as HTMLElement
+                          if (card) setDraggedId(Number(card.dataset.productId))
+                        }}
+                        onTouchMove={e => {
+                          e.preventDefault()
+                          const touch = e.touches[0]
+                          const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+                          const card = el?.closest('[data-product-id]') as HTMLElement
+                          if (card) setDragOverId(Number(card.dataset.productId))
+                        }}
+                        onTouchEnd={e => {
+                          const touch = e.changedTouches[0]
+                          const el = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+                          const card = el?.closest('[data-product-id]') as HTMLElement
+                          if (card && draggedId !== null) {
+                            const dragged = products.find(p => p.id === draggedId)
+                            const target = products.find(p => p.id === Number(card.dataset.productId))
+                            if (dragged && target) handleDrop(dragged, target)
+                          }
+                          setDraggedId(null)
+                          setDragOverId(null)
+                        }}
+                        className="flex items-center gap-2 text-muted-foreground/40 hover:text-muted-foreground/70 cursor-grab active:cursor-grabbing touch-none select-none shrink-0 mt-1 mr-1 sm:mr-2"
+                      >
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect y="2" width="14" height="2" rx="1"/><rect y="6" width="14" height="2" rx="1"/><rect y="10" width="14" height="2" rx="1"/></svg>
                       </div>
                       <div className="flex flex-col items-start shrink-0">
