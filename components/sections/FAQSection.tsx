@@ -22,7 +22,7 @@ export default function FAQSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-[14px] tracking-[0.35em] mb-5">
+          <p className="text-[18px] tracking-[0.35em] mb-5">
             <span className="relative inline-block font-script text-black">
               {t.faq.heading}
               <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[400%] -z-10">
