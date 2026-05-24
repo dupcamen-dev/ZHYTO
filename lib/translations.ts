@@ -7,10 +7,8 @@ export const translations = {
       delivery: 'DELIVERY',
       reviews: 'REVIEWS',
       faq: 'FAQ',
-      contact: 'CONTACT',
     },
     hero: {
-      dumplings: 'Dumplings',
       withSoul: 'with soul',
       description: 'artisian homemade varenyky [ukrainian dumplings]',
       description2: 'delivered across London',
@@ -62,15 +60,12 @@ export const translations = {
     },
     faq: {
       heading: 'GET IN TOUCH',
-      got: 'Got',
-      questions: 'questions?',
       items: [
         { q: 'How to cook?', a: 'Cook pelmeni and varenyky from frozen in boiling salted water for 5\u20137 minutes. For syrnyky, fry in butter over medium heat for 3\u20134 minutes per side until golden.' },
         { q: 'How to store?', a: 'Keep frozen. Our products stay fresh for up to 3 months in the freezer. Once thawed, do not refreeze. Always cook directly from frozen.' },
         { q: 'Delivery zones?', a: 'We deliver across all London zones. Same-day delivery available for Zones 1\u20133. Next-day delivery for all London and select surrounding areas.' },
         { q: 'How do I order?', a: 'Browse our menu, add items to your cart, checkout with your delivery details, and we\'ll confirm your order via email or phone.' },
       ],
-      stillQuestions: 'Still have questions?',
       getInTouch: 'Get in touch',
     },
     reviews: {
@@ -93,9 +88,6 @@ export const translations = {
       mustOrderFirst: 'You must place an order before leaving a review',
     },
     contact: {
-      getInTouch: 'GET IN TOUCH',
-      readyTo: 'Ready to',
-      order: 'order?',
       contactDesc: 'Contact us for orders, catering inquiries, or just to say hello.',
       orderNow: 'ORDER NOW',
       instagram: 'INSTAGRAM',
@@ -265,10 +257,8 @@ export const translations = {
       delivery: 'ДОСТАВКА',
       reviews: 'ВІДГУКИ',
       faq: 'ПИТАННЯ',
-      contact: 'КОНТАКТИ',
     },
     hero: {
-      dumplings: 'Вареники',
       withSoul: 'з душею',
       description: 'домашні вареники ручної роботи',
       description2: 'з доставкою по всьому Лондону',
@@ -320,15 +310,12 @@ export const translations = {
     },
     faq: {
       heading: "ЗВ'ЯЖІТЬСЯ",
-      got: 'Маєте',
-      questions: 'питання?',
       items: [
         { q: 'Як готувати?', a: 'Готуйте пельмені та вареники замороженими в киплячій підсоленій воді 5-7 хвилин. Сирники смажте на вершковому маслі на середньому вогні 3-4 хвилини з кожного боку до золотистого кольору.' },
         { q: 'Як зберігати?', a: 'Зберігайте замороженими. Наші продукти залишаються свіжими до 3 місяців у морозилці. Після розморожування не заморожуйте повторно. Завжди готуйте одразу замороженими.' },
         { q: 'Зони доставки?', a: 'Ми доставляємо по всіх зонах Лондона. Доставка того ж дня доступна для Зон 1-3. Доставка наступного дня для всього Лондона та окремих прилеглих районів.' },
         { q: 'Як замовити?', a: 'Перегляньте наше меню, додайте товари в кошик, оформте замовлення з вашими даними для доставки, і ми підтвердимо ваше замовлення електронною поштою або телефоном.' },
       ],
-      stillQuestions: 'Ще маєте питання?',
       getInTouch: 'Зв\'яжіться з нами',
     },
     reviews: {
@@ -351,9 +338,6 @@ export const translations = {
       mustOrderFirst: 'Спочатку потрібно зробити замовлення, щоб залишити відгук',
     },
     contact: {
-      getInTouch: 'ЗВ\'ЯЖІТЬСЯ',
-      readyTo: 'Готові',
-      order: 'замовити?',
       contactDesc: 'Зв\'яжіться з нами для замовлень, кейтерингу або просто щоб привітатися.',
       orderNow: 'ЗАМОВИТИ',
       instagram: 'INSTAGRAM',
@@ -523,10 +507,8 @@ export const translations = {
       delivery: 'DOSTAWA',
       reviews: 'RECENZJE',
       faq: 'FAQ',
-      contact: 'KONTAKT',
     },
     hero: {
-      dumplings: 'Pierogi',
       withSoul: 'z duszą',
       description: 'domowe pierogi rękodzieła [ukraińskie pierogi]',
       description2: 'z dostawą po całym Londynie',
@@ -578,15 +560,12 @@ export const translations = {
     },
     faq: {
       heading: 'SKONTAKTUJ SIĘ',
-      got: 'Masz',
-      questions: 'pytania?',
       items: [
         { q: 'Jak gotować?', a: 'Gotuj pierogi z zamrożenia w osolonej wrzącej wodzie przez 5-7 minut. Serniczki smaż na maśle na średnim ogniu po 3-4 minuty z każdej strony na złoty kolor.' },
         { q: 'Jak przechowywać?', a: 'Przechowuj zamrożone. Nasze produkty pozostają świeże do 3 miesięcy w zamrażarce. Po rozmrożeniu nie zamrażaj ponownie. Zawsze gotuj bezpośrednio z zamrożenia.' },
         { q: 'Strefy dostawy?', a: 'Dostarczamy we wszystkich strefach Londynu. Dostawa tego samego dnia dostępna dla Stref 1-3. Dostawa następnego dnia dla całego Londynu i wybranych okolic.' },
         { q: 'Jak zamówić?', a: 'Przeglądaj nasze menu, dodaj produkty do koszyka, przejdź do kasy z danymi do dostawy, a my potwierdzimy Twoje zamówienie e-mailem lub telefonicznie.' },
       ],
-      stillQuestions: 'Masz pytania?',
       getInTouch: 'Skontaktuj się z nami',
     },
     reviews: {
@@ -609,9 +588,6 @@ export const translations = {
       mustOrderFirst: 'Musisz złożyć zamówienie przed napisaniem recenzji',
     },
     contact: {
-      getInTouch: 'SKONTAKTUJ SIĘ',
-      readyTo: 'Gotowy',
-      order: 'zamówić?',
       contactDesc: 'Skontaktuj się z nami w sprawie zamówień, cateringu lub po prostu, żeby się przywitać.',
       orderNow: 'ZAMÓW TERAZ',
       instagram: 'INSTAGRAM',

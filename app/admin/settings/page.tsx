@@ -5,8 +5,8 @@ import { supabase } from '@/lib/supabase'
 import { Truck, Save, Loader, Percent, X, Tag, Languages, RotateCcw, Upload, Trash2, Camera, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
-import TextEditor from '@/components/text-editor'
 import { translations } from '@/lib/translations'
+import SiteTextsTabs from '@/components/SiteTextsTabs'
 import { img } from '@/lib/constants'
 
 export default function AdminSettings() {
@@ -337,42 +337,14 @@ export default function AdminSettings() {
 
             {siteTexts && (
               <>
-                <div className="max-h-[600px] overflow-y-auto border border-border/30 rounded-lg p-4 bg-background/50">
-                  <TextEditor
-                    en={siteTexts.en}
-                    uk={siteTexts.uk}
-                    pl={siteTexts.pl}
-                    onChange={(newEn, newUk, newPl) => setSiteTexts({ en: newEn, uk: newUk, pl: newPl })}
-                  />
-                </div>
-                <div className="flex gap-3 mt-6">
-                  <button
-                    onClick={async () => {
-                      try {
-                        await upsertSetting('site_texts', siteTexts)
-                        setSiteTextsFromCode(false)
-                        toast.success('Site texts saved')
-                      } catch (e) {
-                        toast.error(e instanceof Error ? e.message : 'Failed to save')
-                      }
-                    }}
-                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors cursor-pointer"
-                  >
-                    <Save className="w-4 h-4" />
-                    SAVE SITE TEXTS
-                  </button>
-                  {(siteTextsFromCode || !siteTexts) && (
-                    <button
-                      onClick={() => {
-                        setSiteTexts(null)
-                        setSiteTextsFromCode(false)
-                      }}
-                      className="flex items-center gap-2 px-6 py-3 border border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-border/20 transition-colors cursor-pointer"
-                    >
-                      CANCEL
-                    </button>
-                  )}
-                </div>
+                <SiteTextsTabs
+                  siteTexts={siteTexts}
+                  onChange={setSiteTexts}
+                  siteTextsFromCode={siteTextsFromCode}
+                  setSiteTextsFromCode={setSiteTextsFromCode}
+                  upsertSetting={upsertSetting}
+                  onCancel={() => { setSiteTexts(null); setSiteTextsFromCode(false) }}
+                />
               </>
             )}
           </>

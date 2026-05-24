@@ -13,9 +13,8 @@ export default function HeroSection() {
     <section className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background hero-parallax" style={{ contentVisibility: 'auto' } as React.CSSProperties}>
       <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-20 sm:pt-24 md:pt-28 lg:pt-28">
         <h1 className="hero-delay-1 text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-serif font-light leading-[1.1] mb-10 relative tracking-[0.05em]">
-          <span className="text-white block tracking-[0.2em] font-konstrukt">{t.hero.dumplings}</span>
-            <span className="font-script text-foreground text-[0.55em] uppercase relative inline-block tracking-[0.05em]">
-            {t.hero.withSoul}
+          <span className="font-script text-foreground text-[0.55em] uppercase relative inline-block tracking-[0.05em]">
+            zhyto
             <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[55%] w-[130%] h-[200%] -z-10">
               <Image
                 src={img("/images/about-card.webp")}
