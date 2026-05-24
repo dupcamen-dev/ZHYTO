@@ -88,29 +88,19 @@ export default function ReviewsSection({ setSignInModalOpen }: ReviewsSectionPro
     <section id="reviews" ref={reviewsRef} className="py-28 lg:py-36 relative bg-black overflow-hidden" style={{ contentVisibility: 'auto' }}>
       <FloatingVarenyky isMobile={isMobile} />
 
-      <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-serif font-light">
-            <span className="font-script text-cream text-[1.15em]">{t.reviews.whatOur}</span>{" "}
-            <span className="font-script text-cream text-[1.15em]">{t.reviews.customersSay}</span>
-          </h2>
-        </motion.div>
+        <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
+          <div className="animate-on-view text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-serif font-light">
+              <span className="font-script text-cream text-[1.15em]">{t.reviews.whatOur}</span>{" "}
+              <span className="font-script text-cream text-[1.15em]">{t.reviews.customersSay}</span>
+            </h2>
+          </div>
 
         {/* Reviews Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 stagger-children">
           {reviews.map((review, index) => (
-            <motion.div
+            <div
               key={review.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div className="bg-black/90 backdrop-blur-sm p-8 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex gap-1 mb-4">
@@ -129,7 +119,7 @@ export default function ReviewsSection({ setSignInModalOpen }: ReviewsSectionPro
                   <span className="text-cream text-sm font-medium">{review.user_name}</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 

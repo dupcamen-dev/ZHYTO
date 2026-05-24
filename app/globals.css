@@ -287,3 +287,72 @@ html, html * {
 button, a, [role="button"], input, select, textarea {
   touch-action: manipulation;
 }
+
+/* ── Scroll-Driven Animations ── */
+@supports ((animation-timeline: scroll()) and (animation-range: 0 1px)) {
+  @keyframes hero-parallax {
+    from { opacity: 1; scale: 1; }
+    to { opacity: 0; scale: 0.95; }
+  }
+  .hero-parallax { animation: hero-parallax linear both; animation-timeline: scroll(root); animation-range: 0 20%; }
+
+  @keyframes products-parallax {
+    from { translate: 0 200px; }
+    to { translate: 0 0; }
+  }
+  .products-parallax { animation: products-parallax linear both; animation-timeline: scroll(root); animation-range: 0 25%; }
+
+  @keyframes about-image-parallax {
+    from { translate: 0 -20%; }
+    to { translate: 0 20%; }
+  }
+  .about-image-parallax { animation: about-image-parallax linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+
+  @keyframes fade-in-up { from { opacity: 0; translate: 0 30px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes fade-in-left { from { opacity: 0; translate: -30px 0; } to { opacity: 1; translate: 0 0; } }
+  @keyframes fade-in-right { from { opacity: 0; translate: 30px 0; } to { opacity: 1; translate: 0 0; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  .animate-on-view { animation: fade-in-up linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .animate-on-view-left { animation: fade-in-left linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .animate-on-view-right { animation: fade-in-right linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .animate-fade-view { animation: fade-in linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+
+  .stagger-children > * { animation: fade-in-up linear both; animation-timeline: view(); }
+  .stagger-children > :nth-child(1) { animation-range: entry 0% entry 100%; }
+  .stagger-children > :nth-child(2) { animation-range: entry 10% entry 110%; }
+  .stagger-children > :nth-child(3) { animation-range: entry 20% entry 120%; }
+  .stagger-children > :nth-child(4) { animation-range: entry 30% entry 130%; }
+  .stagger-children > :nth-child(5) { animation-range: entry 40% entry 140%; }
+  .stagger-children > :nth-child(6) { animation-range: entry 50% entry 150%; }
+  .stagger-children > :nth-child(7) { animation-range: entry 60% entry 160%; }
+  .stagger-children > :nth-child(8) { animation-range: entry 70% entry 170%; }
+  .stagger-children > :nth-child(9) { animation-range: entry 80% entry 180%; }
+  .stagger-children > :nth-child(10) { animation-range: entry 90% entry 190%; }
+
+  .stagger-right > * { animation: fade-in-right linear both; animation-timeline: view(); }
+  .stagger-right > :nth-child(1) { animation-range: entry 0% entry 100%; }
+  .stagger-right > :nth-child(2) { animation-range: entry 10% entry 110%; }
+  .stagger-right > :nth-child(3) { animation-range: entry 20% entry 120%; }
+  .stagger-right > :nth-child(4) { animation-range: entry 30% entry 130%; }
+
+  .stagger-left > * { animation: fade-in-left linear both; animation-timeline: view(); }
+  .stagger-left > :nth-child(1) { animation-range: entry 0% entry 100%; }
+  .stagger-left > :nth-child(2) { animation-range: entry 10% entry 110%; }
+  .stagger-left > :nth-child(3) { animation-range: entry 20% entry 120%; }
+}
+
+/* Time-based entry animations for hero above-fold */
+@keyframes fade-in-up-time { from { opacity: 0; translate: 0 30px; } to { opacity: 1; translate: 0 0; } }
+@keyframes fade-in-time { from { opacity: 0; } to { opacity: 1; } }
+
+.hero-delay-1 { animation: fade-in-up-time 0.8s 0.2s backwards; }
+.hero-delay-2 { animation: fade-in-up-time 0.8s 0.4s backwards; }
+.hero-delay-3 { animation: fade-in-up-time 0.8s 0.6s backwards; }
+.hero-delay-4 { animation: fade-in-up-time 0.8s 0.8s backwards; }
+.hero-delay-5 { animation: fade-in-up-time 0.8s 1.0s backwards; }
+.hero-fade-delay-2 { animation: fade-in-time 0.8s 0.4s backwards; }
+
+/* Chevron bounce */
+@keyframes bounce-y { 0%, 100% { translate: 0 0; } 50% { translate: 0 6px; } }
+.chevron-bounce { animation: bounce-y 1.5s ease-in-out infinite; }

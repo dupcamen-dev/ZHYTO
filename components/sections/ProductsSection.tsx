@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Minus, Plus, X } from 'lucide-react'
 import Image from 'next/image'
 import { img as imgPath } from '@/lib/constants'
@@ -102,26 +102,16 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
     fetchSettings()
   }, [])
 
-  const { scrollYProgress } = useScroll()
-  const productsParallaxY = useTransform(scrollYProgress, [0, 0.25], [200, 0])
-
   const activeProducts = (products || []).filter(p => p.available !== false)
 
   return (
     <>
-      <motion.section
+      <section
         id="products"
-        style={{ y: productsParallaxY, contentVisibility: 'auto' } as any}
-        className="py-28 lg:py-36 relative z-20 section-orange"
+        className="py-28 lg:py-36 relative z-20 section-orange products-parallax"
       >
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-20"
-          >
+          <div className="animate-on-view text-center mb-20">
             <p className="text-[46px] tracking-[0.35em] mb-5">
               <span className="relative inline-block font-script text-black">
                 {t.products.ourMenu}
@@ -131,7 +121,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
               </span>
             </p>
 
-          </motion.div>
+          </div>
 
           {(categoryOrder || ['varenyky', 'syrnyky', 'pelmeni']).map((key: string, catIndex: number) => {
             const catProducts = activeProducts.filter(p => p.category === key)
@@ -140,25 +130,15 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
             const desc = (lang === 'uk' && categoryDescUk[key]) || categoryDescriptions[key] || ''
             return (
               <div key={key} className={catIndex > 0 ? 'mt-16' : ''}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: false }}
-                  transition={{ duration: 0.6 }}
-                  className="mb-8"
-                >
+                <div className="animate-on-view mb-8">
                   <h3 className="font-serif text-5xl md:text-4xl lg:text-5xl text-foreground mb-2">{label}</h3>
                   <p className="text-base text-muted-foreground">{desc}</p>
-                </motion.div>
+                </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 stagger-children">
                   {catProducts.map((product) => (
-                    <motion.div
+                    <div
                       key={product.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false }}
-                      transition={{ duration: 0.5 }}
                       className="group flex flex-col relative sm:pt-7"
                     >
                       {product.badge && (
@@ -192,14 +172,14 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
                           <p className="text-sm text-gray-500 mt-1 transition-colors duration-300 group-hover/btn:text-primary/80">&pound;{product.price} {product.unit}</p>
                         </button>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
             )
           })}
         </div>
-      </motion.section>
+      </section>
 
       {/* Product Modal */}
       <AnimatePresence>
