@@ -65,9 +65,9 @@ export default function AboutSection() {
             </div>
           </div>
 
-          <div className="animate-on-view-right relative order-2 lg:order-2">
-            <div className="relative min-h-[500px] lg:min-h-[800px] overflow-hidden">
-              <div className="about-image-parallax absolute inset-0">
+          <div className="relative order-2 lg:order-2">
+            <div className="about-image-parallax relative min-h-[500px] lg:min-h-[800px] overflow-hidden">
+              <div className="absolute inset-0">
                 <div className="relative w-full h-full">
                   <ImageCarousel
                     images={images.map(i => ({ src: img(i.src), alt: i.name }))}
