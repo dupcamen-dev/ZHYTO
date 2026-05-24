@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Dialog,
@@ -72,6 +72,62 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [promoCode, setPromoCode] = useState<string | null>(null)
   const [promoError, setPromoError] = useState('')
   const [promoCodes, setPromoCodes] = useState<Record<string, { type: 'percentage' | 'free_delivery'; value: number }>>({})
+
+  const [postcodeInput, setPostcodeInput] = useState('')
+  const [addressResults, setAddressResults] = useState<{ line_1: string; line_2: string; postcode: string; city: string }[]>([])
+  const [lookingUp, setLookingUp] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [selectedIdx, setSelectedIdx] = useState(-1)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (postcodeInput.trim().length < 5) { setAddressResults([]); setShowDropdown(false); return }
+    const timer = setTimeout(async () => {
+      setLookingUp(true)
+      try {
+        const res = await fetch(`/api/postcode-lookup?postcode=${encodeURIComponent(postcodeInput.trim())}`)
+        if (!res.ok) { setAddressResults([]); setShowDropdown(false); return }
+        const data = await res.json()
+        setAddressResults(data.addresses || [])
+        setShowDropdown(data.addresses?.length > 0)
+        setSelectedIdx(-1)
+      } catch { setAddressResults([]); setShowDropdown(false) }
+      finally { setLookingUp(false) }
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [postcodeInput])
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setShowDropdown(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setPostcodeInput(val)
+    if (!val) { setShowDropdown(false); setAddressResults([]) }
+  }
+
+  const selectAddress = (addr: typeof addressResults[0]) => {
+    const parts = [addr.line_1]
+    if (addr.line_2) parts.push(addr.line_2)
+    parts.push(addr.city, addr.postcode)
+    setDeliveryAddress(parts.join(', '))
+    setShowDropdown(false)
+    setAddressResults([])
+    setPostcodeInput('')
+  }
+
+  const handlePostcodeKeyDown = (e: React.KeyboardEvent) => {
+    if (!showDropdown || addressResults.length === 0) return
+    if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIdx(i => Math.min(i + 1, addressResults.length - 1)) }
+    if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIdx(i => Math.max(i - 1, 0)) }
+    if (e.key === 'Enter' && selectedIdx >= 0) { e.preventDefault(); selectAddress(addressResults[selectedIdx]) }
+    if (e.key === 'Escape') { setShowDropdown(false) }
+  }
 
   useEffect(() => {
     fetch('/api/public-settings')
@@ -276,7 +332,40 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       )}
 
       {/* Delivery address */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 relative" ref={dropdownRef}>
+        <Label className="text-[18px] text-foreground/60 tracking-[0.1em]">
+          {t.checkout.postcodeLabel}
+        </Label>
+        <div className="relative">
+          <input
+            value={postcodeInput}
+            onChange={handlePostcodeChange}
+            onKeyDown={handlePostcodeKeyDown}
+            onFocus={() => { if (addressResults.length > 0) setShowDropdown(true) }}
+            className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-[16px] text-foreground focus:border-primary outline-none pr-10"
+            placeholder={t.checkout.postcodePlaceholder}
+          />
+          {lookingUp && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+            </div>
+          )}
+        </div>
+        {showDropdown && addressResults.length > 0 && (
+          <div className="absolute z-50 left-0 right-0 top-full mt-1 max-h-48 overflow-y-auto bg-background border border-border/50 rounded-lg shadow-xl">
+            {addressResults.map((addr, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => selectAddress(addr)}
+                onMouseEnter={() => setSelectedIdx(i)}
+                className={`w-full text-left px-4 py-2.5 text-[14px] text-foreground hover:bg-primary/10 transition-colors cursor-pointer border-b border-border/10 last:border-0 ${i === selectedIdx ? 'bg-primary/10' : ''}`}
+              >
+                {addr.line_1}{addr.line_2 ? `, ${addr.line_2}` : ''}, {addr.city}, {addr.postcode}
+              </button>
+            ))}
+          </div>
+        )}
         <Label htmlFor="delivery-address" className="text-[18px] text-foreground/60 tracking-[0.1em]">
           {t.checkout.deliveryAddress}
         </Label>
