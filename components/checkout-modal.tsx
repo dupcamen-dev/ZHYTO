@@ -83,12 +83,13 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       setPostcodeStatus('looking_up')
       try {
         const clean = postcodeInput.trim().toUpperCase().replace(/\s+/g, '')
-        const res = await fetch(`https://api.postcodes.io/postcodes/${clean}`)
+        const res = await fetch(`/api/postcode-lookup?postcode=${clean}`)
         if (!res.ok) { setPostcodeStatus('invalid'); setPostcodeInfo(null); return }
         const data = await res.json()
+        if (!data.valid) { setPostcodeStatus('invalid'); setPostcodeInfo(null); return }
         setPostcodeInfo({
-          district: data.result.admin_district || data.result.region || '',
-          region: data.result.region || '',
+          district: data.district || '',
+          region: data.region || '',
         })
         setPostcodeStatus('valid')
       } catch { setPostcodeStatus('invalid'); setPostcodeInfo(null) }
