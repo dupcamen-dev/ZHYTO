@@ -2,7 +2,7 @@
 
 ## Overview
 
-The site runs on **Vercel** (production: `https://zhyto.vercel.app`).  
+The site runs on **Vercel** (production: `https://zhyto.london`).  
 Backed by **Supabase** (database, auth, storage) and **Stripe** (payments).
 
 ---
