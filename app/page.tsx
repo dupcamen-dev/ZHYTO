@@ -13,8 +13,10 @@ import FAQSection from '@/components/sections/FAQSection'
 import Footer from '@/components/sections/Footer'
 import ScrollButtons from '@/components/sections/ScrollButtons'
 import SignInModal from '@/components/sections/SignInModal'
+import SplashScreen from '@/components/SplashScreen'
 
 export default function Home() {
+  const [ready, setReady] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [signInModalOpen, setSignInModalOpen] = useState(false)
@@ -85,6 +87,10 @@ export default function Home() {
     timeout = setTimeout(update, 200)
     return () => clearTimeout(timeout)
   }, [])
+
+  if (!ready) {
+    return <SplashScreen onReady={() => setReady(true)} />
+  }
 
   return (
     <main className="min-h-screen bg-background">

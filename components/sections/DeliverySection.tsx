@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { img as imgPath } from '@/lib/constants'
 const img = imgPath
@@ -12,43 +11,38 @@ export default function DeliverySection() {
   const { settings: delivery } = useDeliverySettings()
 
   return (
-    <section id="delivery" className="py-16 lg:py-20 bg-background overflow-hidden" style={{ contentVisibility: 'auto' }}>
+    <section id="delivery" className="py-28 lg:py-36 relative section-orange" style={{ contentVisibility: 'auto' }}>
       <div className="max-w-7xl mx-auto px-5 lg:px-10">
-        <div className="flex justify-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8 }}
-            className="order-2 lg:order-1"
-          >
-            <div className="sm:px-12 py-8 relative">
-              <h3 className="font-script text-4xl md:text-3xl lg:text-4xl mb-3 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
-                {t.delivery.headingPrefix}
-                <span>{t.delivery.headingSuffix}</span>
-                {t.delivery.headingSuffix && (
-                  <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[55%] w-[140%] h-[280%] -z-10">
-                    <Image
-                      src={img("/images/about-card.webp")}
-                      alt=""
-                      fill
-                      className="object-fill"
-                    />
-                  </div>
-                )}
-              </h3>
-              <div className="grid grid-cols-2 gap-y-2 gap-x-6 text-base lg:text-lg mt-10 lg:mt-16 max-w-[500px] mx-auto lg:mx-0 lg:ml-8">
-                <span className="text-foreground font-medium">{t.delivery.sameDay}</span>
-                <span className="text-foreground text-right">{t.delivery.zones1to3}</span>
-                <span className="text-foreground font-medium">{t.delivery.nextDay}</span>
-                <span className="text-foreground text-right">{t.delivery.allLondon}</span>
-                <span className="text-foreground font-medium">{t.delivery.minOrder}</span>
-                <span className="text-foreground text-right">&pound;{delivery.min_order}</span>
-                <span className="text-foreground font-medium">{t.delivery.freeDelivery}</span>
-                <span className="text-foreground text-right">{t.delivery.ordersOver} &pound;{delivery.free_threshold}</span>
+        <div className="animate-on-view text-center mb-16">
+          <p className="text-[18px] tracking-[0.35em] mb-5">
+            <span className="relative inline-block font-script text-black">
+              {t.delivery.headingPrefix}{t.delivery.headingSuffix}
+              <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[55%] w-[200%] h-[300%] -z-10">
+                <Image src={img("/images/about-card.webp")} alt="" fill className="object-fill" />
               </div>
+            </span>
+          </p>
+        </div>
+
+        <div className="max-w-3xl mx-auto stagger-children">
+          <div className="grid grid-cols-2 gap-y-10 gap-x-6 md:gap-x-12">
+            <div className="text-center">
+              <p className="text-[13px] tracking-[0.2em] text-muted-foreground mb-2 uppercase">{t.delivery.sameDay}</p>
+              <p className="font-serif text-2xl md:text-3xl text-foreground">{t.delivery.zones1to3}</p>
             </div>
-          </motion.div>
+            <div className="text-center">
+              <p className="text-[13px] tracking-[0.2em] text-muted-foreground mb-2 uppercase">{t.delivery.nextDay}</p>
+              <p className="font-serif text-2xl md:text-3xl text-foreground">{t.delivery.allLondon}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-[13px] tracking-[0.2em] text-muted-foreground mb-2 uppercase">{t.delivery.minOrder}</p>
+              <p className="font-serif text-2xl md:text-3xl text-foreground">£{delivery.min_order}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-[13px] tracking-[0.2em] text-muted-foreground mb-2 uppercase">{t.delivery.freeDelivery}</p>
+              <p className="font-serif text-2xl md:text-3xl text-foreground">{t.delivery.ordersOver} £{delivery.free_threshold}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

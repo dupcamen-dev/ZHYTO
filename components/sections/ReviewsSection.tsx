@@ -209,7 +209,7 @@ const FloatingVarenyky = React.memo(function FloatingVarenyky({ isMobile }: { is
     let visible = false
 
     const calc = () => {
-      if (!visible) return
+      if (!visible) { ticking = false; return }
       const rect = el.getBoundingClientRect()
       const wh = window.innerHeight
       const total = rect.height + wh
@@ -226,6 +226,7 @@ const FloatingVarenyky = React.memo(function FloatingVarenyky({ isMobile }: { is
     const obs = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting
       if (!visible) { lastP.current = 0; setProgress(0) }
+      if (e.isIntersecting) calc()
     }, { rootMargin: '200px' })
     obs.observe(el)
 

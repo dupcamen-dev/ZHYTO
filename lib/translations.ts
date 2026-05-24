@@ -1,5 +1,6 @@
 export const translations = {
   en: {
+    general: { loading: 'Loading' },
     nav: {
       ourMenu: 'OUR MENU',
       aboutUs: 'ABOUT US',
@@ -257,6 +258,7 @@ export const translations = {
     },
   },
   uk: {
+    general: { loading: 'Завантаження' },
     nav: {
       ourMenu: 'МЕНЮ',
       aboutUs: 'ПРО НАС',
