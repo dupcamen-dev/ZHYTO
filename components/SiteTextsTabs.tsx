@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from 'react'
-import { Save } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Save, Download, Upload } from 'lucide-react'
 import { toast } from 'sonner'
 import TextEditor from '@/components/text-editor'
 
@@ -43,6 +43,7 @@ interface SiteTextsTabsProps {
 
 export default function SiteTextsTabs({ siteTexts, onChange, siteTextsFromCode, setSiteTextsFromCode, upsertSetting, onCancel }: SiteTextsTabsProps) {
   const [activeTab, setActiveTab] = useState(TABS[0].id)
+  const importRef = useRef<HTMLInputElement>(null)
 
   const tab = TABS.find(t => t.id === activeTab) || TABS[0]
 
@@ -79,7 +80,7 @@ export default function SiteTextsTabs({ siteTexts, onChange, siteTextsFromCode, 
         />
       </div>
 
-      <div className="flex gap-3 mt-6">
+      <div className="flex flex-wrap gap-3 mt-6">
         <button
           onClick={async () => {
             try {
@@ -105,6 +106,49 @@ export default function SiteTextsTabs({ siteTexts, onChange, siteTextsFromCode, 
             CANCEL
           </button>
         )}
+        <div className="flex-1" />
+        <button
+          onClick={() => {
+            const blob = new Blob([JSON.stringify(siteTexts, null, 2)], { type: 'application/json' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'site-texts.json'
+            a.click()
+            URL.revokeObjectURL(url)
+          }}
+          className="flex items-center gap-2 px-4 py-3 border border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:text-foreground hover:bg-border/20 transition-colors cursor-pointer"
+        >
+          <Download className="w-4 h-4" />
+          DOWNLOAD JSON
+        </button>
+        <input ref={importRef} type="file" accept=".json" className="hidden" onChange={e => {
+          const file = e.target.files?.[0]
+          if (!file) return
+          const reader = new FileReader()
+          reader.onload = (ev) => {
+            try {
+              const parsed = JSON.parse(ev.target?.result as string)
+              if (!parsed?.en || !parsed?.uk || !parsed?.pl) {
+                toast.error('Invalid JSON: must contain en, uk, pl objects')
+                return
+              }
+              onChange(parsed)
+              toast.success('Site texts imported')
+            } catch {
+              toast.error('Invalid JSON file')
+            }
+          }
+          reader.readAsText(file)
+          e.target.value = ''
+        }} />
+        <button
+          onClick={() => importRef.current?.click()}
+          className="flex items-center gap-2 px-4 py-3 border border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:text-foreground hover:bg-border/20 transition-colors cursor-pointer"
+        >
+          <Upload className="w-4 h-4" />
+          UPLOAD JSON
+        </button>
       </div>
     </div>
   )

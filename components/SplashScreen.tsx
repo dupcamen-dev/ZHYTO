@@ -44,7 +44,7 @@ export default function SplashScreen({ onReady }: { onReady: () => void }) {
             src={img("/images/Gemini_Generated_Image_hmwm3ehmwm3ehmwm.png")}
             alt="zhyto"
             fill
-            className="object-cover rounded-full"
+            className="object-contain"
             priority
           />
         </div>

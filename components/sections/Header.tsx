@@ -145,7 +145,7 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
                       lang === l ? 'bg-primary text-primary-foreground' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'
                     }`}
                   >
-                    {l.toUpperCase()}
+                    {l === 'uk' ? 'UA' : l.toUpperCase()}
                   </button>
                 ))}
               </div>
@@ -282,7 +282,7 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
                 onClick={toggleLang}
                 className="text-lg tracking-[0.25em] text-foreground/60 hover:text-primary transition-colors"
               >
-                {lang === 'en' ? 'UK' : lang === 'uk' ? 'PL' : 'EN'}
+                {lang === 'en' ? 'UA' : lang === 'uk' ? 'PL' : 'EN'}
               </motion.button>
             </motion.nav>
           </motion.div>

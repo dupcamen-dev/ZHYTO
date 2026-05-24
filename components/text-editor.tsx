@@ -82,6 +82,9 @@ export default function TextEditor({ en, uk, pl, onChange, depth = 0 }: TextEdit
         const ukVal = uk[key]
         const plVal = pl[key]
 
+        // skip if all three values are empty
+        if (!enVal && !ukVal && !plVal) return null
+
         // string leaf
         if (typeof enVal === 'string' && typeof ukVal === 'string' && typeof plVal === 'string') {
           return (
