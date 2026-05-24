@@ -95,7 +95,11 @@ export default function AdminSettings() {
       headers: { Authorization: `Bearer ${session.access_token}` },
       body: formData,
     })
-    if (!res.ok) return null
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Unknown error' }))
+      toast.error(`Upload failed: ${err.error || res.statusText}`)
+      return null
+    }
     const data = await res.json()
     return data.url || null
   }
@@ -504,8 +508,6 @@ export default function AdminSettings() {
                   const url = await uploadImage(file)
                   if (url) {
                     setAboutImages(prev => [...(prev || []), { src: url, name: '' }])
-                  } else {
-                    toast.error('Failed to upload image')
                   }
                   e.target.value = ''
                 }}
@@ -525,8 +527,6 @@ export default function AdminSettings() {
                   const newImages = [...aboutImages]
                   newImages[carouselEditIndex] = { ...newImages[carouselEditIndex], src: url }
                   setAboutImages(newImages)
-                } else {
-                  toast.error('Failed to upload image')
                 }
                 setCarouselEditIndex(null)
                 e.target.value = ''
