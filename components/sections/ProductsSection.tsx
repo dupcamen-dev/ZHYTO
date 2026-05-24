@@ -14,7 +14,11 @@ import { toast } from 'sonner'
 interface Product {
   id: number
   name: string
+  name_uk?: string | null
+  name_en?: string | null
   description: string
+  description_uk?: string | null
+  description_en?: string | null
   price: number
   unit: string
   image: string
@@ -54,7 +58,11 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
         const mapped = (data || []).map((p: any) => ({
           id: p.id,
           name: p.name,
+          name_uk: p.name_uk,
+          name_en: p.name_en,
           description: p.description,
+          description_uk: p.description_uk,
+          description_en: p.description_en,
           price: Number(p.price),
           unit: p.unit,
           image: img(p.image),
@@ -178,7 +186,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
                         </div>
 
                         <button type="button" className="p-4 pt-5 w-full text-left group/btn transition-all duration-300 hover:bg-primary/5" onClick={() => product.stock > 0 && setSelectedProduct(product)}>
-                          <h3 className="font-serif text-lg text-gray-900 leading-snug transition-colors duration-300 group-hover/btn:text-primary">{product.name}</h3>
+                          <h3 className="font-serif text-lg text-gray-900 leading-snug transition-colors duration-300 group-hover/btn:text-primary">{(product as any)[lang === 'uk' ? 'name_uk' : 'name_en'] || product.name}</h3>
                           <p className="text-sm text-gray-500 mt-1 transition-colors duration-300 group-hover/btn:text-primary/80">&pound;{product.price} {product.unit}</p>
                         </button>
                       </div>
@@ -226,8 +234,8 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
                 />
               </div>
 
-              <h3 className="font-serif text-2xl text-gray-900 mb-2">{selectedProduct.name}</h3>
-              <p className="text-gray-600 text-[15px] leading-relaxed mb-4">{selectedProduct.description}</p>
+              <h3 className="font-serif text-2xl text-gray-900 mb-2">{(selectedProduct as any)[lang === 'uk' ? 'name_uk' : 'name_en'] || selectedProduct.name}</h3>
+              <p className="text-gray-600 text-[15px] leading-relaxed mb-4">{(selectedProduct as any)[lang === 'uk' ? 'description_uk' : 'description_en'] || selectedProduct.description}</p>
 
               <div className="flex items-center justify-between mb-6">
                 <div>

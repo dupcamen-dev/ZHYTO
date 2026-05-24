@@ -3,7 +3,11 @@ export type ProductCategory = 'varenyky' | 'syrnyky' | 'pelmeni';
 export interface Product {
   id: number;
   name: string;
+  name_uk?: string | null;
+  name_en?: string | null;
   description: string;
+  description_uk?: string | null;
+  description_en?: string | null;
   price: number;
   unit: string;
   image: string;
@@ -18,7 +22,11 @@ export interface Product {
 
 export interface ProductInput {
   name: string;
+  name_uk?: string | null;
+  name_en?: string | null;
   description: string;
+  description_uk?: string | null;
+  description_en?: string | null;
   price: number;
   unit?: string;
   image?: string;

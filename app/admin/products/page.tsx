@@ -9,7 +9,11 @@ import { toast } from 'sonner'
 interface Product {
   id: number
   name: string
+  name_uk?: string | null
+  name_en?: string | null
   description: string
+  description_uk?: string | null
+  description_en?: string | null
   price: number
   unit: string
   image: string
@@ -27,7 +31,8 @@ interface Product {
 
 const defaultCategories = ['varenyky', 'syrnyky', 'pelmeni']
 const emptyProduct = {
-  name: '', description: '', price: 0, unit: '/ kg',
+  name: '', name_uk: '', name_en: '', description: '', description_uk: '', description_en: '',
+  price: 0, unit: '/ kg',
   image: '/images/syrnyky-new.webp', background_image: '', badge: null,
   category: 'varenyky', available: true, stock: 10, sort_order: 0,
   recipe_uk: '', recipe_en: '', ingredients_uk: '', ingredients_en: '',
@@ -183,7 +188,9 @@ export default function AdminProducts() {
     setSaving(true)
 
     const payload = {
-      name: editing.name, description: editing.description, price: editing.price,
+      name: editing.name, name_uk: editing.name_uk || null, name_en: editing.name_en || null,
+      description: editing.description, description_uk: editing.description_uk || null, description_en: editing.description_en || null,
+      price: editing.price,
       unit: editing.unit, image: editing.image || '/images/syrnyky-new.webp',
       background_image: editing.background_image || null, badge: editing.badge || null, category: editing.category,
       available: editing.available ?? true, stock: editing.stock ?? 10,
@@ -432,21 +439,39 @@ export default function AdminProducts() {
 
             <div className="space-y-3">
               <div>
-                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Name</label>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Name (English)</label>
                 <input
                   value={editing.name || ''}
                   onChange={e => setEditing(f => ({ ...f, name: e.target.value }))}
                   className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none"
-                  placeholder="Product name"
+                  placeholder="Product name (English)"
                 />
               </div>
               <div>
-                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Description</label>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Name (Ukrainian)</label>
+                <input
+                  value={editing.name_uk || ''}
+                  onChange={e => setEditing(f => ({ ...f, name_uk: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none"
+                  placeholder="Назва продукту (українською)"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Description (English)</label>
                 <textarea
                   value={editing.description || ''}
                   onChange={e => setEditing(f => ({ ...f, description: e.target.value }))}
                   className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[60px]"
-                  placeholder="Product description"
+                  placeholder="Product description (English)"
+                />
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-1">Description (Ukrainian)</label>
+                <textarea
+                  value={editing.description_uk || ''}
+                  onChange={e => setEditing(f => ({ ...f, description_uk: e.target.value }))}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-base text-foreground focus:border-primary outline-none min-h-[60px]"
+                  placeholder="Опис продукту (українською)"
                 />
               </div>
               <div>

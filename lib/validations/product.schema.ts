@@ -5,7 +5,11 @@ export const ProductCategorySchema = z.enum(['varenyky', 'syrnyky', 'pelmeni']);
 export const ProductSchema = z.object({
   id: z.number(),
   name: z.string(),
+  name_uk: z.string().nullable().optional(),
+  name_en: z.string().nullable().optional(),
   description: z.string(),
+  description_uk: z.string().nullable().optional(),
+  description_en: z.string().nullable().optional(),
   price: z.number().positive(),
   unit: z.string(),
   image: z.string(),
@@ -20,7 +24,11 @@ export const ProductSchema = z.object({
 
 export const CreateProductSchema = z.object({
   name: z.string().min(1, 'Name is required'),
+  name_uk: z.string().optional(),
+  name_en: z.string().optional(),
   description: z.string().min(10, 'Description must be at least 10 characters'),
+  description_uk: z.string().optional(),
+  description_en: z.string().optional(),
   price: z.number().positive('Price must be positive'),
   unit: z.string().default('/ kg'),
   image: z.string().url('Invalid image URL').default('/images/hero-varenyky.jpg'),
