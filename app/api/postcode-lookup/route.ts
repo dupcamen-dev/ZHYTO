@@ -17,27 +17,18 @@ export async function GET(request: NextRequest) {
 
     const clean = postcode.trim().toUpperCase().replace(/\s+/g, '');
     const res = await fetch(
-      `https://api.ideal-postcodes.co.uk/v1/postcodes/${clean}/addresses?api_key=${apiKey}`,
+      `https://api.ideal-postcodes.co.uk/v1/addresses?query=${clean}&api_key=${apiKey}&limit=100`,
       { headers: { Accept: 'application/json' } }
     );
 
     if (!res.ok) {
-      if (res.status === 404) {
-        return Response.json({ addresses: [] });
-      }
       return Response.json({ error: 'Postcode lookup failed' }, { status: res.status });
     }
 
     const body = await res.json();
 
-    let hits: any[] = []
-    if (Array.isArray(body.result)) {
-      hits = body.result
-    } else if (body.result?.hits) {
-      hits = body.result.hits
-    }
-
-    if (hits.length === 0) {
+    const hits = body.result?.hits
+    if (!hits || hits.length === 0) {
       return Response.json({ addresses: [] });
     }
 
