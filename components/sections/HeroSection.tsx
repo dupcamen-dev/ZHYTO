@@ -16,6 +16,7 @@ export default function HeroSection() {
   return (
     <motion.section
       style={{ opacity: heroOpacity, scale: heroScale }}
+      style={{ contentVisibility: 'auto' } as React.CSSProperties}
       className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
     >
       <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-20 sm:pt-24 md:pt-28 lg:pt-28">

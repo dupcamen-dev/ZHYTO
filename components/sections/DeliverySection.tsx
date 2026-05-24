@@ -12,7 +12,7 @@ export default function DeliverySection() {
   const { settings: delivery } = useDeliverySettings()
 
   return (
-    <section id="delivery" className="py-16 lg:py-20 bg-background overflow-hidden">
+    <section id="delivery" className="py-16 lg:py-20 bg-background overflow-hidden" style={{ contentVisibility: 'auto' }}>
       <div className="max-w-7xl mx-auto px-5 lg:px-10">
         <div className="flex justify-center">
           <motion.div

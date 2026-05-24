@@ -41,7 +41,7 @@ export default function AboutSection() {
   const names = images.map(i => i.name)
 
   return (
-    <section id="about" ref={aboutRef} className="py-28 lg:py-36 relative bg-background">
+    <section id="about" ref={aboutRef} className="py-28 lg:py-36 relative bg-background" style={{ contentVisibility: 'auto' }}>
       <div className="max-w-7xl mx-auto px-5 lg:px-10">
         <div className="grid lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
           <div className="order-1 lg:order-1">

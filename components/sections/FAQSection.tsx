@@ -14,7 +14,7 @@ export default function FAQSection() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="py-28 lg:py-36 relative section-orange">
+    <section id="faq" className="py-28 lg:py-36 relative section-orange" style={{ contentVisibility: 'auto' }}>
       <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

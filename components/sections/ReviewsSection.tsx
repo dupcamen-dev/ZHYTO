@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
@@ -12,10 +12,9 @@ import { toast } from 'sonner'
 
 interface ReviewsSectionProps {
   setSignInModalOpen: (open: boolean) => void
-  progressRef: React.RefObject<number | null>
 }
 
-export default function ReviewsSection({ setSignInModalOpen, progressRef }: ReviewsSectionProps) {
+export default function ReviewsSection({ setSignInModalOpen }: ReviewsSectionProps) {
   const { t } = useLanguage()
   const { user } = useAuth()
   const reviewsRef = useRef<HTMLElement>(null)
@@ -86,8 +85,8 @@ export default function ReviewsSection({ setSignInModalOpen, progressRef }: Revi
   }
 
   return (
-    <section id="reviews" ref={reviewsRef} className="py-28 lg:py-36 relative bg-black overflow-hidden">
-      <FloatingVarenyky progressRef={progressRef} isMobile={isMobile} />
+    <section id="reviews" ref={reviewsRef} className="py-28 lg:py-36 relative bg-black overflow-hidden" style={{ contentVisibility: 'auto' }}>
+      <FloatingVarenyky isMobile={isMobile} />
 
       <div className="max-w-7xl mx-auto px-5 lg:px-10 relative z-1">
         <motion.div
@@ -208,22 +207,44 @@ export default function ReviewsSection({ setSignInModalOpen, progressRef }: Revi
   )
 }
 
-const FloatingVarenyky = React.memo(function FloatingVarenyky({ progressRef, isMobile }: { progressRef: React.RefObject<number | null>; isMobile: boolean }) {
+const FloatingVarenyky = React.memo(function FloatingVarenyky({ isMobile }: { isMobile: boolean }) {
+  const containerRef = React.useRef<HTMLDivElement>(null)
   const [progress, setProgress] = React.useState(0)
-  const lastRef = React.useRef(0)
+  const lastP = React.useRef(0)
+
   React.useEffect(() => {
-    let raf: number
-    const loop = () => {
-      raf = requestAnimationFrame(loop)
-      const p = progressRef.current ?? 0
-      if (Math.abs(p - lastRef.current) > 0.001) {
-        lastRef.current = p
+    const el = containerRef.current
+    if (!el) return
+    let ticking = false
+    let visible = false
+
+    const calc = () => {
+      if (!visible) return
+      const rect = el.getBoundingClientRect()
+      const wh = window.innerHeight
+      const total = rect.height + wh
+      const p = Math.max(0, Math.min(1, (wh - rect.top) / total))
+      if (Math.abs(p - lastP.current) > 0.001) {
+        lastP.current = p
         setProgress(p)
       }
+      ticking = false
     }
-    raf = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(raf)
-  }, [progressRef])
+
+    const onScroll = () => { if (!ticking) { requestAnimationFrame(calc); ticking = true } }
+
+    const obs = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting
+      if (!visible) { lastP.current = 0; setProgress(0) }
+    }, { rootMargin: '200px' })
+    obs.observe(el)
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    calc()
+
+    return () => { obs.disconnect(); window.removeEventListener('scroll', onScroll) }
+  }, [])
+
   const data = [
     { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -5, finalMob: -45 },
     { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 40, finalMob: 0, hideMob: true },
@@ -232,28 +253,34 @@ const FloatingVarenyky = React.memo(function FloatingVarenyky({ progressRef, isM
     { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 40, finalMob: -35 },
     { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 60, finalMob: -20 },
   ]
-  return data.map((v) => {
-    if (isMobile && v.hideMob) return null
-    const target = isMobile ? v.finalMob : v.final
-    const entryStart = 0.15 + v.delay * 0.12
-    const entryEnd = Math.min(1, entryStart + 0.85)
-    const raw = Math.max(0, Math.min(1, (progress - entryStart) / (entryEnd - entryStart)))
-    const t = 1 - (1 - raw) ** 3
-    const x = -280 + (target + 280) * t
-    return (
-      <img
-        key={`${v.side}-${v.top}`}
-        src={img("/images/varenyk-bg.png")}
-        alt=""
-        className="absolute z-0 pointer-events-none"
-        style={{
-          width: `${v.width}px`,
-          top: v.top,
-          [v.side === 'left' ? 'left' : 'right']: `${x}px`,
-          opacity: t,
-          transform: `rotate(${v.rotate}deg)`,
-        }}
-      />
-    )
-  })
+
+  return (
+    <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      {data.map((v) => {
+        if (isMobile && v.hideMob) return null
+        const target = isMobile ? v.finalMob : v.final
+        const entryStart = 0.15 + v.delay * 0.12
+        const entryEnd = Math.min(1, entryStart + 0.85)
+        const raw = Math.max(0, Math.min(1, (progress - entryStart) / (entryEnd - entryStart)))
+        const t = 1 - (1 - raw) ** 3
+        const x = -280 + (target + 280) * t
+        return (
+          <img
+            key={`${v.side}-${v.top}`}
+            src={img("/images/varenyk-bg.png")}
+            alt=""
+            className="absolute pointer-events-none"
+            style={{
+              width: `${v.width}px`,
+              top: v.top,
+              [v.side === 'left' ? 'left' : 'right']: `${x}px`,
+              opacity: t,
+              transform: `rotate(${v.rotate}deg)`,
+              willChange: 'transform, opacity',
+            }}
+          />
+        )
+      })}
+    </div>
+  )
 })

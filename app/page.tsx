@@ -20,7 +20,6 @@ export default function Home() {
   const [signInModalOpen, setSignInModalOpen] = useState(false)
   const [activeProducts, setActiveProducts] = useState<any[]>([])
 
-  const progressRef = useRef(0)
   const [headerMode, setHeaderMode] = useState<'visible' | 'hidden'>('visible')
   const [isOnProducts, setIsOnProducts] = useState(false)
   const [showScrollTop, setShowScrollTop] = useState(false)
@@ -42,7 +41,6 @@ export default function Home() {
 
   useEffect(() => {
     let ticking = false
-    let lastProgress = -1
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -51,18 +49,6 @@ export default function Home() {
           const atTop = y < 50
           const atBottom = y > maxY - 100
           const goingDown = y > prevScrollY.current
-
-          const reviewsEl = document.getElementById('reviews')
-          if (reviewsEl) {
-            const rect = reviewsEl.getBoundingClientRect()
-            const wh = window.innerHeight
-            const total = rect.height + wh
-            const p = Math.max(0, Math.min(1, (wh - rect.top) / total))
-            if (Math.round(p * 100) !== Math.round(lastProgress * 100)) {
-              progressRef.current = p
-              lastProgress = p
-            }
-          }
 
           if (window.innerWidth < 1024 && aboutTopRef.current > 0) {
             const v = y >= productsTopRef.current - 100 && y < aboutTopRef.current - 100
@@ -108,7 +94,7 @@ export default function Home() {
       <AboutSection />
       <DeliverySection />
       <FAQSection />
-      <ReviewsSection setSignInModalOpen={setSignInModalOpen} progressRef={progressRef} />
+      <ReviewsSection setSignInModalOpen={setSignInModalOpen} />
       <Footer />
 
       <CartDrawer

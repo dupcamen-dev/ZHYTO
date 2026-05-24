@@ -111,7 +111,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
     <>
       <motion.section
         id="products"
-        style={{ y: productsParallaxY }}
+        style={{ y: productsParallaxY, contentVisibility: 'auto' } as any}
         className="py-28 lg:py-36 relative z-20 section-orange"
       >
         <div className="max-w-7xl mx-auto px-5 lg:px-10">
