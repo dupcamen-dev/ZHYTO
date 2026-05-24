@@ -115,7 +115,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
             <p className="text-[46px] tracking-[0.35em] mb-5">
               <span className="relative inline-block font-script text-black">
                 {t.products.ourMenu}
-                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[240%] h-[550%] -z-10">
+                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[180%] h-[410%] -z-10">
                   <Image src={img("/images/about-card.webp")} alt="" fill className="object-fill" />
                 </div>
               </span>
