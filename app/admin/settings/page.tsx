@@ -27,9 +27,8 @@ export default function AdminSettings() {
   const [siteTexts, setSiteTexts] = useState<{ en: Record<string, unknown>; uk: Record<string, unknown> } | null>(null)
   const [siteTextsLoaded, setSiteTextsLoaded] = useState(false)
   const [siteTextsFromCode, setSiteTextsFromCode] = useState(false)
-  const [aboutImages, setAboutImages] = useState<{ images: { src: string; name: string }[]; cardImage: string } | null>(null)
+  const [aboutImages, setAboutImages] = useState<{ src: string; name: string }[] | null>(null)
   const [aboutImagesLoaded, setAboutImagesLoaded] = useState(false)
-  const cardInputRef = useRef<HTMLInputElement>(null)
   const carouselInputRef = useRef<HTMLInputElement>(null)
   const addPhotoInputRef = useRef<HTMLInputElement>(null)
   const [carouselEditIndex, setCarouselEditIndex] = useState<number | null>(null)
@@ -73,7 +72,7 @@ export default function AdminSettings() {
   useEffect(() => {
     if (!supabase) { setAboutImagesLoaded(true); return }
     supabase.from('settings').select('value').eq('key', 'about_images').single().then(({ data }) => {
-      if (data?.value) setAboutImages(data.value as typeof aboutImages)
+      if (data?.value?.images) setAboutImages(data.value.images as { src: string; name: string }[])
       setAboutImagesLoaded(true)
     })
   }, [])
@@ -435,46 +434,11 @@ export default function AdminSettings() {
           </div>
         ) : (
           <>
-            {/* Card Image */}
-            <div className="mb-8">
-              <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-3">Card Image</label>
-              <div className="flex items-center gap-4">
-                <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-border/50 bg-background/50 shrink-0">
-                  <Image
-                    src={img(aboutImages?.cardImage || "/images/about-card.webp")}
-                    alt="Card"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <button
-                  onClick={() => cardInputRef.current?.click()}
-                  className="flex items-center gap-2 px-4 py-2 border border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-border/20 transition-colors cursor-pointer"
-                >
-                  <Upload className="w-4 h-4" />
-                  CHANGE
-                </button>
-                <input
-                  ref={cardInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={async e => {
-                    const file = e.target.files?.[0]
-                    if (!file) return
-                    const url = await uploadImage(file)
-                    if (url) setAboutImages(prev => prev ? { ...prev, cardImage: url } : { images: [], cardImage: url })
-                    e.target.value = ''
-                  }}
-                />
-              </div>
-            </div>
-
             {/* Carousel Images */}
             <div>
               <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-3">Carousel Images</label>
               <div className="space-y-3">
-                {(aboutImages?.images || []).map((item, i) => (
+                {(aboutImages || []).map((item, i) => (
                   <div key={i} className="flex items-start gap-4 p-4 rounded-lg border border-border/30 bg-background/30">
                     <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-border/50 shrink-0 bg-background/50">
                       <Image src={img(item.src)} alt={item.name} fill className="object-cover" />
@@ -484,9 +448,9 @@ export default function AdminSettings() {
                       <input
                         value={item.name}
                         onChange={e => {
-                          const newImages = [...(aboutImages?.images || [])]
+                          const newImages = [...(aboutImages || [])]
                           newImages[i] = { ...newImages[i], name: e.target.value }
-                          setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                          setAboutImages(newImages)
                         }}
                         className="w-full bg-transparent border border-border/50 rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none mb-2"
                         placeholder="Name"
@@ -503,8 +467,7 @@ export default function AdminSettings() {
                         </button>
                         <button
                           onClick={() => {
-                            const newImages = (aboutImages?.images || []).filter((_, j) => j !== i)
-                            setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                            setAboutImages((aboutImages || []).filter((_, j) => j !== i))
                           }}
                           className="flex items-center gap-1 text-xs text-destructive hover:text-destructive/80 transition-colors cursor-pointer"
                         >
@@ -532,8 +495,7 @@ export default function AdminSettings() {
                   if (!file) return
                   const url = await uploadImage(file)
                   if (url) {
-                    const newImages = [...(aboutImages?.images || []), { src: url, name: '' }]
-                    setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                    setAboutImages([...(aboutImages || []), { src: url, name: '' }])
                   }
                   e.target.value = ''
                 }}
@@ -550,9 +512,9 @@ export default function AdminSettings() {
                 if (!file || carouselEditIndex === null) return
                 const url = await uploadImage(file)
                 if (url && aboutImages) {
-                  const newImages = [...aboutImages.images]
+                  const newImages = [...aboutImages]
                   newImages[carouselEditIndex] = { ...newImages[carouselEditIndex], src: url }
-                  setAboutImages({ ...aboutImages, images: newImages })
+                  setAboutImages(newImages)
                 }
                 setCarouselEditIndex(null)
                 e.target.value = ''
@@ -563,7 +525,7 @@ export default function AdminSettings() {
               onClick={async () => {
                 if (!aboutImages) return
                 try {
-                  await upsertSetting('about_images', aboutImages)
+                  await upsertSetting('about_images', { images: aboutImages })
                   toast.success('About images saved')
                 } catch (e) {
                   toast.error(e instanceof Error ? e.message : 'Failed to save')

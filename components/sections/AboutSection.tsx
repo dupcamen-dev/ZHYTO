@@ -9,20 +9,17 @@ const img = imgPath
 import { ImageCarousel } from '@/components/image-carousel'
 import { useLanguage } from '@/components/language-context'
 
-const DEFAULT_ABOUT_IMAGES = {
-  images: [
-    { src: "/images/about-us.webp", name: "Illia" },
-    { src: "/images/about-us-2.webp", name: "Victor" },
-    { src: "/images/about-us-3.webp", name: "Nataliia" },
-  ],
-  cardImage: "/images/about-card.webp",
-}
+const DEFAULT_ABOUT_IMAGES = [
+  { src: "/images/about-us.webp", name: "Illia" },
+  { src: "/images/about-us-2.webp", name: "Victor" },
+  { src: "/images/about-us-3.webp", name: "Nataliia" },
+]
 
 export default function AboutSection() {
   const { t } = useLanguage()
   const aboutRef = useRef<HTMLElement>(null)
   const [aboutImageIndex, setAboutImageIndex] = useState(0)
-  const [aboutData, setAboutData] = useState<{ images: { src: string; name: string }[]; cardImage: string } | null>(null)
+  const [aboutImages, setAboutImages] = useState<{ src: string; name: string }[] | null>(null)
   const { scrollYProgress: aboutScroll } = useScroll({
     target: aboutRef,
     offset: ["start end", "end start"]
@@ -34,14 +31,14 @@ export default function AboutSection() {
       .then(r => r.json())
       .then(data => {
         if (data?.about_images?.images?.length > 0) {
-          setAboutData(data.about_images)
+          setAboutImages(data.about_images.images)
         }
       })
       .catch(() => {})
   }, [])
 
-  const data = aboutData || DEFAULT_ABOUT_IMAGES
-  const names = data.images.map(i => i.name)
+  const images = aboutImages || DEFAULT_ABOUT_IMAGES
+  const names = images.map(i => i.name)
 
   return (
     <section id="about" ref={aboutRef} className="py-28 lg:py-36 relative bg-background">
@@ -92,7 +89,7 @@ export default function AboutSection() {
               >
                 <div className="relative w-full h-full">
                   <ImageCarousel
-                    images={data.images.map(i => ({ src: img(i.src), alt: i.name }))}
+                    images={images.map(i => ({ src: img(i.src), alt: i.name }))}
                     onChange={setAboutImageIndex}
                     showDots={false}
                   />
@@ -101,7 +98,7 @@ export default function AboutSection() {
             </div>
             {names.length > 0 && (
               <div className="flex justify-center gap-2 mt-4 z-10">
-                {data.images.map((_, i) => (
+                {images.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setAboutImageIndex(i)}
@@ -114,7 +111,7 @@ export default function AboutSection() {
             )}
             <div className="absolute -bottom-8 -left-8 lg:-bottom-12 lg:-left-12 w-56 h-56 lg:w-72 lg:h-72 overflow-hidden">
               <Image
-                src={img(data.cardImage)}
+                src={img("/images/about-card.webp")}
                 alt=""
                 fill
                 className="object-contain"
