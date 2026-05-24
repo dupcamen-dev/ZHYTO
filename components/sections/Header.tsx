@@ -30,7 +30,7 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
     { name: t.nav.delivery, href: "#delivery" },
     { name: t.nav.reviews, href: "#reviews" },
     { name: t.nav.faq, href: "#faq" },
-    { name: t.nav.contact, href: "#contact" },
+    { name: t.nav.contact, href: "#faq" },
   ]
 
   useEffect(() => {

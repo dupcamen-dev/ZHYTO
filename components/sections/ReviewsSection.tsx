@@ -97,10 +97,9 @@ export default function ReviewsSection({ setSignInModalOpen, progressRef }: Revi
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-[13px] tracking-[0.35em] text-cream mb-5">{t.reviews.testimonials}</p>
           <h2 className="text-4xl md:text-5xl font-serif font-light">
             <span className="font-script text-cream text-[1.15em]">{t.reviews.whatOur}</span>{" "}
-            <span className="text-cream">{t.reviews.customersSay}</span>
+            <span className="font-script text-cream text-[1.15em]">{t.reviews.customersSay}</span>
           </h2>
         </motion.div>
 

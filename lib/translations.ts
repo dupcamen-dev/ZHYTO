@@ -60,7 +60,7 @@ export const translations = {
       ordersOver: 'Orders over',
     },
     faq: {
-      heading: 'FAQ',
+      heading: 'GET IN TOUCH',
       got: 'Got',
       questions: 'questions?',
       items: [
@@ -317,7 +317,7 @@ export const translations = {
       ordersOver: 'Замовлення від',
     },
     faq: {
-      heading: 'ПИТАННЯ',
+      heading: "ЗВ'ЯЖІТЬСЯ",
       got: 'Маєте',
       questions: 'питання?',
       items: [

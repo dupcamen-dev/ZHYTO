@@ -10,7 +10,6 @@ import AboutSection from '@/components/sections/AboutSection'
 import DeliverySection from '@/components/sections/DeliverySection'
 import ReviewsSection from '@/components/sections/ReviewsSection'
 import FAQSection from '@/components/sections/FAQSection'
-import ContactSection from '@/components/sections/ContactSection'
 import Footer from '@/components/sections/Footer'
 import ScrollButtons from '@/components/sections/ScrollButtons'
 import SignInModal from '@/components/sections/SignInModal'
@@ -109,7 +108,6 @@ export default function Home() {
       <AboutSection />
       <DeliverySection />
       <FAQSection />
-      <ContactSection />
       <ReviewsSection setSignInModalOpen={setSignInModalOpen} progressRef={progressRef} />
       <Footer />
 

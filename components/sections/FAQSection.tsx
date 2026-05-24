@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Minus, HelpCircle } from 'lucide-react'
+import { Plus, Minus } from 'lucide-react'
 import Image from 'next/image'
+import { Button } from '@/components/ui/button'
 import { img as imgPath } from '@/lib/constants'
 const img = imgPath
 import { useLanguage } from '@/components/language-context'
@@ -30,15 +31,6 @@ export default function FAQSection() {
               </div>
             </span>
           </p>
-          <h2 className="text-6xl lg:text-7xl font-script text-black font-light">
-            <span className="text-[1.15em]">{t.faq.got}</span>{" "}
-            <span>{t.faq.questions}</span>
-          </h2>
-          <div className="flex items-center justify-center gap-3 mt-8">
-            <span className="w-12 h-px bg-primary/30" />
-            <HelpCircle className="w-5 h-5 text-primary/60" />
-            <span className="w-12 h-px bg-primary/30" />
-          </div>
         </motion.div>
 
         <div className="max-w-3xl mx-auto space-y-4">
@@ -84,22 +76,40 @@ export default function FAQSection() {
           ))}
         </div>
 
+        {/* Contact buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-center mt-12"
+          className="text-center mt-16"
         >
-          <p className="text-muted-foreground text-base">
-            {t.faq.stillQuestions}{" "}
-            <a
-              href="#contact"
-              className="text-primary hover:text-primary/80 transition-colors border-b border-primary/30 hover:border-primary/60 pb-0.5"
-            >
-              {t.faq.getInTouch}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-14">
+            <a href="#products">
+              <Button
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 px-12 py-7 tracking-[0.2em] text-[15px] rounded-none shadow-xl"
+              >
+                {t.contact.orderNow}
+              </Button>
             </a>
-          </p>
+            <a
+              href="mailto:hello@zhyto.london"
+              className="text-[16px] tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors border-b border-foreground/20 hover:border-primary pb-1"
+            >
+              HELLO@ZHYTO.LONDON
+            </a>
+          </div>
+
+          <div className="flex items-center justify-center gap-10">
+            <a href="https://www.instagram.com/zhyto.london/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors text-[14px] tracking-[0.2em]">
+              {t.contact.instagram}
+            </a>
+            <span className="text-muted-foreground/30">|</span>
+            <a href="https://wa.me/440000000000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors text-[14px] tracking-[0.2em]">
+              {t.contact.whatsapp}
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
