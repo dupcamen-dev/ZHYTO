@@ -39,7 +39,7 @@ export default function SplashScreen({ onReady }: { onReady: () => void }) {
       style={{ pointerEvents: state === 'exit' ? 'none' : 'auto' }}
     >
       <div className="text-center">
-        <h1 className="font-script text-6xl md:text-8xl text-foreground mb-4">zhyto</h1>
+        <h1 className="font-serif text-6xl md:text-8xl text-primary tracking-[0.15em] mb-4">ZHYTO</h1>
         <p className="font-serif text-sm tracking-[0.25em] text-muted-foreground uppercase">
           {t.general.loading}
         </p>
