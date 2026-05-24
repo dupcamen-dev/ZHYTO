@@ -18,7 +18,7 @@ interface HeaderProps {
 
 export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: HeaderProps) {
   const router = useRouter()
-  const { t, lang, toggleLang } = useLanguage()
+  const { t, lang, toggleLang, setLang } = useLanguage()
   const { totalItems } = useCart()
   const { user, loading, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -135,6 +135,20 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
                   </motion.button>
                 )
               )}
+              {/* Language Selector */}
+              <div className="hidden sm:flex items-center gap-0.5 border-2 border-foreground/20 rounded-full px-1 py-1">
+                {(['en', 'uk', 'pl'] as const).map(l => (
+                  <button
+                    key={l}
+                    onClick={() => setLang(l)}
+                    className={`text-[11px] tracking-[0.15em] font-medium rounded-full px-2.5 py-1 transition-all cursor-pointer ${
+                      lang === l ? 'bg-primary text-primary-foreground' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'
+                    }`}
+                  >
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
               {/* Burger Toggle */}
               <motion.button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

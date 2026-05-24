@@ -9,6 +9,7 @@ interface LangContextType {
   lang: Lang
   t: TranslationKeys
   toggleLang: () => void
+  setLang: (l: Lang) => void
 }
 
 const LS_KEY = 'zhyto-lang'
@@ -41,6 +42,7 @@ const LangContext = createContext<LangContextType>({
   lang: 'en',
   t: translations.en,
   toggleLang: () => {},
+  setLang: () => {},
 })
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -65,14 +67,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       }
     : translations
 
-  const toggleLang = () => setLang(prev => {
-    const next = prev === 'en' ? 'uk' : prev === 'uk' ? 'pl' : 'en'
+  const setLangWithStore = (next: Lang) => {
     localStorage.setItem(LS_KEY, next)
-    return next
-  })
+    setLang(next)
+  }
+
+  const toggleLang = () => {
+    setLangWithStore(lang === 'en' ? 'uk' : lang === 'uk' ? 'pl' : 'en')
+  }
 
   return (
-    <LangContext.Provider value={{ lang, t: merged[lang], toggleLang }}>
+    <LangContext.Provider value={{ lang, t: merged[lang], toggleLang, setLang: setLangWithStore }}>
       <div data-lang={lang} style={{ display: 'contents' }}>
         {children}
       </div>

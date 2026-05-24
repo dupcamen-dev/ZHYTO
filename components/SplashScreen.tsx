@@ -3,11 +3,9 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { img } from '@/lib/constants'
-import { useLanguage } from '@/components/language-context'
 
 export default function SplashScreen({ onReady }: { onReady: () => void }) {
   const [state, setState] = useState<'enter' | 'visible' | 'exit'>('enter')
-  const { t } = useLanguage()
 
   useEffect(() => {
     let cancelled = false
@@ -41,19 +39,16 @@ export default function SplashScreen({ onReady }: { onReady: () => void }) {
       style={{ pointerEvents: state === 'exit' ? 'none' : 'auto' }}
     >
       <div className="text-center">
-        <div className="relative w-24 h-24 md:w-28 md:h-28 mx-auto mb-6">
+        <div className="relative w-40 h-40 md:w-52 md:h-52 mx-auto mb-6">
           <Image
             src={img("/images/Gemini_Generated_Image_hmwm3ehmwm3ehmwm.png")}
             alt="zhyto"
             fill
-            className="object-contain rounded-full"
+            className="object-cover rounded-full"
             priority
           />
         </div>
-        <h1 className="font-script text-6xl md:text-8xl text-primary tracking-[0.15em] mb-4">ZHYTO</h1>
-        <p className="font-serif text-sm tracking-[0.25em] text-muted-foreground uppercase">
-          {t.general.loading}
-        </p>
+        <h1 className="font-script text-6xl md:text-8xl text-primary tracking-[0.15em]">ZHYTO</h1>
       </div>
     </div>
   )
