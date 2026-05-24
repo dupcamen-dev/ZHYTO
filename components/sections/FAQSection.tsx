@@ -30,9 +30,9 @@ export default function FAQSection() {
               </div>
             </span>
           </p>
-          <h2 className="text-5xl lg:text-6xl font-serif font-light">
-            <span className="font-script text-primary text-[1.15em]">{t.faq.got}</span>{" "}
-            <span className="text-black">{t.faq.questions}</span>
+          <h2 className="text-5xl lg:text-6xl font-script text-black font-light">
+            <span className="text-[1.15em]">{t.faq.got}</span>{" "}
+            <span>{t.faq.questions}</span>
           </h2>
           <div className="flex items-center justify-center gap-3 mt-8">
             <span className="w-12 h-px bg-primary/30" />

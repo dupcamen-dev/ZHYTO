@@ -25,19 +25,17 @@ export default function DeliverySection() {
             <div className="sm:px-12 py-8 relative">
               <h3 className="font-script text-4xl md:text-3xl lg:text-4xl mb-3 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
                 {t.delivery.headingPrefix}
-                <span className="relative">
-                  {t.delivery.headingSuffix}
-                  {t.delivery.headingSuffix && (
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[calc(-50%+5px)] w-[300px] aspect-[661/252] -z-10">
-                      <Image
-                        src={img("/images/about-card.webp")}
-                        alt=""
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                  )}
-                </span>
+                <span>{t.delivery.headingSuffix}</span>
+                {t.delivery.headingSuffix && (
+                  <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[400%] -z-10">
+                    <Image
+                      src={img("/images/about-card.webp")}
+                      alt=""
+                      fill
+                      className="object-fill"
+                    />
+                  </div>
+                )}
               </h3>
               <div className="grid grid-cols-2 gap-y-2 gap-x-6 text-base lg:text-lg mt-10 lg:mt-16 max-w-[500px] mx-auto lg:mx-0 lg:ml-8">
                 <span className="text-foreground font-medium">{t.delivery.sameDay}</span>
