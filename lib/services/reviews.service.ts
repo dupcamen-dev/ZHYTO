@@ -24,7 +24,8 @@ export const reviewsService = {
   },
 
   async createReview(userId: string, userName: string, input: ReviewInput): Promise<Review> {
-    const { data, error } = await supabase
+    const client = getClient();
+    const { data, error } = await client
       .from('reviews')
       .insert({
         user_id: userId,
