@@ -51,11 +51,11 @@ export default function AboutSection() {
             transition={{ duration: 0.8 }}
             className="order-1 lg:order-1"
           >
-            <p className="text-[13px] tracking-[0.35em] text-primary mb-5">
-              <span className="relative inline-block">
+            <p className="text-[39px] tracking-[0.35em] mb-0">
+              <span className="relative inline-block font-script text-black">
                 {t.about.ourStory}
-                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[400%] -z-10">
-                  <Image src={img("/images/about-card.webp")} alt="" fill className="object-contain" />
+                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[600%] -z-10">
+                  <Image src={img("/images/about-card.webp")} alt="" fill className="object-fill" />
                 </div>
               </span>
             </p>
