@@ -137,7 +137,7 @@ export default function ProductsSection({ onProductsChange, setCartOpen }: Produ
                   transition={{ duration: 0.6 }}
                   className="mb-8"
                 >
-                  <h3 className="font-serif text-5xl text-foreground mb-2">{label}</h3>
+                  <h3 className="font-serif text-5xl md:text-4xl lg:text-5xl text-foreground mb-2">{label}</h3>
                   <p className="text-base text-muted-foreground">{desc}</p>
                 </motion.div>
 

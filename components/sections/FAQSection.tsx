@@ -30,7 +30,7 @@ export default function FAQSection() {
               </div>
             </span>
           </p>
-          <h2 className="text-5xl md:text-6xl font-serif font-light">
+          <h2 className="text-5xl lg:text-6xl font-serif font-light">
             <span className="font-script text-primary text-[1.15em]">{t.faq.got}</span>{" "}
             <span className="text-black">{t.faq.questions}</span>
           </h2>

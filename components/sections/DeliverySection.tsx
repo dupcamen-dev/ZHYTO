@@ -23,7 +23,7 @@ export default function DeliverySection() {
             className="order-2 lg:order-1"
           >
             <div className="sm:px-12 py-16 relative">
-              <h3 className="font-script text-5xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
+              <h3 className="font-script text-5xl md:text-4xl lg:text-5xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
                 {t.delivery.headingPrefix}
                 <span className="relative">
                   {t.delivery.headingSuffix}

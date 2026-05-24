@@ -18,7 +18,7 @@ export default function HeroSection() {
       style={{ opacity: heroOpacity, scale: heroScale }}
       className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background"
     >
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-20 sm:pt-24 lg:pt-36">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-20 sm:pt-24 md:pt-36 lg:pt-36">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -26,7 +26,7 @@ export default function HeroSection() {
           className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-serif font-light leading-[1.1] mb-10 relative tracking-[0.05em]"
         >
           <span className="text-white block tracking-[0.2em] font-konstrukt">{t.hero.dumplings}</span>
-          <span className="font-script text-foreground text-[0.55em] uppercase relative inline-block tracking-[0.15em]">
+            <span className="font-script text-foreground text-[0.55em] uppercase relative inline-block tracking-[0.05em]">
             {t.hero.withSoul}
             <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[46%] w-[500%] h-[500%] -z-10">
               <Image

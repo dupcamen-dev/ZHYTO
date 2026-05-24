@@ -21,10 +21,10 @@ export default function ContactSection() {
             transition={{ duration: 0.8 }}
           >
             <p className="text-[16px] tracking-[0.35em] text-primary mb-6">{t.contact.getInTouch}</p>
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-serif font-light mb-6 sm:mb-10">
+            <h2 className="text-5xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light mb-6 sm:mb-10">
               <span className="text-primary">{t.contact.readyTo}</span>{" "}
               <span
-                className="font-script text-[1.15em] inline-block bg-no-repeat px-16 py-8 order-bg"
+                className="font-script text-[1.15em] inline-block bg-no-repeat px-8 md:px-8 lg:px-16 py-8 order-bg"
                 style={{
                   backgroundImage: `url(${img("/images/about-card.webp")})`,
                   backgroundSize: '115%',
