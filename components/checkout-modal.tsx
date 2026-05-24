@@ -76,22 +76,30 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const [postcodeInput, setPostcodeInput] = useState('')
   const [addressResults, setAddressResults] = useState<{ line_1: string; line_2: string; postcode: string; city: string }[]>([])
   const [lookingUp, setLookingUp] = useState(false)
+  const [lookupError, setLookupError] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
   const [selectedIdx, setSelectedIdx] = useState(-1)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (postcodeInput.trim().length < 5) { setAddressResults([]); setShowDropdown(false); return }
+    if (postcodeInput.trim().length < 5) { setAddressResults([]); setShowDropdown(false); setLookupError(''); return }
     const timer = setTimeout(async () => {
       setLookingUp(true)
+      setLookupError('')
       try {
         const res = await fetch(`/api/postcode-lookup?postcode=${encodeURIComponent(postcodeInput.trim())}`)
-        if (!res.ok) { setAddressResults([]); setShowDropdown(false); return }
+        if (!res.ok) { setAddressResults([]); setShowDropdown(false); setLookupError(t.checkout.addressLookupError || 'Lookup failed'); return }
         const data = await res.json()
         setAddressResults(data.addresses || [])
-        setShowDropdown(data.addresses?.length > 0)
+        const hasResults = data.addresses?.length > 0
+        setShowDropdown(hasResults)
+        if (!hasResults) setLookupError(t.checkout.noAddressesFound || 'No addresses found')
         setSelectedIdx(-1)
-      } catch { setAddressResults([]); setShowDropdown(false) }
+      } catch {
+        setAddressResults([])
+        setShowDropdown(false)
+        setLookupError(t.checkout.addressLookupError || 'Lookup failed')
+      }
       finally { setLookingUp(false) }
     }, 300)
     return () => clearTimeout(timer)
@@ -108,6 +116,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
   const handlePostcodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
     setPostcodeInput(val)
+    setLookupError('')
     if (!val) { setShowDropdown(false); setAddressResults([]) }
   }
 
@@ -119,6 +128,7 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
     setShowDropdown(false)
     setAddressResults([])
     setPostcodeInput('')
+    setLookupError('')
   }
 
   const handlePostcodeKeyDown = (e: React.KeyboardEvent) => {
@@ -332,40 +342,45 @@ export function CheckoutModal({ open, onOpenChange, products }: CheckoutModalPro
       )}
 
       {/* Delivery address */}
-      <div className="space-y-1.5 relative" ref={dropdownRef}>
-        <Label className="text-[18px] text-foreground/60 tracking-[0.1em]">
-          {t.checkout.postcodeLabel}
-        </Label>
+      <div className="space-y-1.5" ref={dropdownRef}>
         <div className="relative">
-          <input
-            value={postcodeInput}
-            onChange={handlePostcodeChange}
-            onKeyDown={handlePostcodeKeyDown}
-            onFocus={() => { if (addressResults.length > 0) setShowDropdown(true) }}
-            className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-[16px] text-foreground focus:border-primary outline-none pr-10"
-            placeholder={t.checkout.postcodePlaceholder}
-          />
-          {lookingUp && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+          <Label className="text-[18px] text-foreground/60 tracking-[0.1em]">
+            {t.checkout.postcodeLabel}
+          </Label>
+          <div className="relative mt-1">
+            <input
+              value={postcodeInput}
+              onChange={handlePostcodeChange}
+              onKeyDown={handlePostcodeKeyDown}
+              onFocus={() => { if (addressResults.length > 0) setShowDropdown(true) }}
+              className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-2.5 text-[16px] text-foreground focus:border-primary outline-none pr-10"
+              placeholder={t.checkout.postcodePlaceholder}
+            />
+            {lookingUp && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+              </div>
+            )}
+          </div>
+          {lookupError && !lookingUp && (
+            <p className="text-[14px] text-destructive mt-1">{lookupError}</p>
+          )}
+          {showDropdown && addressResults.length > 0 && (
+            <div className="absolute z-50 left-0 right-0 top-full mt-1 max-h-48 overflow-y-auto bg-background border border-border/50 rounded-lg shadow-xl">
+              {addressResults.map((addr, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => selectAddress(addr)}
+                  onMouseEnter={() => setSelectedIdx(i)}
+                  className={`w-full text-left px-4 py-2.5 text-[14px] text-foreground hover:bg-primary/10 transition-colors cursor-pointer border-b border-border/10 last:border-0 ${i === selectedIdx ? 'bg-primary/10' : ''}`}
+                >
+                  {addr.line_1}{addr.line_2 ? `, ${addr.line_2}` : ''}, {addr.city}, {addr.postcode}
+                </button>
+              ))}
             </div>
           )}
         </div>
-        {showDropdown && addressResults.length > 0 && (
-          <div className="absolute z-50 left-0 right-0 top-full mt-1 max-h-48 overflow-y-auto bg-background border border-border/50 rounded-lg shadow-xl">
-            {addressResults.map((addr, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => selectAddress(addr)}
-                onMouseEnter={() => setSelectedIdx(i)}
-                className={`w-full text-left px-4 py-2.5 text-[14px] text-foreground hover:bg-primary/10 transition-colors cursor-pointer border-b border-border/10 last:border-0 ${i === selectedIdx ? 'bg-primary/10' : ''}`}
-              >
-                {addr.line_1}{addr.line_2 ? `, ${addr.line_2}` : ''}, {addr.city}, {addr.postcode}
-              </button>
-            ))}
-          </div>
-        )}
         <Label htmlFor="delivery-address" className="text-[18px] text-foreground/60 tracking-[0.1em]">
           {t.checkout.deliveryAddress}
         </Label>
