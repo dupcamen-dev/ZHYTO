@@ -11,7 +11,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[120dvh] flex flex-col items-center justify-center overflow-hidden bg-background hero-parallax" style={{ contentVisibility: 'auto' } as React.CSSProperties}>
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-12 sm:pt-14 md:pt-16 lg:pt-16">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-5 sm:px-10 text-center pt-6 sm:pt-8 md:pt-10 lg:pt-10">
         <h1 className="hero-delay-1 text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-serif font-light leading-[1.1] mb-10 relative tracking-[0.05em]">
           <span className="font-script text-foreground text-[0.55em] uppercase relative inline-block tracking-[0.05em]">
             zhyto
