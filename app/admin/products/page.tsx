@@ -58,6 +58,8 @@ export default function AdminProducts() {
   const [categoryDescPl, setCategoryDescPl] = useState<Record<string, string>>({})
   const [newCategory, setNewCategory] = useState('')
   const [categoriesOpen, setCategoriesOpen] = useState(false)
+  const [draggedId, setDraggedId] = useState<number | null>(null)
+  const [dragOverId, setDragOverId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const bgFileInputRef = useRef<HTMLInputElement>(null)
 
@@ -319,43 +321,42 @@ export default function AdminProducts() {
     }
   }
 
-  const moveProduct = async (index: number, direction: -1 | 1) => {
-    const current = products[index]
-    const targetIndex = index + direction
-    if (targetIndex < 0 || targetIndex >= products.length) return
-    const target = products[targetIndex]
-    // only swap if same category
-    if (current.category !== target.category) return
-    if (!supabase) {
-      setProducts(prev => {
-        const next = [...prev]
-        const tmp = next[index].sort_order
-        next[index] = { ...next[index], sort_order: next[targetIndex].sort_order }
-        next[targetIndex] = { ...next[targetIndex], sort_order: tmp }
-        next.sort((a, b) => a.sort_order - b.sort_order)
-        return next
-      })
-      return
-    }
+  const handleDrop = async (draggedProduct: Product, targetProduct: Product) => {
+    if (draggedProduct.id === targetProduct.id) return
+    if (draggedProduct.category !== targetProduct.category) return
+
+    const catProducts = products.filter(p => p.category === draggedProduct.category)
+    const fromIndex = catProducts.findIndex(p => p.id === draggedProduct.id)
+    const toIndex = catProducts.findIndex(p => p.id === targetProduct.id)
+    if (fromIndex === -1 || toIndex === -1) return
+
+    const reordered = [...catProducts]
+    reordered.splice(fromIndex, 1)
+    reordered.splice(toIndex, 0, draggedProduct)
+
+    const updates = reordered.map((p, i) => ({ id: p.id, sort_order: i }))
+
+    setProducts(prev => {
+      const next = prev.filter(p => p.category !== draggedProduct.category)
+      next.push(...reordered.map((p, i) => ({ ...p, sort_order: i })))
+      next.sort((a, b) => a.sort_order - b.sort_order)
+      return next
+    })
+
+    if (!supabase) return
     try {
       const { data: { session } } = await supabase!.auth.getSession()
       if (!session?.access_token) return
-      const tmp = current.sort_order
-      await Promise.all([
+      await Promise.all(updates.map(u =>
         fetch('/api/admin/products', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
-          body: JSON.stringify({ id: current.id, sort_order: target.sort_order }),
-        }),
-        fetch('/api/admin/products', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
-          body: JSON.stringify({ id: target.id, sort_order: tmp }),
-        }),
-      ])
-      fetchProducts()
+          body: JSON.stringify(u),
+        })
+      ))
     } catch (e: any) {
       toast.error(e?.message || 'Failed to reorder')
+      fetchProducts()
     }
   }
 
@@ -491,93 +492,105 @@ export default function AdminProducts() {
         )}
       </div>
 
-      {/* Product list */}
-      <div className="space-y-3">
-        {products.map(product => (
-          <div key={product.id} className={`glass-card p-4 sm:p-5 ${!product.available ? 'opacity-50' : ''}`}>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
-              <div className="flex items-start gap-3 sm:gap-0">
-                <div className="flex flex-col items-start shrink-0">
-                  {product.badge && (
-                    <span className="hidden sm:inline px-2 py-0.5 bg-primary text-primary-foreground text-[11px] tracking-[0.15em] rounded font-semibold leading-none mb-0.5">
-                      {product.badge}
-                    </span>
-                  )}
-                  <div className="relative w-14 h-14 sm:w-20 sm:h-20 overflow-hidden shrink-0">
-                    <img src={img(product.image)} alt={product.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0 sm:hidden ml-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-serif text-base text-foreground truncate">{product.name}</h3>
-                    {product.badge && (
-                      <span className="px-1.5 py-0.5 bg-primary/20 text-primary text-[11px] tracking-[0.15em] rounded shrink-0">
-                        {product.badge}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{product.description}</p>
-                </div>
-              </div>
-              <div className="hidden sm:block flex-1 min-w-0">
-                <h3 className="font-serif text-lg text-foreground mb-0.5">{product.name}</h3>
-                <p className="text-sm text-muted-foreground">{product.description}</p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <span className="text-primary text-sm sm:text-base font-serif">£{product.price}{product.unit}</span>
-                <span className="text-xs sm:text-sm tracking-[0.15em] text-muted-foreground uppercase">{product.category}</span>
-                <span className={`text-xs sm:text-sm tracking-[0.1em] ${product.stock === 0 ? 'text-red-400' : 'text-emerald-400'}`}>
-                  {product.stock === 0 ? 'OUT OF STOCK' : `STOCK: ${product.stock}`}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 justify-end sm:justify-start shrink-0 sm:ml-auto">
-                <div className="flex flex-col gap-0.5 mr-1">
-                  <button
-                    onClick={() => moveProduct(products.indexOf(product), -1)}
-                    disabled={products.indexOf(product) === 0 || products[products.indexOf(product) - 1]?.category !== product.category}
-                    className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-border/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default"
-                    title="Move up"
-                  >
-                    <ChevronUp className="w-3 h-3" />
-                  </button>
-                  <button
-                    onClick={() => moveProduct(products.indexOf(product), 1)}
-                    disabled={products.indexOf(product) === products.length - 1 || products[products.indexOf(product) + 1]?.category !== product.category}
-                    className="w-5 h-5 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-border/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-default"
-                    title="Move down"
-                  >
-                    <ChevronDown className="w-3 h-3" />
-                  </button>
-                </div>
-                <button
-                  onClick={() => toggleAvailable(product)}
-                  className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border text-[11px] sm:text-xs tracking-[0.12em] font-medium transition-colors cursor-pointer whitespace-nowrap ${
-                    product.available
-                      ? 'border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10'
-                      : 'border-border/50 text-muted-foreground hover:border-foreground/50 hover:text-foreground'
+      {/* Product list grouped by category */}
+      {categories.map(cat => {
+        const catProducts = products.filter(p => p.category === cat)
+        if (catProducts.length === 0) return null
+        return (
+          <div key={cat} className="glass-card overflow-hidden">
+            <div className="px-4 sm:px-5 py-3 border-b border-border/20 bg-background/30">
+              <h2 className="font-serif text-lg text-foreground uppercase tracking-[0.1em]">{cat}</h2>
+            </div>
+            <div className="divide-y divide-border/10">
+              {catProducts.map(product => (
+                <div
+                  key={product.id}
+                  draggable
+                  onDragStart={() => setDraggedId(product.id)}
+                  onDragEnd={() => { setDraggedId(null); setDragOverId(null) }}
+                  onDragOver={e => { e.preventDefault(); setDragOverId(product.id) }}
+                  onDragLeave={() => setDragOverId(null)}
+                  onDrop={e => {
+                    e.preventDefault()
+                    const dragged = products.find(p => p.id === draggedId)
+                    if (dragged) handleDrop(dragged, product)
+                    setDraggedId(null)
+                    setDragOverId(null)
+                  }}
+                  className={`p-4 sm:p-5 transition-colors ${
+                    !product.available ? 'opacity-50' : ''
+                  } ${
+                    dragOverId === product.id && draggedId !== product.id ? 'bg-primary/5' : ''
+                  } ${
+                    draggedId === product.id ? 'opacity-40' : ''
                   }`}
                 >
-                  {product.available ? 'DISABLE' : 'ENABLE'}
-                </button>
-                <button
-                  onClick={() => setEditing({ ...product })}
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors cursor-pointer"
-                  title="Edit"
-                >
-                  <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </button>
-                <button
-                  onClick={() => deleteProduct(product.id)}
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-red-400 hover:border-red-400/50 transition-colors cursor-pointer"
-                  title="Delete"
-                >
-                  <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </button>
-              </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+                    <div className="flex items-start gap-3 sm:gap-0 flex-1 min-w-0">
+                      <div className="flex items-center gap-2 text-muted-foreground/40 hover:text-muted-foreground/70 cursor-grab active:cursor-grabbing shrink-0 mt-1 mr-1 sm:mr-2">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect y="2" width="14" height="2" rx="1"/><rect y="6" width="14" height="2" rx="1"/><rect y="10" width="14" height="2" rx="1"/></svg>
+                      </div>
+                      <div className="flex flex-col items-start shrink-0">
+                        {product.badge && (
+                          <span className="hidden sm:inline px-2 py-0.5 bg-primary text-primary-foreground text-[11px] tracking-[0.15em] rounded font-semibold leading-none mb-0.5">
+                            {product.badge}
+                          </span>
+                        )}
+                        <div className="relative w-14 h-14 sm:w-20 sm:h-20 overflow-hidden shrink-0">
+                          <img src={img(product.image)} alt={product.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/images/syrnyky-new.webp' }} />
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0 ml-2">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-serif text-base sm:text-lg text-foreground truncate">{product.name}</h3>
+                          {product.badge && (
+                            <span className="sm:hidden px-1.5 py-0.5 bg-primary/20 text-primary text-[11px] tracking-[0.15em] rounded shrink-0">
+                              {product.badge}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 sm:line-clamp-2 mt-0.5">{product.description}</p>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                          <span className="text-primary text-xs sm:text-sm font-serif">£{product.price}{product.unit}</span>
+                          <span className={`text-xs tracking-[0.1em] ${product.stock === 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                            {product.stock === 0 ? 'OUT OF STOCK' : `STOCK: ${product.stock}`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 justify-end shrink-0">
+                      <button
+                        onClick={() => toggleAvailable(product)}
+                        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border text-[11px] sm:text-xs tracking-[0.12em] font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                          product.available
+                            ? 'border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10'
+                            : 'border-border/50 text-muted-foreground hover:border-foreground/50 hover:text-foreground'
+                        }`}
+                      >
+                        {product.available ? 'DISABLE' : 'ENABLE'}
+                      </button>
+                      <button
+                        onClick={() => setEditing({ ...product })}
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors cursor-pointer"
+                        title="Edit"
+                      >
+                        <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </button>
+                      <button
+                        onClick={() => deleteProduct(product.id)}
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-red-400 hover:border-red-400/50 transition-colors cursor-pointer"
+                        title="Delete"
+                      >
+                        <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
+        )
+      })}
 
       {/* Edit/Create modal */}
       {editing && (
