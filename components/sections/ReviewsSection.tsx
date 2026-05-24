@@ -240,7 +240,7 @@ const FloatingVarenyky = React.memo(function FloatingVarenyky({ progressRef, isM
   return data.map((v) => {
     if (isMobile && v.hideMob) return null
     const target = isMobile ? v.finalMob : v.final
-    const entryStart = 0.15 + v.delay * 0.015
+    const entryStart = 0.15 + v.delay * 0.12
     const entryEnd = Math.min(1, entryStart + 0.85)
     const raw = Math.max(0, Math.min(1, (progress - entryStart) / (entryEnd - entryStart)))
     const t = 1 - (1 - raw) ** 3
