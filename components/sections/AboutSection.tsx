@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
@@ -9,16 +9,39 @@ const img = imgPath
 import { ImageCarousel } from '@/components/image-carousel'
 import { useLanguage } from '@/components/language-context'
 
+const DEFAULT_ABOUT_IMAGES = {
+  images: [
+    { src: "/images/about-us.webp", name: "Illia" },
+    { src: "/images/about-us-2.webp", name: "Victor" },
+    { src: "/images/about-us-3.webp", name: "Nataliia" },
+  ],
+  cardImage: "/images/about-card.webp",
+}
+
 export default function AboutSection() {
   const { t } = useLanguage()
   const aboutRef = useRef<HTMLElement>(null)
   const [aboutImageIndex, setAboutImageIndex] = useState(0)
-  const aboutNames = ["Illia", "Victor", "Nataliia", "Anna", "Kateryna", "Iryna"]
+  const [aboutData, setAboutData] = useState<{ images: { src: string; name: string }[]; cardImage: string } | null>(null)
   const { scrollYProgress: aboutScroll } = useScroll({
     target: aboutRef,
     offset: ["start end", "end start"]
   })
   const aboutImageY = useTransform(aboutScroll, [0, 1], ["-20%", "20%"])
+
+  useEffect(() => {
+    fetch('/api/public-settings')
+      .then(r => r.json())
+      .then(data => {
+        if (data?.about_images?.images?.length > 0) {
+          setAboutData(data.about_images)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const data = aboutData || DEFAULT_ABOUT_IMAGES
+  const names = data.images.map(i => i.name)
 
   return (
     <section id="about" ref={aboutRef} className="py-28 lg:py-36 relative bg-background">
@@ -69,20 +92,16 @@ export default function AboutSection() {
               >
                 <div className="relative w-full h-full">
                   <ImageCarousel
-                    images={[
-                      { src: img("/images/about-us.webp"), alt: "Handmade varenyky process" },
-                      { src: img("/images/about-us-2.webp"), alt: "Handmade varenyky process" },
-                      { src: img("/images/about-us-3.webp"), alt: "Handmade varenyky process" },
-                    ]}
+                    images={data.images.map(i => ({ src: img(i.src), alt: i.name }))}
                     onChange={setAboutImageIndex}
                     showDots={false}
                   />
                 </div>
               </motion.div>
             </div>
-            {aboutNames.length > 0 && (
+            {names.length > 0 && (
               <div className="flex justify-center gap-2 mt-4 z-10">
-                {[0, 1, 2].map(i => (
+                {data.images.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setAboutImageIndex(i)}
@@ -95,13 +114,13 @@ export default function AboutSection() {
             )}
             <div className="absolute -bottom-8 -left-8 lg:-bottom-12 lg:-left-12 w-56 h-56 lg:w-72 lg:h-72 overflow-hidden">
               <Image
-                src={img("/images/about-card.webp")}
+                src={img(data.cardImage)}
                 alt=""
                 fill
                 className="object-contain"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-3xl lg:text-4xl font-script leading-none text-black">{aboutNames[aboutImageIndex]}</span>
+                <span className="text-3xl lg:text-4xl font-script leading-none text-black">{names[aboutImageIndex]}</span>
               </div>
             </div>
           </motion.div>

@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Truck, Save, Loader, Percent, X, Tag, FolderOpen, Languages, RotateCcw } from 'lucide-react'
+import { Truck, Save, Loader, Percent, X, Tag, FolderOpen, Languages, RotateCcw, Upload, Trash2, Camera, Plus } from 'lucide-react'
+import Image from 'next/image'
 import { toast } from 'sonner'
 import TextEditor from '@/components/text-editor'
 import { translations } from '@/lib/translations'
@@ -25,6 +26,10 @@ export default function AdminSettings() {
   const [siteTexts, setSiteTexts] = useState<{ en: Record<string, unknown>; uk: Record<string, unknown> } | null>(null)
   const [siteTextsLoaded, setSiteTextsLoaded] = useState(false)
   const [siteTextsFromCode, setSiteTextsFromCode] = useState(false)
+  const [aboutImages, setAboutImages] = useState<{ images: { src: string; name: string }[]; cardImage: string } | null>(null)
+  const [aboutImagesLoaded, setAboutImagesLoaded] = useState(false)
+  const cardInputRef = useRef<HTMLInputElement>(null)
+  const carouselInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!supabase) { setLoaded(true); return }
@@ -61,6 +66,29 @@ export default function AdminSettings() {
       setPromoLoaded(true)
     })
   }, [])
+
+  useEffect(() => {
+    if (!supabase) { setAboutImagesLoaded(true); return }
+    supabase.from('settings').select('value').eq('key', 'about_images').single().then(({ data }) => {
+      if (data?.value) setAboutImages(data.value as typeof aboutImages)
+      setAboutImagesLoaded(true)
+    })
+  }, [])
+
+  const uploadImage = async (file: File): Promise<string | null> => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return null
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      body: formData,
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.url || null
+  }
 
   const upsertSetting = async (key: string, value: any) => {
     const { data: { session } } = await supabase.auth.getSession()
@@ -387,6 +415,145 @@ export default function AdminSettings() {
                 </div>
               </>
             )}
+          </>
+        )}
+      </div>
+
+      {/* About Images */}
+      <div className="glass-card rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Camera className="w-6 h-6 text-primary" />
+          <h2 className="font-serif text-xl text-foreground">About Images</h2>
+        </div>
+
+        {!aboutImagesLoaded ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader className="w-5 h-5 text-primary animate-spin" />
+          </div>
+        ) : (
+          <>
+            {/* Card Image */}
+            <div className="mb-8">
+              <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-3">Card Image</label>
+              <div className="flex items-center gap-4">
+                <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-border/50 bg-background/50 shrink-0">
+                  <Image
+                    src={img(aboutImages?.cardImage || "/images/about-card.webp")}
+                    alt="Card"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <button
+                  onClick={() => cardInputRef.current?.click()}
+                  className="flex items-center gap-2 px-4 py-2 border border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-border/20 transition-colors cursor-pointer"
+                >
+                  <Upload className="w-4 h-4" />
+                  CHANGE
+                </button>
+                <input
+                  ref={cardInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async e => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    const url = await uploadImage(file)
+                    if (url) setAboutImages(prev => prev ? { ...prev, cardImage: url } : { images: [], cardImage: url })
+                    e.target.value = ''
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Carousel Images */}
+            <div>
+              <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-3">Carousel Images</label>
+              <div className="space-y-3">
+                {(aboutImages?.images || []).map((item, i) => (
+                  <div key={i} className="flex items-start gap-4 p-4 rounded-lg border border-border/30 bg-background/30">
+                    <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-border/50 shrink-0 bg-background/50">
+                      <Image src={img(item.src)} alt={item.name} fill className="object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <label className="text-xs tracking-[0.1em] text-muted-foreground block mb-1">Name</label>
+                      <input
+                        value={item.name}
+                        onChange={e => {
+                          const newImages = [...(aboutImages?.images || [])]
+                          newImages[i] = { ...newImages[i], name: e.target.value }
+                          setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                        }}
+                        className="w-full bg-transparent border border-border/50 rounded-lg px-3 py-2 text-sm text-foreground focus:border-primary outline-none mb-2"
+                        placeholder="Name"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => carouselInputRef.current?.click()}
+                          className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                        >
+                          <Upload className="w-3 h-3" /> Change photo
+                        </button>
+                        <input
+                          ref={i === 0 ? carouselInputRef : undefined}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async e => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            const url = await uploadImage(file)
+                            if (url) {
+                              const newImages = [...(aboutImages?.images || [])]
+                              newImages[i] = { ...newImages[i], src: url }
+                              setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                            }
+                            e.target.value = ''
+                          }}
+                        />
+                        <button
+                          onClick={() => {
+                            const newImages = (aboutImages?.images || []).filter((_, j) => j !== i)
+                            setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                          }}
+                          className="flex items-center gap-1 text-xs text-destructive hover:text-destructive/80 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-3 h-3" /> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  const newImages = [...(aboutImages?.images || []), { src: '', name: '' }]
+                  setAboutImages(prev => prev ? { ...prev, images: newImages } : { cardImage: '', images: newImages })
+                }}
+                className="mt-3 flex items-center gap-2 px-4 py-2 border border-dashed border-border/50 text-muted-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-border/20 transition-colors w-full justify-center cursor-pointer"
+              >
+                <Plus className="w-4 h-4" /> ADD PHOTO
+              </button>
+            </div>
+
+            <button
+              onClick={async () => {
+                if (!aboutImages) return
+                try {
+                  await upsertSetting('about_images', aboutImages)
+                  toast.success('About images saved')
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : 'Failed to save')
+                }
+              }}
+              disabled={!aboutImages}
+              className="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <Save className="w-4 h-4" />
+              SAVE ABOUT IMAGES
+            </button>
           </>
         )}
       </div>
