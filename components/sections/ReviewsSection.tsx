@@ -197,26 +197,53 @@ export default function ReviewsSection({ setSignInModalOpen }: ReviewsSectionPro
   )
 }
 
+const layoutData = [
+  { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -5, finalMob: -45 },
+  { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 40, finalMob: 0, hideMob: true },
+  { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 60, finalMob: -20 },
+  { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -5, finalMob: -45 },
+  { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 40, finalMob: -35 },
+  { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 60, finalMob: -20 },
+]
+
 const FloatingVarenyky = React.memo(function FloatingVarenyky({ isMobile }: { isMobile: boolean }) {
   const containerRef = React.useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = React.useState(0)
+  const imgRefs = React.useRef<(HTMLImageElement | null)[]>([])
+  const visibleRef = React.useRef(false)
   const lastP = React.useRef(0)
 
   React.useEffect(() => {
     const el = containerRef.current
     if (!el) return
     let ticking = false
-    let visible = false
 
     const calc = () => {
-      if (!visible) { ticking = false; return }
+      if (!visibleRef.current) { ticking = false; return }
       const rect = el.getBoundingClientRect()
       const wh = window.innerHeight
       const total = rect.height + wh
       const p = Math.max(0, Math.min(1, (wh - rect.top) / total))
-      if (Math.abs(p - lastP.current) > 0.001) {
-        lastP.current = p
-        setProgress(p)
+      if (Math.abs(p - lastP.current) <= 0.001) { ticking = false; return }
+      lastP.current = p
+
+      for (const v of layoutData) {
+        if (isMobile && (v as any).hideMob) continue
+        const i = imgRefs.current[layoutData.indexOf(v)]
+        if (!i) continue
+        const target = isMobile ? (v as any).finalMob : v.final
+        const entryStart = 0.15 + v.delay * 0.12
+        const entryEnd = Math.min(1, entryStart + 0.85)
+        const raw = Math.max(0, Math.min(1, (p - entryStart) / (entryEnd - entryStart)))
+        const t = 1 - (1 - raw) ** 3
+        const x = -280 + (target + 280) * t
+        i.style.opacity = String(t)
+        if (v.side === 'left') {
+          i.style.left = `${x}px`
+          i.style.right = ''
+        } else {
+          i.style.right = `${x}px`
+          i.style.left = ''
+        }
       }
       ticking = false
     }
@@ -224,8 +251,8 @@ const FloatingVarenyky = React.memo(function FloatingVarenyky({ isMobile }: { is
     const onScroll = () => { if (!ticking) { requestAnimationFrame(calc); ticking = true } }
 
     const obs = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting
-      if (!visible) { lastP.current = 0; setProgress(0) }
+      visibleRef.current = e.isIntersecting
+      if (!e.isIntersecting) { lastP.current = 0; for (const i of imgRefs.current) { if (i) { i.style.opacity = '0' } } }
       if (e.isIntersecting) calc()
     }, { rootMargin: '200px' })
     obs.observe(el)
@@ -234,40 +261,28 @@ const FloatingVarenyky = React.memo(function FloatingVarenyky({ isMobile }: { is
     calc()
 
     return () => { obs.disconnect(); window.removeEventListener('scroll', onScroll) }
-  }, [])
+  }, [isMobile])
 
-  const data = [
-    { side: 'left' as const, top: '3%', width: 170, rotate: -10, delay: 0, final: -5, finalMob: -45 },
-    { side: 'left' as const, top: '22%', width: 140, rotate: 6, delay: 0.25, final: 40, finalMob: 0, hideMob: true },
-    { side: 'left' as const, top: '45%', width: 190, rotate: -8, delay: 0.5, final: 60, finalMob: -20 },
-    { side: 'right' as const, top: '5%', width: 160, rotate: 12, delay: 0.15, final: -5, finalMob: -45 },
-    { side: 'right' as const, top: '27%', width: 200, rotate: -5, delay: 0.4, final: 40, finalMob: -35 },
-    { side: 'right' as const, top: '50%', width: 150, rotate: 10, delay: 0.65, final: 60, finalMob: -20 },
-  ]
+  const items = layoutData.filter(v => !(isMobile && (v as any).hideMob))
 
   return (
     <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-      {data.map((v) => {
-        if (isMobile && v.hideMob) return null
-        const target = isMobile ? v.finalMob : v.final
-        const entryStart = 0.15 + v.delay * 0.12
-        const entryEnd = Math.min(1, entryStart + 0.85)
-        const raw = Math.max(0, Math.min(1, (progress - entryStart) / (entryEnd - entryStart)))
-        const t = 1 - (1 - raw) ** 3
-        const x = -280 + (target + 280) * t
+      {items.map((v, idx) => {
+        const origIdx = layoutData.indexOf(v)
         return (
           <img
             key={`${v.side}-${v.top}`}
+            ref={r => { imgRefs.current[origIdx] = r }}
             src={img("/images/varenyk-bg.png")}
             alt=""
             className="absolute pointer-events-none"
             style={{
               width: `${v.width}px`,
               top: v.top,
-              [v.side === 'left' ? 'left' : 'right']: `${x}px`,
-              opacity: t,
+              [v.side === 'left' ? 'left' : 'right']: '-280px',
+              opacity: 0,
               transform: `rotate(${v.rotate}deg)`,
-              willChange: 'transform, opacity',
+              willChange: 'transform, left, right, opacity',
             }}
           />
         )
