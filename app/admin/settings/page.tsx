@@ -72,7 +72,15 @@ export default function AdminSettings() {
   useEffect(() => {
     if (!supabase) { setAboutImagesLoaded(true); return }
     supabase.from('settings').select('value').eq('key', 'about_images').single().then(({ data }) => {
-      if (data?.value?.images) setAboutImages(data.value.images as { src: string; name: string }[])
+      if (data?.value?.images) {
+        setAboutImages(data.value.images as { src: string; name: string }[])
+      } else {
+        setAboutImages([
+          { src: "/images/about-us.webp", name: "Illia" },
+          { src: "/images/about-us-2.webp", name: "Victor" },
+          { src: "/images/about-us-3.webp", name: "Nataliia" },
+        ])
+      }
       setAboutImagesLoaded(true)
     })
   }, [])
@@ -531,7 +539,7 @@ export default function AdminSettings() {
                   toast.error(e instanceof Error ? e.message : 'Failed to save')
                 }
               }}
-              disabled={!aboutImages}
+              disabled={!aboutImages || aboutImages.length === 0}
               className="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
             >
               <Save className="w-4 h-4" />
