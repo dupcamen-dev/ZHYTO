@@ -27,7 +27,7 @@ export default function DeliverySection() {
                 {t.delivery.headingPrefix}
                 <span>{t.delivery.headingSuffix}</span>
                 {t.delivery.headingSuffix && (
-                  <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[400%] -z-10">
+                  <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-[180%] h-[420%] -z-10">
                     <Image
                       src={img("/images/about-card.webp")}
                       alt=""
