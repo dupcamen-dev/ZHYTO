@@ -12,7 +12,7 @@ export default function DeliverySection() {
   const { settings: delivery } = useDeliverySettings()
 
   return (
-    <section id="delivery" className="py-28 lg:py-36 bg-background overflow-hidden">
+    <section id="delivery" className="py-16 lg:py-20 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 lg:px-10">
         <div className="flex justify-center">
           <motion.div
@@ -22,8 +22,8 @@ export default function DeliverySection() {
             transition={{ duration: 0.8 }}
             className="order-2 lg:order-1"
           >
-            <div className="sm:px-12 py-16 relative">
-              <h3 className="font-script text-5xl md:text-4xl lg:text-5xl mb-6 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
+            <div className="sm:px-12 py-8 relative">
+              <h3 className="font-script text-4xl md:text-3xl lg:text-4xl mb-3 lg:text-left text-center text-black relative z-10 inline-block uppercase lg:ml-8">
                 {t.delivery.headingPrefix}
                 <span className="relative">
                   {t.delivery.headingSuffix}
@@ -39,7 +39,7 @@ export default function DeliverySection() {
                   )}
                 </span>
               </h3>
-              <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm mt-24 lg:mt-32 max-w-[500px] mx-auto lg:mx-0 lg:ml-8">
+              <div className="grid grid-cols-2 gap-y-2 gap-x-6 text-base lg:text-lg mt-10 lg:mt-16 max-w-[500px] mx-auto lg:mx-0 lg:ml-8">
                 <span className="text-foreground font-medium">{t.delivery.sameDay}</span>
                 <span className="text-foreground text-right">{t.delivery.zones1to3}</span>
                 <span className="text-foreground font-medium">{t.delivery.nextDay}</span>
