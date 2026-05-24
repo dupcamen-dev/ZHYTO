@@ -72,11 +72,7 @@ export default function ReviewsSection({ setSignInModalOpen, progressRef }: Revi
     setReviewSubmitting(false)
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: 'Unknown error' }))
-      if (err.error?.includes('order')) {
-        toast.error(t.reviews.mustOrderFirst)
-      } else {
-        toast.error(t.reviews.failedSubmit)
-      }
+      toast.error(err.error || t.reviews.failedSubmit)
       return
     }
     toast.success(t.reviews.reviewSubmitted)
