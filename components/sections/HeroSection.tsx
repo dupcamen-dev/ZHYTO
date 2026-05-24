@@ -28,7 +28,7 @@ export default function HeroSection() {
           <span className="text-white block tracking-[0.2em] font-konstrukt">{t.hero.dumplings}</span>
             <span className="font-script text-foreground text-[0.55em] uppercase relative inline-block tracking-[0.05em]">
             {t.hero.withSoul}
-            <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[46%] w-[200%] h-[300%] -z-10">
+            <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[56%] w-[200%] h-[320%] -z-10">
               <Image
                 src={img("/images/about-card.webp")}
                 alt=""
