@@ -99,7 +99,7 @@ export async function processTelegramUpdate(body: any) {
   const [action, orderId] = cbData.split(':');
   if (!action || !orderId) return;
 
-  const status = action === 'approve' ? 'processing' : 'cancelled';
+  const status = action === 'approve' ? 'confirmed' : 'cancelled';
 
   const { data: order, error } = await db
     .from('orders')
@@ -111,7 +111,7 @@ export async function processTelegramUpdate(body: any) {
   if (error || !order) {
     await callTelegram('answerCallbackQuery', {
       callback_query_id: callbackId,
-      text: '❌ Order not found',
+      text: `❌ ${error?.message || 'Order not found'}`,
       show_alert: true,
     });
     return;
@@ -124,7 +124,7 @@ export async function processTelegramUpdate(body: any) {
   });
 
   // Remove inline keyboard and update message
-  const label = status === 'processing' ? 'Approved ✅' : 'Cancelled ❌';
+  const label = status === 'confirmed' ? 'Approved ✅' : 'Cancelled ❌';
   const updatedText = message.text + `\n\n*Status:* ${label}`;
   await callTelegram('editMessageText', {
     chat_id: chatId,
