@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Truck, Save, Loader, Percent, X, Tag, Languages, RotateCcw, Upload, Trash2, Camera, Plus, MessageCircle, Link } from 'lucide-react'
+import { Truck, Save, Loader, Percent, X, Tag, Languages, RotateCcw, Upload, Trash2, Camera, Plus, MessageCircle, Link, Globe } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
 import { translations } from '@/lib/translations'
@@ -35,6 +35,9 @@ export default function AdminSettings() {
   const carouselInputRef = useRef<HTMLInputElement>(null)
   const addPhotoInputRef = useRef<HTMLInputElement>(null)
   const [carouselEditIndex, setCarouselEditIndex] = useState<number | null>(null)
+
+  const [enabledLanguages, setEnabledLanguages] = useState<string[]>(['en', 'uk', 'pl'])
+  const [langLoaded, setLangLoaded] = useState(false)
 
   useEffect(() => {
     if (!supabase) { setLoaded(true); return }
@@ -73,6 +76,14 @@ export default function AdminSettings() {
       if (tokenRes.data?.value) setTelegramBotToken(tokenRes.data.value)
       if (chatRes.data?.value) setTelegramChatId(chatRes.data.value)
       setTelegramLoaded(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) { setLangLoaded(true); return }
+    supabase.from('settings').select('value').eq('key', 'enabled_languages').single().then(({ data }) => {
+      if (data?.value?.length) setEnabledLanguages(data.value)
+      setLangLoaded(true)
     })
   }, [])
 
@@ -251,6 +262,62 @@ export default function AdminSettings() {
             >
               <Save className="w-4 h-4" />
               {saving ? 'SAVING...' : saved ? 'SAVED ✓' : 'SAVE SETTINGS'}
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Language Settings */}
+      <div className="glass-card rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <Globe className="w-6 h-6 text-primary" />
+          <h2 className="font-serif text-xl text-foreground">Language Settings</h2>
+        </div>
+
+        {!langLoaded ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader className="w-5 h-5 text-primary animate-spin" />
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-muted-foreground mb-4">Choose which languages are visible on the frontend</p>
+            <div className="flex flex-wrap gap-3">
+              {(['en', 'uk', 'pl'] as const).map(l => (
+                <button
+                  key={l}
+                  onClick={() => {
+                    setEnabledLanguages(prev =>
+                      prev.includes(l) ? prev.filter(x => x !== l) : [...prev, l]
+                    )
+                  }}
+                  className={`px-5 py-2.5 rounded-lg text-sm tracking-[0.15em] border transition-colors cursor-pointer ${
+                    enabledLanguages.includes(l)
+                      ? 'bg-primary text-primary-foreground border-primary'
+                      : 'border-border/50 text-muted-foreground hover:border-primary/40'
+                  }`}
+                >
+                  {l === 'en' ? 'EN — English' : l === 'uk' ? 'UA — Ukrainian' : 'PL — Polish'}
+                </button>
+              ))}
+            </div>
+            {enabledLanguages.length === 0 && (
+              <p className="text-sm text-destructive mt-2">At least one language must be enabled</p>
+            )}
+            <button
+              onClick={async () => {
+                if (enabledLanguages.length === 0) return
+                try {
+                  await upsertSetting('enabled_languages', enabledLanguages)
+                  toast.success('Language settings saved')
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : 'Failed to save')
+                }
+              }}
+              disabled={enabledLanguages.length === 0}
+              className="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <Save className="w-4 h-4" />
+              SAVE LANGUAGES
             </button>
           </>
         )}

@@ -18,7 +18,7 @@ interface HeaderProps {
 
 export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: HeaderProps) {
   const router = useRouter()
-  const { t, lang, setLang } = useLanguage()
+  const { t, lang, setLang, enabledLanguages } = useLanguage()
   const { totalItems } = useCart()
   const { user, loading, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -89,7 +89,7 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
 
             {/* Language Selector - centered on mobile */}
             <div className="flex sm:hidden items-center gap-0.5 border-2 border-foreground/20 rounded-full px-1 py-1">
-              {(['en', 'uk', 'pl'] as const).map(l => (
+              {enabledLanguages.map(l => (
                 <button
                   key={l}
                   onClick={() => setLang(l)}
@@ -152,7 +152,7 @@ export default function Header({ setCartOpen, setSignInModalOpen, headerMode }: 
               )}
               {/* Language Selector - desktop */}
               <div className="hidden sm:flex items-center gap-0.5 border-2 border-foreground/20 rounded-full px-1 py-1">
-                {(['en', 'uk', 'pl'] as const).map(l => (
+                {enabledLanguages.map(l => (
                   <button
                     key={l}
                     onClick={() => setLang(l)}

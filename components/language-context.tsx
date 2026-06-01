@@ -5,11 +5,14 @@ import { translations, TranslationKeys } from '@/lib/translations'
 
 type Lang = 'en' | 'uk' | 'pl'
 
+const ALL_LANGS: Lang[] = ['en', 'uk', 'pl']
+
 interface LangContextType {
   lang: Lang
   t: TranslationKeys
   toggleLang: () => void
   setLang: (l: Lang) => void
+  enabledLanguages: Lang[]
 }
 
 const LS_KEY = 'zhyto-lang'
@@ -43,10 +46,12 @@ const LangContext = createContext<LangContextType>({
   t: translations.en,
   toggleLang: () => {},
   setLang: () => {},
+  enabledLanguages: ALL_LANGS,
 })
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>('en')
+  const [enabledLanguages, setEnabledLanguages] = useState<Lang[]>(ALL_LANGS)
   const [customTexts, setCustomTexts] = useState<{ en: Record<string, any>; uk: Record<string, any>; pl: Record<string, any> } | null>(null)
 
   useEffect(() => {
@@ -55,6 +60,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       .then(r => r.json())
       .then(data => {
         if (data?.en && data?.uk && data?.pl) setCustomTexts(data)
+      })
+      .catch(() => {})
+    fetch('/api/public-settings')
+      .then(r => r.json())
+      .then(data => {
+        if (data?.enabled_languages?.length) {
+          setEnabledLanguages(data.enabled_languages)
+        }
       })
       .catch(() => {})
   }, [])
@@ -68,16 +81,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     : translations
 
   const setLangWithStore = (next: Lang) => {
+    if (!enabledLanguages.includes(next)) return
     localStorage.setItem(LS_KEY, next)
     setLang(next)
   }
 
   const toggleLang = () => {
-    setLangWithStore(lang === 'en' ? 'uk' : lang === 'uk' ? 'pl' : 'en')
+    const idx = enabledLanguages.indexOf(lang)
+    const next = enabledLanguages[(idx + 1) % enabledLanguages.length]
+    setLangWithStore(next)
   }
 
   return (
-    <LangContext.Provider value={{ lang, t: merged[lang], toggleLang, setLang: setLangWithStore }}>
+    <LangContext.Provider value={{ lang, t: merged[lang], toggleLang, setLang: setLangWithStore, enabledLanguages }}>
       <div data-lang={lang} style={{ display: 'contents' }}>
         {children}
       </div>
