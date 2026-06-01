@@ -76,63 +76,63 @@ export async function sendTelegramNotification(order: {
 }
 
 export async function processTelegramUpdate(body: any) {
+  if (!body?.callback_query) return;
+
   const db = getSupabaseAdmin();
+  const { data: cbData, message, id: callbackId } = body.callback_query;
+  if (!cbData || !message?.chat?.id) return;
 
-  // Handle callback query (inline button press)
-  if (body.callback_query) {
-    const { data, from, message, id: callbackId } = body.callback_query;
-    if (!data || !message?.chat?.id) return;
+  const chatId = message.chat.id;
 
-    const [action, orderId] = data.split(':');
-    if (!action || !orderId) return;
-
-    const chatId = message.chat.id;
-
-    // Verify sender is admin — check if chat_id matches the configured one
-    const { data: settings } = await db.from('settings').select('value').eq('key', 'telegram_chat_id').single();
-    const allowedChat = settings?.value;
-    if (String(chatId) !== String(allowedChat)) {
-      await callTelegram('answerCallbackQuery', {
-        callback_query_id: callbackId,
-        text: '⛔ Unauthorized',
-        show_alert: true,
-      });
-      return;
-    }
-
-    const status = action === 'approve' ? 'processing' : 'cancelled';
-
-    const { data: order, error } = await db
-      .from('orders')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', orderId)
-      .select()
-      .single();
-
-    if (error || !order) {
-      await callTelegram('answerCallbackQuery', {
-        callback_query_id: callbackId,
-        text: '❌ Order not found',
-        show_alert: true,
-      });
-      return;
-    }
-
-    // Acknowledge the button press
+  // Verify sender is admin — check if chat_id matches the configured one
+  const { data: settings } = await db.from('settings').select('value').eq('key', 'telegram_chat_id').single();
+  const allowedChat = settings?.value;
+  if (String(chatId) !== String(allowedChat)) {
     await callTelegram('answerCallbackQuery', {
       callback_query_id: callbackId,
-      text: `✅ Order ${status}!`,
+      text: '⛔ Unauthorized',
+      show_alert: true,
     });
-
-    // Update the original message
-    const updatedText = message.text + `\n\n_Status: ${status.toUpperCase()}_`;
-    await callTelegram('editMessageText', {
-      chat_id: chatId,
-      message_id: message.message_id,
-      text: updatedText,
-      parse_mode: 'Markdown',
-    });
+    return;
   }
+
+  const [action, orderId] = cbData.split(':');
+  if (!action || !orderId) return;
+
+  const status = action === 'approve' ? 'processing' : 'cancelled';
+
+  const { data: order, error } = await db
+    .from('orders')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', orderId)
+    .select()
+    .single();
+
+  if (error || !order) {
+    await callTelegram('answerCallbackQuery', {
+      callback_query_id: callbackId,
+      text: '❌ Order not found',
+      show_alert: true,
+    });
+    return;
+  }
+
+  // Answer callback — removes loading state
+  await callTelegram('answerCallbackQuery', {
+    callback_query_id: callbackId,
+    text: `✅ ${status}!`,
+  });
+
+  // Remove inline keyboard and update message
+  const label = status === 'processing' ? 'Approved ✅' : 'Cancelled ❌';
+  const updatedText = message.text + `\n\n*Status:* ${label}`;
+  await callTelegram('editMessageText', {
+    chat_id: chatId,
+    message_id: message.message_id,
+    text: updatedText,
+    parse_mode: 'Markdown',
+    reply_markup: { inline_keyboard: [] },
+  });
 }
 
 export async function setTelegramWebhook(url: string) {
