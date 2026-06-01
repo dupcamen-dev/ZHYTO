@@ -103,7 +103,7 @@ export async function processTelegramUpdate(body: any) {
 
   const { data: order, error } = await db
     .from('orders')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update({ status })
     .eq('id', orderId)
     .select()
     .single();
