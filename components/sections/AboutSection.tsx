@@ -40,11 +40,8 @@ export default function AboutSection() {
         <div className="grid lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
           <div className="order-1 lg:order-1">
             <p className="text-[39px] tracking-[0.35em] mb-0">
-              <span className="relative inline-block font-script text-black">
+              <span className="font-script text-black">
                 {t.about.ourStory}
-                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-[55%] w-[200%] h-[320%] -z-10">
-                  <Image src={img("/images/about-card.webp")} alt="" fill className="object-fill" />
-                </div>
               </span>
             </p>
             <div className="w-10 h-px bg-primary/60 mb-10" />

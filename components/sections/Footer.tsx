@@ -1,13 +1,14 @@
 "use client"
 
 import Link from 'next/link'
+import { ArrowUp } from 'lucide-react'
 import { useLanguage } from '@/components/language-context'
 
 export default function Footer() {
   const { t } = useLanguage()
 
   return (
-    <footer className="py-28 bg-black">
+    <footer className="py-28 bg-black relative">
       <div className="max-w-7xl mx-auto px-5 lg:px-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="text-2xl md:text-4xl font-serif tracking-[0.15em] text-cream">
@@ -36,6 +37,13 @@ export default function Footer() {
             <Link href="/terms" className="text-sm md:text-base text-cream hover:text-white transition-colors tracking-[0.15em]">
               {t.footer.terms}
             </Link>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              aria-label="Scroll to top"
+              className="lg:hidden w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors shrink-0 cursor-pointer"
+            >
+              <ArrowUp className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
