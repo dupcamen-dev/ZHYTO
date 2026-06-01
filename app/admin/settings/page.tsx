@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Truck, Save, Loader, Percent, X, Tag, Languages, RotateCcw, Upload, Trash2, Camera, Plus } from 'lucide-react'
+import { Truck, Save, Loader, Percent, X, Tag, Languages, RotateCcw, Upload, Trash2, Camera, Plus, MessageCircle } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
 import { translations } from '@/lib/translations'
@@ -23,6 +23,11 @@ export default function AdminSettings() {
   const [siteTexts, setSiteTexts] = useState<{ en: Record<string, unknown>; uk: Record<string, unknown>; pl: Record<string, unknown> } | null>(null)
   const [siteTextsLoaded, setSiteTextsLoaded] = useState(false)
   const [siteTextsFromCode, setSiteTextsFromCode] = useState(false)
+  const [telegramBotToken, setTelegramBotToken] = useState('')
+  const [telegramChatId, setTelegramChatId] = useState('')
+  const [telegramLoaded, setTelegramLoaded] = useState(false)
+  const [telegramSaving, setTelegramSaving] = useState(false)
+  const [telegramSaved, setTelegramSaved] = useState(false)
   const [aboutImages, setAboutImages] = useState<{ src: string; name: string }[] | null>(null)
   const [aboutImagesLoaded, setAboutImagesLoaded] = useState(false)
   const carouselInputRef = useRef<HTMLInputElement>(null)
@@ -54,6 +59,18 @@ export default function AdminSettings() {
     supabase.from('settings').select('value').eq('key', 'promo_codes').single().then(({ data }) => {
       if (data?.value) setPromoCodes(data.value as typeof promoCodes)
       setPromoLoaded(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) { setTelegramLoaded(true); return }
+    Promise.all([
+      supabase.from('settings').select('value').eq('key', 'telegram_bot_token').single(),
+      supabase.from('settings').select('value').eq('key', 'telegram_chat_id').single(),
+    ]).then(([tokenRes, chatRes]) => {
+      if (tokenRes.data?.value) setTelegramBotToken(tokenRes.data.value)
+      if (chatRes.data?.value) setTelegramChatId(chatRes.data.value)
+      setTelegramLoaded(true)
     })
   }, [])
 
@@ -136,6 +153,19 @@ export default function AdminSettings() {
 
   const removePromoCode = (code: string) => {
     savePromoCodes(promoCodes.filter(p => p.code !== code))
+  }
+
+  const saveTelegram = async () => {
+    setTelegramSaving(true)
+    try {
+      await upsertSetting('telegram_bot_token', telegramBotToken)
+      await upsertSetting('telegram_chat_id', telegramChatId)
+      setTelegramSaved(true)
+      setTimeout(() => setTelegramSaved(false), 2000)
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Failed to save')
+    }
+    setTelegramSaving(false)
   }
 
   return (
@@ -285,6 +315,53 @@ export default function AdminSettings() {
                 ADD
               </button>
             </div>
+          </>
+        )}
+      </div>
+
+      {/* Telegram */}
+      <div className="glass-card rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <MessageCircle className="w-6 h-6 text-primary" />
+          <h2 className="font-serif text-xl text-foreground">Telegram Notifications</h2>
+        </div>
+
+        {!telegramLoaded ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader className="w-5 h-5 text-primary animate-spin" />
+          </div>
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-2">Bot Token</label>
+                <input
+                  value={telegramBotToken}
+                  onChange={e => setTelegramBotToken(e.target.value)}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-3 text-base text-foreground focus:border-primary outline-none font-mono text-sm"
+                  placeholder="1234567890:ABCdefGHIjklMNOpqrsTUVwxyz"
+                />
+                <p className="text-sm text-muted-foreground/60 mt-1">From <span className="font-mono">@BotFather</span></p>
+              </div>
+              <div>
+                <label className="text-sm tracking-[0.1em] text-muted-foreground block mb-2">Chat ID</label>
+                <input
+                  value={telegramChatId}
+                  onChange={e => setTelegramChatId(e.target.value)}
+                  className="w-full bg-transparent border border-border/50 rounded-lg px-4 py-3 text-base text-foreground focus:border-primary outline-none"
+                  placeholder="-1001234567890"
+                />
+                <p className="text-sm text-muted-foreground/60 mt-1">Send <span className="font-mono">/id</span> to <span className="font-mono">@userinfobot</span> to get it</p>
+              </div>
+            </div>
+            <button
+              onClick={saveTelegram}
+              disabled={telegramSaving}
+              className="mt-6 flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm tracking-[0.15em] hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <Save className="w-4 h-4" />
+              {telegramSaving ? 'SAVING...' : telegramSaved ? 'SAVED ✓' : 'SAVE TELEGRAM'}
+            </button>
           </>
         )}
       </div>

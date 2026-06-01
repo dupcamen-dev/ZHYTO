@@ -3,6 +3,7 @@ import { ordersService } from '@/lib/services/orders.service';
 import { productsService } from '@/lib/services/products.service';
 import { paymentsService } from '@/lib/services/payments.service';
 import { emailService } from '@/lib/services/email.service';
+import { sendTelegramNotification } from '@/lib/services/telegram.service';
 import { requireAuth } from '@/lib/middleware/auth.middleware';
 import { CreateOrderSchema } from '@/lib/validations/order.schema';
 import { handleError, ValidationError } from '@/lib/utils/errors';
@@ -34,6 +35,16 @@ export async function POST(request: NextRequest) {
     }
 
     const order = await ordersService.createOrder(user.id, validated.data);
+
+    sendTelegramNotification({
+      id: order.id,
+      customer_name: validated.data.customer_name,
+      customer_email: validated.data.customer_email,
+      delivery_address: validated.data.delivery_address,
+      total: order.total + (order.delivery_fee || 0),
+      items: validated.data.items.map(i => ({ name: i.name, quantity: i.quantity, price: i.price })),
+      created_at: order.created_at || new Date().toISOString(),
+    });
 
     if (body.skip_payment) {
       return Response.json({ order }, { status: 201 });
