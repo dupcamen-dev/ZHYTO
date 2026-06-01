@@ -38,17 +38,14 @@ export default function SplashScreen({ onReady }: { onReady: () => void }) {
       }`}
       style={{ pointerEvents: state === 'exit' ? 'none' : 'auto' }}
     >
-      <div className="text-center">
-        <div className="relative w-40 h-40 md:w-52 md:h-52 mx-auto mb-6">
-          <Image
-            src={img("/images/dsfsjfos.png")}
-            alt="zhyto"
-            fill
-            className="object-contain"
-            priority
-          />
-        </div>
-        <h1 className="font-script text-6xl md:text-8xl text-primary tracking-[0.15em]">ZHYTO</h1>
+      <div className="relative w-72 h-72 md:w-96 md:h-96">
+        <Image
+          src={img("/images/dsfsjfos.png")}
+          alt="zhyto"
+          fill
+          className="object-contain"
+          priority
+        />
       </div>
     </div>
   )
