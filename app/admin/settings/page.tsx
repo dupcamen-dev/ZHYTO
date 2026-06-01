@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Truck, Save, Loader, Percent, X, Tag, Languages, RotateCcw, Upload, Trash2, Camera, Plus, MessageCircle } from 'lucide-react'
+import { Truck, Save, Loader, Percent, X, Tag, Languages, RotateCcw, Upload, Trash2, Camera, Plus, MessageCircle, Link } from 'lucide-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
 import { translations } from '@/lib/translations'
@@ -28,6 +28,8 @@ export default function AdminSettings() {
   const [telegramLoaded, setTelegramLoaded] = useState(false)
   const [telegramSaving, setTelegramSaving] = useState(false)
   const [telegramSaved, setTelegramSaved] = useState(false)
+  const [webhookSetting, setWebhookSetting] = useState(false)
+  const [webhookStatus, setWebhookStatus] = useState<string | null>(null)
   const [aboutImages, setAboutImages] = useState<{ src: string; name: string }[] | null>(null)
   const [aboutImagesLoaded, setAboutImagesLoaded] = useState(false)
   const carouselInputRef = useRef<HTMLInputElement>(null)
@@ -166,6 +168,23 @@ export default function AdminSettings() {
       toast.error(e instanceof Error ? e.message : 'Failed to save')
     }
     setTelegramSaving(false)
+  }
+
+  const setWebhook = async () => {
+    setWebhookSetting(true)
+    setWebhookStatus(null)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/telegram-webhook', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      })
+      const data = await res.json()
+      setWebhookStatus(data.ok ? '✅ Webhook set!' : `❌ ${data.error || data.description || 'Failed'}`)
+    } catch {
+      setWebhookStatus('❌ Network error')
+    }
+    setWebhookSetting(false)
   }
 
   return (
@@ -362,6 +381,18 @@ export default function AdminSettings() {
               <Save className="w-4 h-4" />
               {telegramSaving ? 'SAVING...' : telegramSaved ? 'SAVED ✓' : 'SAVE TELEGRAM'}
             </button>
+
+            <button
+              onClick={setWebhook}
+              disabled={webhookSetting || !telegramBotToken}
+              className="mt-3 flex items-center gap-2 px-6 py-3 border border-primary/40 text-primary rounded-lg text-sm tracking-[0.15em] hover:bg-primary/10 transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <Link className="w-4 h-4" />
+              {webhookSetting ? 'SETTING...' : 'SET WEBHOOK'}
+            </button>
+            {webhookStatus && (
+              <p className="mt-2 text-sm text-muted-foreground">{webhookStatus}</p>
+            )}
           </>
         )}
       </div>
